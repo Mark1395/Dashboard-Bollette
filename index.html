@@ -59,6 +59,12 @@
 <div id="cards" class="cards"></div>
 
 <div class="callout" id="giu24note"></div>
+<div class="callout" id="gap2023note">
+  <b>Nota sui file caricati oggi:</b> di 5 PDF, 2 erano bollette del 2022 (fuori dai 3 anni di interesse, non usate),
+  1 è arrivato vuoto/corrotto (0 byte — andrebbe ricaricato), 2 erano quelli giusti (feb-mag 2023) e sono stati aggiunti.
+  Resta un buco: <b>gennaio 2023</b> (e i primi 3 giorni di febbraio) non sono ancora coperti da nessuna bolletta caricata —
+  serve la fattura del bimestre a cavallo tra dicembre 2022 e febbraio 2023.
+</div>
 
 <h2>Andamento nel tempo</h2>
 
@@ -134,6 +140,7 @@
 </div>
 
 <div id="gasPane">
+<div id="gasError" style="display:none; background:#fde8e8; border:1px solid #f0a0a0; border-radius:8px; padding:.8rem; font-size:.8rem; color:#7a2020; margin-bottom:1rem; white-space:pre-wrap; font-family:monospace;"></div>
 <div id="cardsGas" class="cards"></div>
 
 <h2>Andamento costo totale (Gas)</h2>
@@ -179,11 +186,13 @@ let gasRendered = false;
 function destroyAll(){ charts.forEach(c=>c.destroy()); charts = []; }
 
 async function loadData(){
-  const res = await fetch('data.json', {cache: 'no-store'});
-  DATA = await res.json();
-  document.getElementById('updatedLine').textContent = 'Dati aggiornati al ' + DATA.meta.aggiornato;
-  renderLuce();
-  document.getElementById('metodologia').innerHTML = `
+  try {
+    const res = await fetch('data.json', {cache: 'no-store'});
+    if (!res.ok) throw new Error('data.json non trovato (HTTP ' + res.status + '). Verifica che il file sia stato caricato su GitHub con questo nome esatto.');
+    DATA = await res.json();
+    document.getElementById('updatedLine').textContent = 'Dati aggiornati al ' + DATA.meta.aggiornato;
+    renderLuce();
+    document.getElementById('metodologia').innerHTML = `
     <h4>Luce (base mensile)</h4>
     Le bollette SEN ed Eni sono bimestrali (o trimestrali, per l'ultima bolletta Eni nov25-gen26).
     Il <b>consumo e la fascia oraria (F1/F23) di ogni singolo mese</b> sono ricostruiti dalle letture
@@ -207,6 +216,13 @@ async function loadData(){
     calcolabile dalle letture del contatore (differenza tra letture F1/F2/F3 consecutive) riportate in
     bolletta — è quello che ho usato qui.
   `;
+  } catch (err) {
+    document.body.insertAdjacentHTML('afterbegin',
+      '<div style="background:#fde8e8;border:1px solid #f0a0a0;border-radius:8px;padding:.8rem;font-size:.8rem;color:#7a2020;margin-bottom:1rem;white-space:pre-wrap;font-family:monospace;">' +
+      'Errore nel caricamento dei dati: ' + (err && err.message ? err.message : err) +
+      '\n\nCopia questo messaggio e incollalo in chat così lo sistemo.</div>');
+    console.error(err);
+  }
 }
 
 function monthLabel(ym){ const [y,m] = ym.split('-'); return MESI[parseInt(m,10)-1] + String(y).slice(2); }
@@ -388,13 +404,16 @@ function renderLuce(){
   document.getElementById('riepilogoTableLuce').innerHTML = html;
 
   // ---- Riepiloghi annuali ----
-  let costHtml = '<tr><th>Anno</th><th>N. mesi</th><th>Materia (media/mese)</th><th>Trasporto (media/mese)</th><th>Oneri (media/mese)</th><th>Imposte+altro (media/mese)</th><th>Totale (media/mese)</th></tr>';
+  let costHtml = '<tr><th>Anno</th><th>N. mesi</th><th>Materia (media/mese)</th><th>Materia (EUR/kWh)</th><th>Trasporto (media/mese)</th><th>Oneri (media/mese)</th><th>Imposte+altro (media/mese)</th><th>Totale (media/mese)</th></tr>';
   years.forEach(y => {
     const yr = rows.filter(r=>r.month.startsWith(String(y)));
     const n = yr.length;
     const avg = key => round2(yr.reduce((s,r)=>s+r[key],0)/n);
     const avgImp = round2(yr.reduce((s,r)=>s+(r.tot-r.mat-r.tra-r.one),0)/n);
-    costHtml += `<tr><td>${y}</td><td>${n}</td><td>${fmtEUR(avg('mat'))}</td><td>${fmtEUR(avg('tra'))}</td><td>${fmtEUR(avg('one'))}</td><td>${fmtEUR(avgImp)}</td><td>${fmtEUR(avg('tot'))}</td></tr>`;
+    const matTot = yr.reduce((s,r)=>s+r.mat,0);
+    const consTot = yr.reduce((s,r)=>s+(r.c||0),0);
+    const unitMat = consTot ? (matTot/consTot) : null;
+    costHtml += `<tr><td>${y}</td><td>${n}</td><td>${fmtEUR(avg('mat'))}</td><td>${unitMat!=null?unitMat.toFixed(4)+' EUR/kWh':'-'}</td><td>${fmtEUR(avg('tra'))}</td><td>${fmtEUR(avg('one'))}</td><td>${fmtEUR(avgImp)}</td><td>${fmtEUR(avg('tot'))}</td></tr>`;
   });
   document.getElementById('annualCostTable').innerHTML = costHtml;
 
@@ -415,6 +434,19 @@ function renderLuce(){
 function renderGas(){
   if (gasRendered) return;
   gasRendered = true;
+  try {
+    renderGasInner();
+  } catch (err) {
+    const el = document.getElementById('gasError');
+    el.style.display = 'block';
+    el.textContent = 'Errore nel rendering della sezione Gas: ' + (err && err.message ? err.message : err) +
+      '\n\nCopia questo messaggio e incollalo in chat così lo sistemo.';
+    console.error(err);
+    gasRendered = false; // consenti un nuovo tentativo al prossimo click
+  }
+}
+
+function renderGasInner(){
   const unit = 'Smc';
   const main = DATA.gas.main;
   const withUnit = main.filter(d=>d.c);
@@ -544,7 +576,7 @@ document.getElementById('btn-gas').onclick = ()=>{
   document.getElementById('btn-luce').classList.remove('active');
   document.getElementById('gasPane').style.display='';
   document.getElementById('lucePane').style.display='none';
-  renderGas();
+  setTimeout(renderGas, 30);
 };
 loadData();
 </script>
