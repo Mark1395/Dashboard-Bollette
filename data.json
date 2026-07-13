@@ -1,0 +1,478 @@
+{
+  "luce": {
+    "main": [
+      {
+        "p": "Lug23",
+        "f": "SEN",
+        "c": 188,
+        "tot": 57.05,
+        "mat": 30.85,
+        "tra": 15.47,
+        "one": 5.54,
+        "f1": 70,
+        "f23": 118,
+        "note": ""
+      },
+      {
+        "p": "Set23",
+        "f": "SEN",
+        "c": 165,
+        "tot": 53.5,
+        "mat": 28.6,
+        "tra": 15.26,
+        "one": 4.78,
+        "f1": 58,
+        "f23": 107,
+        "note": ""
+      },
+      {
+        "p": "Nov23",
+        "f": "SEN",
+        "c": 141,
+        "tot": 55.23,
+        "mat": 30.99,
+        "tra": 15.03,
+        "one": 4.19,
+        "f1": 44,
+        "f23": 97,
+        "note": ""
+      },
+      {
+        "p": "Gen24",
+        "f": "SEN",
+        "c": 146,
+        "tot": 54.9,
+        "mat": 28.87,
+        "tra": 16.48,
+        "one": 4.56,
+        "f1": 45,
+        "f23": 101,
+        "note": "Canone RAI 14,00 EUR escluso dal totale"
+      },
+      {
+        "p": "Mar24",
+        "f": "SEN",
+        "c": 143,
+        "tot": 51.43,
+        "mat": 25.41,
+        "tra": 16.62,
+        "one": 4.72,
+        "f1": 46,
+        "f23": 97,
+        "note": "Canone RAI 14,00 EUR escluso dal totale"
+      },
+      {
+        "p": "Mag24",
+        "f": "SEN",
+        "c": 136,
+        "tot": 44.11,
+        "mat": 18.31,
+        "tra": 16.54,
+        "one": 5.25,
+        "f1": 42,
+        "f23": 94,
+        "note": "Canone RAI 14,00 EUR escluso dal totale"
+      },
+      {
+        "p": "Lug24",
+        "f": "SEN",
+        "c": 64,
+        "tot": 8.54,
+        "mat": 4.51,
+        "tra": 0.78,
+        "one": 2.47,
+        "f1": 20,
+        "f23": 44,
+        "note": "Chiusura contratto SEN"
+      },
+      {
+        "p": "Lug24",
+        "f": "Eni",
+        "c": 209,
+        "tot": 82.19,
+        "mat": 49.21,
+        "tra": 17.43,
+        "one": 8.08,
+        "f1": 92,
+        "f23": 117,
+        "note": ""
+      },
+      {
+        "p": "Set24",
+        "f": "Eni",
+        "c": 143,
+        "tot": 65.54,
+        "mat": 37.44,
+        "tra": 16.62,
+        "one": 5.52,
+        "f1": 44,
+        "f23": 99,
+        "note": ""
+      },
+      {
+        "p": "Nov24",
+        "f": "Eni",
+        "c": 137,
+        "tot": 66.64,
+        "mat": 38.72,
+        "tra": 16.56,
+        "one": 5.3,
+        "f1": 39,
+        "f23": 98,
+        "note": ""
+      },
+      {
+        "p": "Gen25",
+        "f": "Eni",
+        "c": 128,
+        "tot": 68.55,
+        "mat": 40.02,
+        "tra": 18.18,
+        "one": 4.12,
+        "f1": 37,
+        "f23": 91,
+        "note": ""
+      },
+      {
+        "p": "Mar25",
+        "f": "Eni",
+        "c": 148,
+        "tot": 67.08,
+        "mat": 37.84,
+        "tra": 18.44,
+        "one": 4.7,
+        "f1": 37,
+        "f23": 111,
+        "note": ""
+      },
+      {
+        "p": "Mag25",
+        "f": "Eni",
+        "c": 165,
+        "tot": 68.96,
+        "mat": 38.85,
+        "tra": 18.67,
+        "one": 5.17,
+        "f1": 50,
+        "f23": 115,
+        "note": ""
+      },
+      {
+        "p": "Lug25",
+        "f": "Eni",
+        "c": 164,
+        "tot": 71.63,
+        "mat": 41.32,
+        "tra": 18.66,
+        "one": 5.14,
+        "f1": 55,
+        "f23": 109,
+        "note": ""
+      },
+      {
+        "p": "Set25",
+        "f": "Eni",
+        "c": 122,
+        "tot": 61.22,
+        "mat": 33.73,
+        "tra": 18.09,
+        "one": 3.83,
+        "f1": 42,
+        "f23": 80,
+        "note": ""
+      },
+      {
+        "p": "Feb26",
+        "f": "Octopus",
+        "c": 53,
+        "tot": 25.07,
+        "mat": 12.55,
+        "tra": 8.63,
+        "one": 1.61,
+        "f1": 19,
+        "f23": 34,
+        "note": "Fascia da letture contatore (tariffa monoraria)"
+      },
+      {
+        "p": "Mar26",
+        "f": "Octopus",
+        "c": 54,
+        "tot": 24.84,
+        "mat": 12.3,
+        "tra": 8.64,
+        "one": 1.64,
+        "f1": null,
+        "f23": null,
+        "note": ""
+      },
+      {
+        "p": "Apr26",
+        "f": "Octopus",
+        "c": 53,
+        "tot": 24.71,
+        "mat": 12.22,
+        "tra": 8.63,
+        "one": 1.61,
+        "f1": null,
+        "f23": null,
+        "note": ""
+      },
+      {
+        "p": "Mag26",
+        "f": "Octopus",
+        "c": 63,
+        "tot": 26.26,
+        "mat": 13.19,
+        "tra": 8.77,
+        "one": 1.91,
+        "f1": null,
+        "f23": null,
+        "note": ""
+      }
+    ],
+    "conguaglio": [
+      {
+        "p": "Nov25",
+        "f": "Eni",
+        "c": 188,
+        "tot": 95.15,
+        "mat": 53.76,
+        "tra": 26.92,
+        "one": 5.82,
+        "f1": null,
+        "f23": null,
+        "note": "Bolletta di conguaglio/ricalcolo - esclusa da grafici e medie"
+      }
+    ]
+  },
+  "gas": {
+    "main": [
+      {
+        "p": "Giu23",
+        "f": "Eni",
+        "c": 3,
+        "tot": 32.24,
+        "mat": 23.6,
+        "tra": 11.28,
+        "one": -4.36,
+        "note": ""
+      },
+      {
+        "p": "Ago23",
+        "f": "Eni",
+        "c": 3,
+        "tot": 32.37,
+        "mat": 23.71,
+        "tra": 11.29,
+        "one": -4.36,
+        "note": ""
+      },
+      {
+        "p": "Ott23",
+        "f": "Eni",
+        "c": 11,
+        "tot": 35.32,
+        "mat": 29.24,
+        "tra": 12.8,
+        "one": -4.36,
+        "note": "Include -5,00 EUR voucher fedelta in imposte/altro"
+      },
+      {
+        "p": "Dic23",
+        "f": "Eni",
+        "c": 67,
+        "tot": 90.13,
+        "mat": 59.43,
+        "tra": 22.49,
+        "one": -3.89,
+        "note": ""
+      },
+      {
+        "p": "Feb24",
+        "f": "Eni",
+        "c": 39,
+        "tot": 67.65,
+        "mat": 40.83,
+        "tra": 18.02,
+        "one": -3.68,
+        "note": ""
+      },
+      {
+        "p": "Apr24",
+        "f": "Eni",
+        "c": 5,
+        "tot": 41.11,
+        "mat": 24.61,
+        "tra": 12.88,
+        "one": -3.76,
+        "note": ""
+      },
+      {
+        "p": "Giu24",
+        "f": "Eni",
+        "c": 3,
+        "tot": 39.64,
+        "mat": 23.71,
+        "tra": 12.62,
+        "one": -3.8,
+        "note": ""
+      },
+      {
+        "p": "Ago24",
+        "f": "Eni",
+        "c": 4,
+        "tot": 40.69,
+        "mat": 24.45,
+        "tra": 12.75,
+        "one": -3.78,
+        "note": ""
+      },
+      {
+        "p": "Ott24",
+        "f": "Eni",
+        "c": 19,
+        "tot": 55.4,
+        "mat": 33.84,
+        "tra": 15.37,
+        "one": -3.41,
+        "note": ""
+      },
+      {
+        "p": "Dic24",
+        "f": "Eni",
+        "c": 66,
+        "tot": 114.31,
+        "mat": 69.23,
+        "tra": 24.86,
+        "one": -1.55,
+        "note": ""
+      },
+      {
+        "p": "Feb25",
+        "f": "Eni",
+        "c": 20,
+        "tot": 57.78,
+        "mat": 36.45,
+        "tra": 14.94,
+        "one": -3.46,
+        "note": ""
+      },
+      {
+        "p": "Apr25",
+        "f": "Eni",
+        "c": 9,
+        "tot": 44.8,
+        "mat": 27.29,
+        "tra": 12.96,
+        "one": -3.43,
+        "note": ""
+      },
+      {
+        "p": "Giu25",
+        "f": "Eni",
+        "c": 2,
+        "tot": 38.77,
+        "mat": 23.21,
+        "tra": 12.17,
+        "one": -3.57,
+        "note": ""
+      },
+      {
+        "p": "Ago25",
+        "f": "Eni",
+        "c": 4,
+        "tot": 40.43,
+        "mat": 24.24,
+        "tra": 12.4,
+        "one": -3.46,
+        "note": "Fatturata su stima, poi corretta dai ricalcoli"
+      },
+      {
+        "p": "Ott25",
+        "f": "Eni",
+        "c": 17,
+        "tot": 51.39,
+        "mat": 31.13,
+        "tra": 14.15,
+        "one": -2.99,
+        "note": "Fatturata su stima, poi corretta dai ricalcoli"
+      },
+      {
+        "p": "Feb26",
+        "f": "Octopus",
+        "c": 25,
+        "tot": 29.86,
+        "mat": 15.95,
+        "tra": 9.04,
+        "one": -0.73,
+        "note": ""
+      },
+      {
+        "p": "Mar26",
+        "f": "Octopus",
+        "c": 13,
+        "tot": 22.55,
+        "mat": 11.71,
+        "tra": 8.03,
+        "one": -1.35,
+        "note": ""
+      },
+      {
+        "p": "Apr26",
+        "f": "Octopus",
+        "c": 4,
+        "tot": 14.24,
+        "mat": 7.32,
+        "tra": 6.08,
+        "one": -1.75,
+        "note": ""
+      },
+      {
+        "p": "Mag26",
+        "f": "Octopus",
+        "c": 7,
+        "tot": 18.94,
+        "mat": 9.53,
+        "tra": 7.24,
+        "one": -1.5,
+        "note": ""
+      },
+      {
+        "p": "Giu26",
+        "f": "Octopus",
+        "c": 1,
+        "tot": 9.99,
+        "mat": 5.19,
+        "tra": 5.28,
+        "one": -2.04,
+        "note": ""
+      }
+    ],
+    "conguaglio": [
+      {
+        "p": "Dic25",
+        "f": "Eni",
+        "c": 22,
+        "tot": 76.37,
+        "mat": 46.85,
+        "tra": 17.73,
+        "one": -1.94,
+        "note": "Cessazione contratto Eni gas. Storna stime ago-set/ott-nov 2025 (-21 Smc) e rifattura 44 Smc effettivi (lettura reale) + 22 Smc nuovo periodo dic-gen (stima chiusura)."
+      },
+      {
+        "p": "Ric-Mar26",
+        "f": "Eni",
+        "c": null,
+        "tot": 60.16,
+        "mat": null,
+        "tra": null,
+        "one": null,
+        "note": "Secondo ricalcolo (fatt. 2613344307, 11/03/2026): corregge la lettura STIMATA di chiusura (66 Smc) con la lettura REALE del distributore (124 Smc) per ago25-gen26. Verificato aritmeticamente: corretto."
+      }
+    ]
+  },
+  "meta": {
+    "aggiornato": "2026-07-13",
+    "note": "Nessun dato personale incluso (nome, indirizzo, POD/PDR, codice fiscale, numero cliente esclusi)."
+  }
+}
