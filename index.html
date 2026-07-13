@@ -59,12 +59,6 @@
 <div id="cards" class="cards"></div>
 
 <div class="callout" id="giu24note"></div>
-<div class="callout" id="gap2023note">
-  <b>Nota sui file caricati oggi:</b> di 5 PDF, 2 erano bollette del 2022 (fuori dai 3 anni di interesse, non usate),
-  1 è arrivato vuoto/corrotto (0 byte — andrebbe ricaricato), 2 erano quelli giusti (feb-mag 2023) e sono stati aggiunti.
-  Resta un buco: <b>gennaio 2023</b> (e i primi 3 giorni di febbraio) non sono ancora coperti da nessuna bolletta caricata —
-  serve la fattura del bimestre a cavallo tra dicembre 2022 e febbraio 2023.
-</div>
 
 <h2>Andamento nel tempo</h2>
 
@@ -568,13 +562,13 @@ function renderGasCheck(){
 document.getElementById('btn-luce').onclick = ()=>{
   document.getElementById('btn-luce').classList.add('active');
   document.getElementById('btn-gas').classList.remove('active');
-  document.getElementById('lucePane').style.display='';
+  document.getElementById('lucePane').style.display='block';
   document.getElementById('gasPane').style.display='none';
 };
 document.getElementById('btn-gas').onclick = ()=>{
   document.getElementById('btn-gas').classList.add('active');
   document.getElementById('btn-luce').classList.remove('active');
-  document.getElementById('gasPane').style.display='';
+  document.getElementById('gasPane').style.display='block';
   document.getElementById('lucePane').style.display='none';
   setTimeout(renderGas, 30);
 };

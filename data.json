@@ -1,16 +1,28 @@
 {
   "luce_monthly": [
     {
+      "month": "2023-01",
+      "f": "SEN",
+      "c": 78,
+      "mat": 40.28,
+      "tra": 8.19,
+      "one": 0.0,
+      "tot": 48.47,
+      "f1": 24,
+      "f23": 54,
+      "note": ""
+    },
+    {
       "month": "2023-02",
       "f": "SEN",
-      "c": 55.0,
-      "mat": 25.0,
-      "tra": 6.14,
+      "c": 62.0,
+      "mat": 28.62,
+      "tra": 6.88,
       "one": 0.13,
-      "tot": 31.26,
-      "f1": 21.0,
-      "f23": 34.0,
-      "note": "GAP: mese parziale (dal 04/02/2023), inizio gennaio 2023 non ancora coperto da una bolletta caricata"
+      "tot": 35.61,
+      "f1": 23.0,
+      "f23": 39.0,
+      "note": ""
     },
     {
       "month": "2023-03",
@@ -673,6 +685,6 @@
   },
   "meta": {
     "aggiornato": "2026-07-13",
-    "note": "Luce: dataset mensile, feb23-mag26 (manca gen23). Gas: ancora bimestrale."
+    "note": "Luce: dataset mensile completo gen23-mag26. Gas: ancora bimestrale."
   }
 }
