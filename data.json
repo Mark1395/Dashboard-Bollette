@@ -371,8 +371,8 @@
       "tra": 8.64,
       "one": 1.64,
       "tot": 24.84,
-      "f1": null,
-      "f23": null
+      "f1": 19,
+      "f23": 35
     },
     {
       "month": "2026-04",
@@ -382,8 +382,8 @@
       "tra": 8.63,
       "one": 1.61,
       "tot": 24.71,
-      "f1": null,
-      "f23": null
+      "f1": 19,
+      "f23": 34
     },
     {
       "month": "2026-05",
@@ -393,8 +393,8 @@
       "tra": 8.77,
       "one": 1.91,
       "tot": 26.26,
-      "f1": null,
-      "f23": null
+      "f1": 21,
+      "f23": 42
     }
   ],
   "gas": {
@@ -625,6 +625,6 @@
   },
   "meta": {
     "aggiornato": "2026-07-13",
-    "note": "Luce: dataset ricostruito su base mensile (vedi metodologia nel footer). Gas: ancora su base bimestrale, aggiornamento mensile in arrivo."
+    "note": "Luce: dataset ricostruito su base mensile. Gas: ancora su base bimestrale, ricostruzione mensile in arrivo."
   }
 }
