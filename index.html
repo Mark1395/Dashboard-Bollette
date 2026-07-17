@@ -54,14 +54,16 @@
   .badge-anomalia { background: #e37a1f; }
   .badge-dati_mancanti { background: #999; }
   .badge-info { background: #2a78d6; }
+  .note-empty { font-size: .78rem; color: #999; background: var(--card); border: 1px dashed var(--line); border-radius: 8px; padding: .7rem .9rem; }
+  #noteScope { font-size: .72rem; color: var(--sub); font-weight: 400; }
 </style>
 </head>
 <body>
 <h1>Dashboard costi e consumi — luce e gas</h1>
 <div class="updated" id="updatedLine"></div>
 
-<div id="noteSection" style="display:none;">
-  <h2 style="margin-top:0;">Note e anomalie</h2>
+<div id="noteSection">
+  <h2 style="margin-top:0;">Note e anomalie <span id="noteScope"></span></h2>
   <div id="noteList"></div>
 </div>
 
@@ -72,65 +74,60 @@
 
 <div id="lucePane">
   <h2 style="margin-top:0;">Costo materia prima — sola quota variabile</h2>
-  <div class="callout">Solo il prezzo che si muove con il consumo (energia comprata), esclusa la quota fissa di commercializzazione che, per definizione, non dovrebbe cambiare. Se la quota fissa cambia, lo trovi segnalato in "Note e anomalie" in cima alla pagina.</div>
-  <h3 class="sub">Andamento (prezzo unitario)</h3>
+  <div class="callout">Solo il prezzo che si muove con il consumo (energia comprata), esclusa la quota fissa di commercializzazione che, per definizione, non dovrebbe cambiare.</div>
+  <h3 class="sub">Andamento mese per mese</h3>
   <div class="chart-wrap"><canvas id="l_chartVarUnit"></canvas></div>
   <div class="legend" id="l_legendVarUnit"></div>
   <div class="src" id="l_srcVarUnit"></div>
-
-  <h3 class="sub">Stagionalità (prezzo unitario per mese)</h3>
+  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
   <div class="chart-wrap tall"><canvas id="l_chartSeasonVarUnit"></canvas></div>
   <div class="src" id="l_srcSeasonVarUnit"></div>
 
-  <h2>Andamento nel tempo</h2>
-  <h3 class="sub">Costo totale</h3>
+  <h2>Costo totale</h2>
+  <h3 class="sub">Andamento mese per mese</h3>
   <div class="chart-wrap"><canvas id="l_chartCost"></canvas></div>
   <div class="legend" id="l_legend1"></div>
   <div class="src" id="l_src1"></div>
-
-  <h3 class="sub">Consumo</h3>
-  <div class="chart-wrap"><canvas id="l_chartConsumo"></canvas></div>
-  <div class="legend" id="l_legend2"></div>
-  <div class="src" id="l_src2"></div>
-
-  <h3 class="sub">Costo unitario materia prima (fissa+variabile)</h3>
-  <div class="chart-wrap"><canvas id="l_chartUnit"></canvas></div>
-  <div class="legend" id="l_legend3"></div>
-  <div class="src" id="l_src3"></div>
-
-  <h2>Confronto stagionale (mese su mese, anno su anno)</h2>
-  <div class="note-inline">Stesso mese, anni diversi, a confronto.</div>
-  <h3 class="sub">Costo totale per mese</h3>
+  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
   <div class="chart-wrap tall"><canvas id="l_chartSeasonCost"></canvas></div>
   <div class="src" id="l_src4"></div>
 
-  <h3 class="sub">Consumo per mese</h3>
+  <h2>Consumo</h2>
+  <h3 class="sub">Andamento mese per mese</h3>
+  <div class="chart-wrap"><canvas id="l_chartConsumo"></canvas></div>
+  <div class="legend" id="l_legend2"></div>
+  <div class="src" id="l_src2"></div>
+  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
   <div class="chart-wrap tall"><canvas id="l_chartSeasonCons"></canvas></div>
   <div class="src" id="l_src5"></div>
 
-  <h3 class="sub">Costo unitario materia per mese (fissa+variabile)</h3>
+  <h2>Costo unitario materia prima (fissa+variabile)</h2>
+  <h3 class="sub">Andamento mese per mese</h3>
+  <div class="chart-wrap"><canvas id="l_chartUnit"></canvas></div>
+  <div class="legend" id="l_legend3"></div>
+  <div class="src" id="l_src3"></div>
+  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
   <div class="chart-wrap tall"><canvas id="l_chartSeasonUnit"></canvas></div>
   <div class="src" id="l_src6"></div>
 
-  <h2>Dettaglio costi</h2>
+  <h2>Dettaglio costi (materia / rete / oneri / imposte)</h2>
+  <div class="note-inline">Tre viste della stessa scomposizione: valori assoluti come linee, come colonne impilate, e in percentuale.</div>
   <h3 class="sub">Trend di tutte le voci di costo</h3>
   <div class="chart-wrap tall"><canvas id="l_chartVoci"></canvas></div>
   <div class="src" id="l_src7"></div>
-
-  <h3 class="sub">Composizione % dei costi nel tempo</h3>
-  <div class="chart-wrap tall"><canvas id="l_chartComposizione"></canvas></div>
-  <div class="src" id="l_src8"></div>
-
-  <h3 class="sub">Breakdown dei costi per periodo</h3>
+  <h3 class="sub">Breakdown per periodo (colonne impilate)</h3>
   <div class="chart-wrap tall"><canvas id="l_chartBreak"></canvas></div>
   <div class="legend" id="l_legend4"></div>
   <div class="src" id="l_src9"></div>
+  <h3 class="sub">Composizione % nel tempo</h3>
+  <div class="chart-wrap tall"><canvas id="l_chartComposizione"></canvas></div>
+  <div class="src" id="l_src8"></div>
 
   <h2>Consumo per fascia oraria</h2>
+  <div class="note-inline">Stesso dato, in valore assoluto e in percentuale sul mese.</div>
   <h3 class="sub">F1 vs F23 (valore assoluto)</h3>
   <div class="chart-wrap tall"><canvas id="l_chartFascia"></canvas></div>
   <div class="src" id="l_src10"></div>
-
   <h3 class="sub">F1 vs F23 (% sul mese, 100%)</h3>
   <div class="chart-wrap tall"><canvas id="l_chartFasciaPct"></canvas></div>
   <div class="src" id="l_src11"></div>
@@ -150,61 +147,55 @@
 
 <div id="gasPane">
   <div id="gasError"></div>
-
   <h2 style="margin-top:0;">Costo materia prima — sola quota variabile</h2>
-  <div class="callout">Solo il prezzo che si muove con il consumo (gas comprato), esclusa la quota fissa di commercializzazione che, per definizione, non dovrebbe cambiare. Se la quota fissa cambia, lo trovi segnalato in "Note e anomalie" in cima alla pagina. Nei mesi a consumo quasi nullo (estate) questo valore puo' essere rumoroso: vedi la nota in "Come sono calcolati i dati" qui sotto.</div>
-  <h3 class="sub">Andamento (prezzo unitario)</h3>
+  <div class="callout">Solo il prezzo che si muove con il consumo (gas comprato), esclusa la quota fissa di commercializzazione che, per definizione, non dovrebbe cambiare. Nei mesi a consumo quasi nullo (estate) questo valore puo' essere rumoroso: vedi la nota in "Come sono calcolati i dati" qui sotto.</div>
+  <h3 class="sub">Andamento mese per mese</h3>
   <div class="chart-wrap"><canvas id="g_chartVarUnit"></canvas></div>
   <div class="legend" id="g_legendVarUnit"></div>
   <div class="src" id="g_srcVarUnit"></div>
-
-  <h3 class="sub">Stagionalità (prezzo unitario per mese)</h3>
+  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
   <div class="chart-wrap tall"><canvas id="g_chartSeasonVarUnit"></canvas></div>
   <div class="src" id="g_srcSeasonVarUnit"></div>
 
-  <h2>Andamento nel tempo</h2>
-  <h3 class="sub">Costo totale</h3>
+  <h2>Costo totale</h2>
+  <h3 class="sub">Andamento mese per mese</h3>
   <div class="chart-wrap"><canvas id="g_chartCost"></canvas></div>
   <div class="legend" id="g_legend1"></div>
   <div class="src" id="g_src1"></div>
-
-  <h3 class="sub">Consumo</h3>
-  <div class="chart-wrap"><canvas id="g_chartConsumo"></canvas></div>
-  <div class="legend" id="g_legend2"></div>
-  <div class="src" id="g_src2"></div>
-
-  <h3 class="sub">Costo unitario materia prima (fissa+variabile)</h3>
-  <div class="chart-wrap"><canvas id="g_chartUnit"></canvas></div>
-  <div class="legend" id="g_legend3"></div>
-  <div class="src" id="g_src3"></div>
-
-  <h2>Confronto stagionale (mese su mese, anno su anno)</h2>
-  <div class="note-inline">Stesso mese, anni diversi, a confronto.</div>
-  <h3 class="sub">Costo totale per mese</h3>
+  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
   <div class="chart-wrap tall"><canvas id="g_chartSeasonCost"></canvas></div>
   <div class="src" id="g_src4"></div>
 
-  <h3 class="sub">Consumo per mese</h3>
+  <h2>Consumo</h2>
+  <h3 class="sub">Andamento mese per mese</h3>
+  <div class="chart-wrap"><canvas id="g_chartConsumo"></canvas></div>
+  <div class="legend" id="g_legend2"></div>
+  <div class="src" id="g_src2"></div>
+  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
   <div class="chart-wrap tall"><canvas id="g_chartSeasonCons"></canvas></div>
   <div class="src" id="g_src5"></div>
 
-  <h3 class="sub">Costo unitario materia per mese (fissa+variabile)</h3>
+  <h2>Costo unitario materia prima (fissa+variabile)</h2>
+  <h3 class="sub">Andamento mese per mese</h3>
+  <div class="chart-wrap"><canvas id="g_chartUnit"></canvas></div>
+  <div class="legend" id="g_legend3"></div>
+  <div class="src" id="g_src3"></div>
+  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
   <div class="chart-wrap tall"><canvas id="g_chartSeasonUnit"></canvas></div>
   <div class="src" id="g_src6"></div>
 
-  <h2>Dettaglio costi</h2>
+  <h2>Dettaglio costi (materia / rete / oneri / imposte)</h2>
+  <div class="note-inline">Tre viste della stessa scomposizione: valori assoluti come linee, come colonne impilate, e in percentuale.</div>
   <h3 class="sub">Trend di tutte le voci di costo</h3>
   <div class="chart-wrap tall"><canvas id="g_chartVoci"></canvas></div>
   <div class="src" id="g_src7"></div>
-
-  <h3 class="sub">Composizione % dei costi nel tempo</h3>
-  <div class="chart-wrap tall"><canvas id="g_chartComposizione"></canvas></div>
-  <div class="src" id="g_src8"></div>
-
-  <h3 class="sub">Breakdown dei costi per periodo</h3>
+  <h3 class="sub">Breakdown per periodo (colonne impilate)</h3>
   <div class="chart-wrap tall"><canvas id="g_chartBreak"></canvas></div>
   <div class="legend" id="g_legend4"></div>
   <div class="src" id="g_src9"></div>
+  <h3 class="sub">Composizione % nel tempo</h3>
+  <div class="chart-wrap tall"><canvas id="g_chartComposizione"></canvas></div>
+  <div class="src" id="g_src8"></div>
 
   <h2>Verifica ricalcolo gas ago25–gen26 vs storico</h2>
   <div class="verdict" id="gasVerdict"></div>
@@ -238,12 +229,32 @@ let gasRendered = false;
 function monthLabel(ym){ const [y,m] = ym.split('-'); return MESI[parseInt(m,10)-1] + String(y).slice(2); }
 
 const TIPO_LABEL = {rincaro:'Rincaro', anomalia:'Anomalia', dati_mancanti:'Dati mancanti', info:'Info'};
+const NOTE_ORIZZONTE_MESI = 12;   // in pagina restano solo le note piu' recenti di cosi'
 function fmtDataIt(iso){ const [y,m,d] = iso.split('-'); return d+'/'+m+'/'+y; }
-function renderNotes(notes){
-  const section = document.getElementById('noteSection');
-  if (!notes || !notes.length) { section.style.display='none'; return; }
-  const sorted = [...notes].sort((a,b)=> b.data.localeCompare(a.data));
-  document.getElementById('noteList').innerHTML = sorted.map(n => `
+
+// 'data' di una nota = data dell'EVENTO segnalato, non quella in cui e' stata scritta.
+function noteVisibili(notes, kind){
+  const lim = new Date();
+  lim.setMonth(lim.getMonth() - NOTE_ORIZZONTE_MESI);
+  const limIso = lim.toISOString().slice(0,10);
+  return (notes || [])
+    .filter(n => n.data >= limIso)
+    .filter(n => { const a = (n.ambito||'').toLowerCase(); return a === 'entrambe' || a === kind; })
+    .sort((a,b) => b.data.localeCompare(a.data));
+}
+
+function renderNotes(kind){
+  if (!DATA) return;
+  const etichetta = kind === 'gas' ? 'Gas' : 'Luce';
+  document.getElementById('noteScope').textContent = '— ' + etichetta + ', ultimi 12 mesi';
+  const list = noteVisibili(DATA.note_rilevanti, kind);
+  const el = document.getElementById('noteList');
+  if (!list.length) {
+    el.innerHTML = '<div class="note-empty">Nessuna segnalazione per la sezione ' + etichetta +
+      ' negli ultimi 12 mesi. Rincari, anomalie o dati mancanti rilevati sulle nuove bollette compaiono qui.</div>';
+    return;
+  }
+  el.innerHTML = list.map(n => `
     <div class="note-item tipo-${n.tipo}">
       <div class="note-head">
         <span class="badge badge-${n.tipo}">${TIPO_LABEL[n.tipo] || n.tipo}</span>
@@ -254,7 +265,6 @@ function renderNotes(notes){
       <div>${n.testo}</div>
     </div>
   `).join('');
-  section.style.display = 'block';
 }
 
 async function loadData(){
@@ -263,7 +273,7 @@ async function loadData(){
     if (!res.ok) throw new Error('data.json non trovato (HTTP ' + res.status + ').');
     DATA = await res.json();
     document.getElementById('updatedLine').textContent = 'Dati aggiornati al ' + DATA.meta.aggiornato;
-    renderNotes(DATA.note_rilevanti || []);
+    renderNotes('luce');
     renderUtility({
       rows: DATA.luce_monthly, unit: 'kWh', p: 'l_', fornitori: ['SEN','Eni','Octopus'], fascia: true
     });
@@ -585,12 +595,14 @@ document.getElementById('btn-luce').onclick = ()=>{
   document.getElementById('btn-gas').classList.remove('active');
   document.getElementById('lucePane').style.display='block';
   document.getElementById('gasPane').style.display='none';
+  renderNotes('luce');
 };
 document.getElementById('btn-gas').onclick = ()=>{
   document.getElementById('btn-gas').classList.add('active');
   document.getElementById('btn-luce').classList.remove('active');
   document.getElementById('gasPane').style.display='block';
   document.getElementById('lucePane').style.display='none';
+  renderNotes('gas');
   setTimeout(renderGas, 30);
 };
 loadData();

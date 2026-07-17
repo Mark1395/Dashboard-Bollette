@@ -999,36 +999,23 @@
   ],
   "meta": {
     "aggiornato": "2026-07-17",
-    "note": "Luce e Gas: dataset mensile completo gen23-2026. Gas: gen-mag23 con dati mensili reali; resto (giu23 in poi) ripartizione 50/50 dei bimestri."
+    "note": "Luce e Gas: dataset mensile completo gen23-2026. Gas: gen-mag23 con dati mensili reali; resto (giu23 in poi) ripartizione 50/50 dei bimestri.",
+    "note_rilevanti_regola": "Il campo 'data' e' la data dell'EVENTO segnalato (non quella in cui la nota e' stata scritta). La dashboard mostra solo le note degli ultimi 12 mesi, filtrate per ambito (Luce/Gas/Entrambe)."
   },
   "note_rilevanti": [
     {
-      "data": "2026-07-13",
-      "tipo": "info",
-      "ambito": "Entrambe",
-      "titolo": "Aggiunto il costo unitario della sola materia prima variabile",
-      "testo": "Rilette tutte le bollette originali per scorporare, dalla materia prima, la quota fissa di commercializzazione dalla quota variabile legata al consumo. I grafici in cima alla pagina mostrano ora solo il prezzo unitario della componente variabile (EUR/kWh o EUR/Smc). Aggiunta anche questa sezione: da ora, ogni volta che carichi nuove bollette, eventuali rincari, dati mancanti o anomalie verranno segnalati qui."
-    },
-    {
-      "data": "2026-07-13",
+      "data": "2023-04-01",
       "tipo": "rincaro",
       "ambito": "Luce",
       "titolo": "Quota fissa SEN aumentata da aprile 2023",
       "testo": "La quota fissa mensile di commercializzazione SEN e' passata da 4,295 EUR/mese a 4,8666 EUR/mese a partire dalla bolletta aprile 2023 (+13%). E' rimasta invariata fino al passaggio a Eni (luglio 2024)."
     },
     {
-      "data": "2026-07-13",
+      "data": "2024-01-01",
       "tipo": "rincaro",
       "ambito": "Gas",
       "titolo": "Quota fissa Eni gas aumentata tra il 2023 e il 2024",
-      "testo": "La quota fissa di commercializzazione gas Eni era 10 EUR/mese a inizio 2023 ed e' risultata 11 EUR/mese (12 EUR meno 1 EUR di sconto domiciliazione) nella bolletta di febbraio 2024. Non ho individuato la bolletta esatta del cambio; ho assunto convenzionalmente la transizione al 1 gennaio 2024. Se vuoi la data precisa, posso rileggere le bollette di fine 2023."
-    },
-    {
-      "data": "2026-07-13",
-      "tipo": "info",
-      "ambito": "Gas",
-      "titolo": "Prezzo unitario gas rumoroso nei mesi a consumo quasi nullo",
-      "testo": "Nei mesi estivi con consumo di pochi Smc, il prezzo unitario della sola materia variabile puo' apparire molto piu' alto o basso della norma: la quota fissa (assunta costante) assorbe quasi tutto l'importo, lasciando un residuo variabile minuscolo diviso per un consumo minuscolo. Questi valori vanno letti con cautela, meglio guardare la tendenza su piu' mesi che il singolo mese estivo."
+      "testo": "La quota fissa di commercializzazione gas Eni era 10 EUR/mese a inizio 2023 ed e' risultata 11 EUR/mese (12 EUR meno 1 EUR di sconto domiciliazione) nella bolletta di febbraio 2024. Data del cambio non individuata: assunta convenzionalmente al 1 gennaio 2024."
     }
   ]
 }
