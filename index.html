@@ -515,32 +515,40 @@ function renderGas(){
     });
     renderGasCheck();
     document.getElementById('g_metodologia').innerHTML = `
-      <h4>Base mensile (precisione mista)</h4>
-      Per <b>gennaio-maggio 2023</b> le bollette Eni riportano un dettaglio letture mese per mese: per
-      questi mesi il consumo è <b>reale</b> e il costo è ripartito in proporzione al consumo reale di
-      ciascun mese. Da <b>giugno 2023 in poi</b>, le bollette Eni non riportano lo stesso dettaglio nella
-      forma leggibile usata qui: quei bimestri sono ripartiti <b>50/50</b> tra i due mesi, sia per consumo
-      che per costo — un'approssimazione dichiarata. Le note su ogni riga del dataset indicano quale dei
-      due casi si applica. Octopus fattura già mensilmente: dati diretti, nessuna ripartizione.
+      <h4>Base mensile — letture reali</h4>
+      Da <b>giugno 2023 a gennaio 2026</b> consumo e costi di ogni mese sono <b>reali</b>, letti riga per riga
+      dagli <b>"Elementi di dettaglio"</b> delle bollette Eni: ogni voce di spesa è già spezzata per mese
+      (<i>DAL 01/10 AL 31/10</i>, <i>DAL 01/11 AL 30/11</i>…) con la relativa quantità in Smc. Nessuna
+      ripartizione 50/50, nessuna proporzione: sono gli importi che Eni ha attribuito a quel mese.
+      Per <b>gennaio-maggio 2023</b> il consumo è reale e il costo ripartito in proporzione al consumo.
+      Octopus fattura già mensilmente: dati diretti.
+      <h4>La catena degli acconti</h4>
+      Quando il distributore non riesce a leggere il contatore, Eni fattura il mese <b>in acconto</b> (stima) e
+      lo <b>storna</b> nella bolletta successiva, rifatturandolo sulla lettura reale. Qui vengono tenuti solo
+      gli addebiti definitivi: stime e storni si annullano a vicenda (verificato al centesimo su ogni catena)
+      e la somma dei mesi ricostruiti coincide esattamente con la somma dei totali fatturati.
+      <h4>Unica eccezione dichiarata: agosto 2025 – gennaio 2026</h4>
+      In quei sei mesi il contatore è risultato <b>inaccessibile a ogni tentativo di lettura</b>: esiste una
+      sola lettura reale, quella di cessazione del 31/01/2026 (segnante 1858), pari a <b>124 Smc</b> per
+      l'intero periodo. Il totale è reale, ma <b>il dettaglio mensile non esiste</b>: la ripartizione mostrata
+      è quella pro-rata sui giorni applicata da Eni stessa nel ricalcolo. Da leggere come periodo, non mese per mese.
       <h4>Costo materia prima — sola quota variabile</h4>
-      La quota fissa di commercializzazione gas Eni è risultata 10 EUR/mese a inizio 2023 e 11 EUR/mese dalle
-      bollette del 2024 in poi (confermato su piu' bollette, incluse quelle più recenti). Non ho individuato la
-      bolletta esatta del cambio: ho assunto convenzionalmente la transizione al 1° gennaio 2024 — un'
-      approssimazione dichiarata. Sottraendo questa quota fissa (mensile, costante) dal totale "materia prima"
-      di ogni bimestre resta la spesa variabile, che divisa per il consumo del bimestre dà il prezzo unitario
-      variabile, applicato a entrambi i mesi del bimestre. <b>Nei mesi a consumo quasi nullo (tipicamente
-      giugno-settembre) questo prezzo può risultare molto rumoroso</b>: la quota fissa assorbe quasi tutto
-      l'importo lasciando un residuo variabile piccolo diviso per un consumo piccolo — meglio guardare la
-      tendenza su più mesi che il singolo mese estivo. Per Octopus il prezzo è dato direttamente in bolletta
-      ("di cui spesa per vendita gas naturale" nel Box dell'offerta), nessuno scorporo necessario.
+      La quota fissa di commercializzazione è 10,00 EUR/mese fino ad aprile 2023 e <b>11,00 EUR/mese dal 1°
+      maggio 2023</b> (12,00 meno 1,00 di sconto domiciliazione), col passaggio all'offerta TREND CASA GAS:
+      data ora <b>letta in bolletta</b>, non più assunta. La quota variabile è la somma delle sole voci a
+      consumo (Corrispettivo Gas Index + Contributo al consumo) del mese, divisa per gli Smc del mese.
+      <b>Nei mesi a consumo quasi nullo (tipicamente giugno-settembre) il valore resta rumoroso</b>: pochi
+      centesimi diviso pochi Smc — meglio guardare la tendenza che il singolo mese estivo. A luglio 2025 il
+      consumo è stato 0 Smc, quindi il prezzo unitario non è calcolabile e il punto manca. Per Octopus il
+      prezzo è dato direttamente in bolletta ("di cui spesa per vendita gas naturale" nel Box dell'offerta).
       <h4>Costo unitario materia prima (fissa+variabile)</h4>
       Stessa formula e stessa definizione di "Materia prima" della luce, applicata al gas: Materia prima
       (EUR) / Consumo (Smc), sempre esclusi trasporto/rete e oneri di sistema. E' la metrica storica usata
       per confrontare i fornitori tra loro.
-      <h4>Bollette di ricalcolo escluse</h4>
-      La bolletta di cessazione contratto (dic25, 76,37 EUR) e il secondo ricalcolo di marzo 2026 (60,16 EUR)
-      non sono incluse nella ripartizione mensile sopra: sono correzioni retroattive di stime precedenti, non
-      consumi di un mese specifico. Il dettaglio è nella sezione "Verifica ricalcolo gas" qui sotto.
+      <h4>Bollette di ricalcolo: ora integrate</h4>
+      La bolletta di cessazione (76,37 EUR) e il ricalcolo di marzo 2026 (60,16 EUR) <b>non sono più escluse</b>:
+      sono la fonte della lettura reale di 124 Smc e sono confluite nei mesi ago25-gen26 qui sopra. Ogni euro
+      fatturato da Eni è ora attribuito a un mese.
     `;
   } catch (err) {
     const el = document.getElementById('gasError');
@@ -553,40 +561,40 @@ function renderGas(){
 }
 
 function renderGasCheck(){
-  const cong = DATA.gas_conguaglio_note || [];
-  const gasMain = DATA.gas_monthly;
-  // ricostruisco i totali bimestrali ago-set/ott-nov/dic-gen sommando le coppie di mesi
+  // Tutto calcolato dal dataset: nessun valore hardcoded.
   const byMonth = {};
-  gasMain.forEach(r => byMonth[r.month] = r.c);
+  DATA.gas_monthly.forEach(r => byMonth[r.month] = r.c);
   const sum2 = (m1, m2) => round2((byMonth[m1]||0) + (byMonth[m2]||0));
-  const y2023 = sum2('2023-08','2023-09') + sum2('2023-10','2023-11');
-  const y2023dic = sum2('2023-12','2024-01');
-  const y2024 = sum2('2024-08','2024-09') + sum2('2024-10','2024-11');
-  const y2024dic = sum2('2024-12','2025-01');
-  const agoNov2025_effettivo = 44;
-  const totale2025_26 = 124;
-  const dicGen2025_implicito = totale2025_26 - agoNov2025_effettivo;
+  // stagione ago-gen a cavallo d'anno: y = anno di agosto
+  const stagione = y => ({
+    agoSet: sum2(y+'-08', y+'-09'),
+    ottNov: sum2(y+'-10', y+'-11'),
+    dicGen: sum2(y+'-12', (y+1)+'-01'),
+  });
+  const S = [2023, 2024, 2025].map(y => { const s = stagione(y); s.y = y; s.tot = round2(s.agoSet + s.ottNov + s.dicGen); return s; });
 
-  let html = '<tr><th>Periodo</th><th>Ago-Set</th><th>Ott-Nov</th><th>Dic-Gen</th><th>Totale ago-gen (Smc)</th></tr>';
-  const rows = [
-    ['2023-24 (ago23-gen24)', sum2('2023-08','2023-09'), sum2('2023-10','2023-11'), y2023dic, round2(y2023+y2023dic)],
-    ['2024-25 (ago24-gen25)', sum2('2024-08','2024-09'), sum2('2024-10','2024-11'), y2024dic, round2(y2024+y2024dic)],
-    ['2025-26 (ago25-gen26, ricalcolato)', '~'+agoNov2025_effettivo+' (ago-nov)', '', dicGen2025_implicito.toFixed(0)+' (dic-gen, implicito)', totale2025_26],
-  ];
-  rows.forEach(r => { html += `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><b>${r[4]}</b></td></tr>`; });
+  let html = '<tr><th>Stagione</th><th>Ago-Set</th><th>Ott-Nov</th><th>Dic-Gen</th><th>Totale ago-gen (Smc)</th></tr>';
+  S.forEach(s => {
+    const nota = s.y === 2025 ? ' *' : '';
+    html += `<tr><td>${s.y}-${String(s.y+1).slice(2)} (ago${String(s.y).slice(2)}-gen${String(s.y+1).slice(2)})${nota}</td>` +
+            `<td>${s.agoSet}</td><td>${s.ottNov}</td><td>${s.dicGen}</td><td><b>${s.tot}</b></td></tr>`;
+  });
   document.getElementById('gasCheckTable').innerHTML = html;
 
-  const y2023tot = y2023+y2023dic, y2024tot = y2024+y2024dic;
-  const deltaVs2023 = Math.round((totale2025_26/y2023tot-1)*100);
-  const deltaVs2024 = Math.round((totale2025_26/y2024tot-1)*100);
+  const [a, b, c] = S;
+  const pct = (x, base) => (base ? Math.round((x/base - 1)*100) : 0);
 
   document.getElementById('gasVerdict').innerHTML = `
-    <b>Il consumo totale ago25-gen26 ricalcolato (124 Smc) è più alto dello stesso periodo negli anni precedenti:</b>
-    +${deltaVs2023}% vs 2023-24 (${y2023tot.toFixed(0)} Smc) e +${deltaVs2024}% vs 2024-25 (${y2024tot.toFixed(0)} Smc).<br><br>
-    La parte <b>dic-gen</b> (implicita, ${dicGen2025_implicito.toFixed(0)} Smc) è coerente con lo storico.
-    Il salto anomalo è nella parte <b>ago-nov</b> (44 Smc, lettura "effettiva" già nella bolletta di dicembre 2025),
-    quasi triplicata rispetto agli anni precedenti. Le due bollette di ricalcolo (76,37 EUR e 60,16 EUR) restano
-    escluse dai grafici mensili sopra, come correzioni retroattive.
+    <b>Confronto ora omogeneo:</b> tutte e tre le stagioni sono letture reali del distributore, non stime.
+    Il periodo <b>ago25-gen26 (${c.tot} Smc)</b> resta il più alto: <b>+${pct(c.tot, a.tot)}%</b> vs ${a.y}-${String(a.y+1).slice(2)}
+    (${a.tot} Smc) e <b>+${pct(c.tot, b.tot)}%</b> vs ${b.y}-${String(b.y+1).slice(2)} (${b.tot} Smc).<br><br>
+    È un salto reale ma <b>molto meno estremo di quanto sembrava prima</b>: il vecchio confronto metteva una lettura
+    reale contro delle stime in acconto, gonfiando lo scarto. L'origine del problema è documentata nelle bollette:
+    <b>il contatore è risultato inaccessibile alla lettura ogni mese da agosto a dicembre 2025</b>, quindi Eni ha
+    fatturato sei mesi su stime al ribasso, poi corrette in blocco alla cessazione (bollette da 76,37 EUR e 60,16 EUR,
+    entrambe verificate aritmeticamente corrette e ora <b>integrate</b> nei grafici mensili qui sopra).<br><br>
+    <span style="font-size:.9em">* Per ago25-gen26 la ripartizione interna nelle tre colonne è pro-rata sui giorni
+    (unica lettura reale sul periodo, vedi metodologia): è affidabile il <b>totale</b>, non la singola colonna.</span>
   `;
 }
 
