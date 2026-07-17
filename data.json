@@ -862,7 +862,8 @@
       "one": -0.69,
       "tot": 38.88,
       "note": "Consumo ago25-gen26 da UNICA lettura reale di cessazione (124 Smc, 31/01/2026): il contatore e' risultato inaccessibile ogni mese da ago a dic 2025, quindi non esiste un dettaglio mensile reale. Ripartizione mensile pro-rata sui giorni, quella applicata da Eni stessa nel ricalcolo. Il TOTALE del periodo e' reale. Fatt. 2539339820, 2543227806, 2609073275, 2613344307.",
-      "mat_var_unit": 0.565238
+      "mat_var_unit": 0.565238,
+      "ripartito": true
     },
     {
       "month": "2025-09",
@@ -873,7 +874,8 @@
       "one": -0.74,
       "tot": 37.68,
       "note": "Consumo ago25-gen26 da UNICA lettura reale di cessazione (124 Smc, 31/01/2026): il contatore e' risultato inaccessibile ogni mese da ago a dic 2025, quindi non esiste un dettaglio mensile reale. Ripartizione mensile pro-rata sui giorni, quella applicata da Eni stessa nel ricalcolo. Il TOTALE del periodo e' reale. Fatt. 2539339820, 2543227806, 2609073275, 2613344307.",
-      "mat_var_unit": 0.5575
+      "mat_var_unit": 0.5575,
+      "ripartito": true
     },
     {
       "month": "2025-10",
@@ -884,7 +886,8 @@
       "one": -0.69,
       "tot": 38.6,
       "note": "Consumo ago25-gen26 da UNICA lettura reale di cessazione (124 Smc, 31/01/2026): il contatore e' risultato inaccessibile ogni mese da ago a dic 2025, quindi non esiste un dettaglio mensile reale. Ripartizione mensile pro-rata sui giorni, quella applicata da Eni stessa nel ricalcolo. Il TOTALE del periodo e' reale. Fatt. 2539339820, 2543227806, 2609073275, 2613344307.",
-      "mat_var_unit": 0.537143
+      "mat_var_unit": 0.537143,
+      "ripartito": true
     },
     {
       "month": "2025-11",
@@ -895,7 +898,8 @@
       "one": -0.74,
       "tot": 37.47,
       "note": "Consumo ago25-gen26 da UNICA lettura reale di cessazione (124 Smc, 31/01/2026): il contatore e' risultato inaccessibile ogni mese da ago a dic 2025, quindi non esiste un dettaglio mensile reale. Ripartizione mensile pro-rata sui giorni, quella applicata da Eni stessa nel ricalcolo. Il TOTALE del periodo e' reale. Fatt. 2539339820, 2543227806, 2609073275, 2613344307.",
-      "mat_var_unit": 0.532
+      "mat_var_unit": 0.532,
+      "ripartito": true
     },
     {
       "month": "2025-12",
@@ -906,7 +910,8 @@
       "one": -0.68,
       "tot": 37.98,
       "note": "Consumo ago25-gen26 da UNICA lettura reale di cessazione (124 Smc, 31/01/2026): il contatore e' risultato inaccessibile ogni mese da ago a dic 2025, quindi non esiste un dettaglio mensile reale. Ripartizione mensile pro-rata sui giorni, quella applicata da Eni stessa nel ricalcolo. Il TOTALE del periodo e' reale. Fatt. 2539339820, 2543227806, 2609073275, 2613344307.",
-      "mat_var_unit": 0.510952
+      "mat_var_unit": 0.510952,
+      "ripartito": true
     },
     {
       "month": "2026-01",
@@ -917,7 +922,8 @@
       "one": -1.03,
       "tot": 37.75,
       "note": "Consumo ago25-gen26 da UNICA lettura reale di cessazione (124 Smc, 31/01/2026): il contatore e' risultato inaccessibile ogni mese da ago a dic 2025, quindi non esiste un dettaglio mensile reale. Ripartizione mensile pro-rata sui giorni, quella applicata da Eni stessa nel ricalcolo. Il TOTALE del periodo e' reale. Fatt. 2539339820, 2543227806, 2609073275, 2613344307.",
-      "mat_var_unit": 0.583333
+      "mat_var_unit": 0.583333,
+      "ripartito": true
     },
     {
       "month": "2026-02",
@@ -999,7 +1005,7 @@
   ],
   "meta": {
     "aggiornato": "2026-07-17",
-    "note": "Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi.",
+    "note": "Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi. Le righe gas ago25-gen26 portano il flag 'ripartito': true (ripartizione pro-rata di un'unica lettura reale): la dashboard le rende tratteggiate e a punto vuoto per non confonderle con i mesi letti davvero.",
     "note_rilevanti_regola": "Il campo 'data' e' la data dell'EVENTO segnalato (non quella in cui la nota e' stata scritta). La dashboard mostra solo le note degli ultimi 12 mesi, filtrate per ambito (Luce/Gas/Entrambe)."
   },
   "note_rilevanti": [

@@ -217,6 +217,7 @@ const COL_HEX = {SEN:"#2a78d6", Eni:"#e34948", Octopus:"#1baf7a"};
 const YEAR_COL = {2023:"#9c6ade", 2024:"#2a78d6", 2025:"#e37a1f", 2026:"#1baf7a"};
 const MESI = ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
 const round2 = v => v==null ? null : Math.round(v*100)/100;
+const isRip = r => !!(r && r.ripartito);   // mese ricavato per ripartizione pro-rata, non da lettura reale
 const round4 = v => v==null ? null : Math.round(v*10000)/10000;
 const fmtEUR = v => v.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' EUR';
 const allLabels = { autoSkip:false, maxRotation:90, minRotation:90, font:{size:9} };
@@ -321,35 +322,48 @@ function renderUtility(cfg){
   const labels = rows.map(r=>monthLabel(r.month));
   const fillCol = rows.map(r=>COL_HEX[r.f]);
 
+  // --- Mesi ripartiti pro-rata (flag "ripartito" in data.json): non sono letture mensili reali.
+  // Resa grafica: punto vuoto + segmento tratteggiato, per non confonderli con i mesi letti davvero.
+  const rip = rows.map(isRip);
+  const anyRip = rip.some(Boolean);
+  const ptBg = rows.map((r,i) => rip[i] ? '#ffffff' : COL_HEX[r.f]);
+  const ptBd = rows.map(r => COL_HEX[r.f]);
+  const dashSeg = { borderDash: ctx => (rip[ctx.p0DataIndex] || rip[ctx.p1DataIndex]) ? [5,4] : undefined };
+  const ripTag = i => rip[i] ? ' — ripartito pro-rata, non letto' : '';
+
   charts.push(new Chart(document.getElementById(p+'chartCost'), {
     type:'line',
-    data:{labels, datasets:[{label:'Costo totale', data:rows.map(r=>r.tot), borderColor:'#2a78d6', backgroundColor:'#2a78d6', pointBackgroundColor:fillCol, pointRadius:4, borderWidth:2, tension:0.15}]},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>ctx.parsed.y.toFixed(2)+' EUR ('+rows[ctx.dataIndex].f+')'}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' EUR'}}, x:{grid:{display:false}, ticks:allLabels}}}
+    data:{labels, datasets:[{label:'Costo totale', data:rows.map(r=>r.tot), borderColor:'#2a78d6', backgroundColor:'#2a78d6', pointBackgroundColor:ptBg, pointBorderColor:ptBd, pointBorderWidth:2, pointRadius:4, borderWidth:2, tension:0.15, segment:dashSeg}]},
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>ctx.parsed.y.toFixed(2)+' EUR ('+rows[ctx.dataIndex].f+')'+ripTag(ctx.dataIndex)}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' EUR'}}, x:{grid:{display:false}, ticks:allLabels}}}
   }));
-  document.getElementById(p+'src1').innerHTML = '<b>Fonte:</b> bollette dei fornitori (ripartite su base mensile dove bimestrali). <b>Formula:</b> costo totale di bolletta' + (unit==='kWh' ? ', al netto del canone RAI.' : '.');
+  document.getElementById(p+'src1').innerHTML = '<b>Fonte:</b> bollette dei fornitori (ripartite su base mensile dove bimestrali). <b>Formula:</b> costo totale di bolletta' + (unit==='kWh' ? ', al netto del canone RAI.' : '.') + ripLegenda();
 
   charts.push(new Chart(document.getElementById(p+'chartConsumo'), {
     type:'bar',
-    data:{labels, datasets:[{label:'Consumo', data:rows.map(r=>r.c), backgroundColor:fillCol, borderRadius:3}]},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>(ctx.parsed.y??'n.d.')+' '+unit}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' '+unit}}, x:{grid:{display:false}, ticks:allLabels}}}
+    data:{labels, datasets:[{label:'Consumo', data:rows.map(r=>r.c), backgroundColor:rows.map((r,i)=> rip[i] ? COL_HEX[r.f]+'38' : COL_HEX[r.f]), borderColor:ptBd, borderWidth:rows.map((r,i)=> rip[i] ? 1.5 : 0), borderRadius:3}]},
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>(ctx.parsed.y??'n.d.')+' '+unit+ripTag(ctx.dataIndex)}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' '+unit}}, x:{grid:{display:false}, ticks:allLabels}}}
   }));
-  document.getElementById(p+'src2').innerHTML = '<b>Fonte:</b> letture/consumi fatturati, ripartiti su base mensile dove il fornitore fattura a bimestre. Nessun calcolo aggiuntivo.';
+  document.getElementById(p+'src2').innerHTML = '<b>Fonte:</b> letture/consumi fatturati, ripartiti su base mensile dove il fornitore fattura a bimestre. Nessun calcolo aggiuntivo.' + ripLegenda();
 
   const unitRows = rows.map(r=> r.mat!=null && r.c ? round4(r.mat/r.c) : null);
   charts.push(new Chart(document.getElementById(p+'chartUnit'), {
     type:'line',
-    data:{labels, datasets:[{label:'Costo unitario materia', data:unitRows, borderColor:'#eda100', backgroundColor:'#eda100', pointBackgroundColor:fillCol, pointRadius:4, borderWidth:2, spanGaps:true, tension:0.15}]},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit+' ('+rows[ctx.dataIndex].f+')':'n.d.'}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}, ticks:allLabels}}}
+    data:{labels, datasets:[{label:'Costo unitario materia', data:unitRows, borderColor:'#eda100', backgroundColor:'#eda100', pointBackgroundColor:ptBg, pointBorderColor:ptBd, pointBorderWidth:2, pointRadius:4, borderWidth:2, spanGaps:true, tension:0.15, segment:dashSeg}]},
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit+' ('+rows[ctx.dataIndex].f+')'+ripTag(ctx.dataIndex):'n.d.'}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}, ticks:allLabels}}}
   }));
-  document.getElementById(p+'src3').innerHTML = '<b>Formula:</b> Materia prima (EUR) / Consumo (' + unit + '). Vedi "Come sono calcolati i dati" per cosa include "Materia prima".';
+  document.getElementById(p+'src3').innerHTML = '<b>Formula:</b> Materia prima (EUR) / Consumo (' + unit + '). Vedi "Come sono calcolati i dati" per cosa include "Materia prima".' + ripLegenda();
 
   const varUnitRows = rows.map(r => r.mat_var_unit != null ? r.mat_var_unit : null);
   charts.push(new Chart(document.getElementById(p+'chartVarUnit'), {
     type:'line',
-    data:{labels, datasets:[{label:'Materia prima (sola variabile)', data:varUnitRows, borderColor:'#e34948', backgroundColor:'#e34948', pointBackgroundColor:fillCol, pointRadius:4, borderWidth:2, spanGaps:true, tension:0.15}]},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit+' ('+rows[ctx.dataIndex].f+')':'n.d.'}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}, ticks:allLabels}}}
+    data:{labels, datasets:[{label:'Materia prima (sola variabile)', data:varUnitRows, borderColor:'#e34948', backgroundColor:'#e34948', pointBackgroundColor:ptBg, pointBorderColor:ptBd, pointBorderWidth:2, pointRadius:4, borderWidth:2, spanGaps:true, tension:0.15, segment:dashSeg}]},
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit+' ('+rows[ctx.dataIndex].f+')'+ripTag(ctx.dataIndex):'n.d.'}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}, ticks:allLabels}}}
   }));
-  document.getElementById(p+'srcVarUnit').innerHTML = '<b>Fonte:</b> bollette originali, sezione "Elementi di Dettaglio" — quota energia (variabile) scorporata dalla quota fissa di commercializzazione. <b>Formula:</b> spesa per la sola quota variabile / consumo del mese (' + unit + '). Per SEN e Octopus il prezzo variabile e i suoi cambi sono riportati direttamente in bolletta; per Eni \u00e8 ricostruito riga per riga dal dettaglio tariffario.';
+  document.getElementById(p+'srcVarUnit').innerHTML = '<b>Fonte:</b> bollette originali, sezione "Elementi di Dettaglio" — quota energia (variabile) scorporata dalla quota fissa di commercializzazione. <b>Formula:</b> spesa per la sola quota variabile / consumo del mese (' + unit + '). Per SEN e Octopus il prezzo variabile e i suoi cambi sono riportati direttamente in bolletta; per Eni \u00e8 ricostruito riga per riga dal dettaglio tariffario.' + ripLegenda();
+
+  function ripLegenda(){
+    return anyRip ? ' <b>Punti vuoti e tratteggio</b> = mesi ricavati per ripartizione pro-rata (contatore non letto): affidabile il totale del periodo, non il singolo mese. Vedi metodologia.' : '';
+  }
 
   const legendHTML = fornitori.map(f => `<span><span class="dot" style="background:${COL_HEX[f]};"></span>${f==='SEN'?'Servizio Elettrico Nazionale':f==='Eni'?'Eni Plenitude':'Octopus Energy'}</span>`).join('');
   [p+'legend1', p+'legend2', p+'legend3', p+'legend4', p+'legendVarUnit'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = legendHTML; });
@@ -357,41 +371,44 @@ function renderUtility(cfg){
   const years = [...new Set(rows.map(r=>r.month.slice(0,4)))].map(Number).sort();
   function seasonalDatasets(valueFn){
     return years.map(y => {
-      const data = MESI.map((_, mi) => {
-        const key = `${y}-${String(mi+1).padStart(2,'0')}`;
-        const r = rows.find(rr=>rr.month===key);
-        return r ? valueFn(r) : null;
-      });
-      return {label:String(y), data, borderColor:YEAR_COL[y], backgroundColor:YEAR_COL[y], spanGaps:false, tension:0.15, pointRadius:3};
+      const rowsY = MESI.map((_, mi) => rows.find(rr=>rr.month===`${y}-${String(mi+1).padStart(2,'0')}`) || null);
+      const data = rowsY.map(r => r ? valueFn(r) : null);
+      const ripY = rowsY.map(isRip);
+      return {label:String(y), data, ripY, borderColor:YEAR_COL[y], backgroundColor:YEAR_COL[y],
+        pointBackgroundColor: ripY.map(x => x ? '#ffffff' : YEAR_COL[y]),
+        pointBorderColor: YEAR_COL[y], pointBorderWidth: 2,
+        segment: { borderDash: ctx => (ripY[ctx.p0DataIndex] || ripY[ctx.p1DataIndex]) ? [5,4] : undefined },
+        spanGaps:false, tension:0.15, pointRadius:3};
     });
   }
+  const seasonTag = ctx => (ctx.dataset.ripY && ctx.dataset.ripY[ctx.dataIndex]) ? ' — ripartito pro-rata, non letto' : '';
   charts.push(new Chart(document.getElementById(p+'chartSeasonCost'), {
     type:'line',
     data:{labels:MESI, datasets:seasonalDatasets(r=>r.tot)},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y.toFixed(2)+' EUR':'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' EUR'}}, x:{grid:{display:false}}}}
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y.toFixed(2)+' EUR'+seasonTag(ctx):'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' EUR'}}, x:{grid:{display:false}}}}
   }));
-  document.getElementById(p+'src4').innerHTML = '<b>Fonte:</b> stessa colonna "Costo totale" di sopra, riorganizzata per mese-anno.';
+  document.getElementById(p+'src4').innerHTML = '<b>Fonte:</b> stessa colonna "Costo totale" di sopra, riorganizzata per mese-anno.' + ripLegenda();
 
   charts.push(new Chart(document.getElementById(p+'chartSeasonCons'), {
     type:'line',
     data:{labels:MESI, datasets:seasonalDatasets(r=>r.c)},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y+' '+unit:'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' '+unit}}, x:{grid:{display:false}}}}
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y+' '+unit+seasonTag(ctx):'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' '+unit}}, x:{grid:{display:false}}}}
   }));
-  document.getElementById(p+'src5').innerHTML = '<b>Fonte:</b> stessa colonna "Consumo" di sopra, riorganizzata per mese-anno.';
+  document.getElementById(p+'src5').innerHTML = '<b>Fonte:</b> stessa colonna "Consumo" di sopra, riorganizzata per mese-anno.' + ripLegenda();
 
   charts.push(new Chart(document.getElementById(p+'chartSeasonUnit'), {
     type:'line',
     data:{labels:MESI, datasets:seasonalDatasets(r=> r.mat!=null && r.c ? round4(r.mat/r.c) : null)},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit:'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}}}}
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit+seasonTag(ctx):'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}}}}
   }));
-  document.getElementById(p+'src6').innerHTML = '<b>Formula:</b> stessa di "Costo unitario materia prima (fissa+variabile)" sopra, riorganizzata per mese-anno.';
+  document.getElementById(p+'src6').innerHTML = '<b>Formula:</b> stessa di "Costo unitario materia prima (fissa+variabile)" sopra, riorganizzata per mese-anno.' + ripLegenda();
 
   charts.push(new Chart(document.getElementById(p+'chartSeasonVarUnit'), {
     type:'line',
     data:{labels:MESI, datasets:seasonalDatasets(r=>r.mat_var_unit)},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit:'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}}}}
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit+seasonTag(ctx):'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}}}}
   }));
-  document.getElementById(p+'srcSeasonVarUnit').innerHTML = '<b>Fonte:</b> stessa colonna del grafico "Andamento (prezzo unitario)" sopra, riorganizzata per mese-anno per confrontare la stagionalita\'.';
+  document.getElementById(p+'srcSeasonVarUnit').innerHTML = '<b>Fonte:</b> stessa colonna del grafico "Andamento mese per mese" sopra, riorganizzata per mese-anno per confrontare la stagionalita\'.' + ripLegenda();
 
   const imposte = rows.map(r => round2(r.tot-r.mat-r.tra-r.one));
   charts.push(new Chart(document.getElementById(p+'chartVoci'), {
@@ -532,6 +549,11 @@ function renderGas(){
       sola lettura reale, quella di cessazione del 31/01/2026 (segnante 1858), pari a <b>124 Smc</b> per
       l'intero periodo. Il totale è reale, ma <b>il dettaglio mensile non esiste</b>: la ripartizione mostrata
       è quella pro-rata sui giorni applicata da Eni stessa nel ricalcolo. Da leggere come periodo, non mese per mese.
+      Per questo quei sei mesi sono <b>disegnati diversamente in tutti i grafici</b>: punto vuoto e linea
+      tratteggiata (barre sbiadite con bordo, nel grafico dei consumi). Serve a non farli sembrare letture reali —
+      senza questa distinzione il confronto stagionale mostrava agosto-ottobre 2025 a ~20 Smc, come se il
+      riscaldamento fosse acceso in piena estate, mentre negli stessi mesi del 2023 e 2024 il consumo reale
+      è stato di 1-3 Smc. La forma di quella curva è un effetto della ripartizione, non un comportamento.
       <h4>Costo materia prima — sola quota variabile</h4>
       La quota fissa di commercializzazione è 10,00 EUR/mese fino ad aprile 2023 e <b>11,00 EUR/mese dal 1°
       maggio 2023</b> (12,00 meno 1,00 di sconto domiciliazione), col passaggio all'offerta TREND CASA GAS:
