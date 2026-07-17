@@ -10,8 +10,7 @@
       "tot": 48.47,
       "f1": 24,
       "f23": 54,
-      "note": "",
-      "mat_var_unit": 0.415042
+      "note": ""
     },
     {
       "month": "2023-02",
@@ -23,8 +22,7 @@
       "tot": 35.61,
       "f1": 23.0,
       "f23": 39.0,
-      "note": "",
-      "mat_var_unit": 0.416263
+      "note": ""
     },
     {
       "month": "2023-03",
@@ -36,8 +34,7 @@
       "tot": 39.22,
       "f1": 22.0,
       "f23": 47.0,
-      "note": "",
-      "mat_var_unit": 0.415257
+      "note": ""
     },
     {
       "month": "2023-04",
@@ -49,8 +46,7 @@
       "tot": 23.77,
       "f1": 17.0,
       "f23": 46.0,
-      "note": "",
-      "mat_var_unit": 0.115572
+      "note": ""
     },
     {
       "month": "2023-05",
@@ -62,8 +58,7 @@
       "tot": 23.2,
       "f1": 23.0,
       "f23": 45.0,
-      "note": "",
-      "mat_var_unit": 0.116363
+      "note": ""
     },
     {
       "month": "2023-06",
@@ -74,8 +69,7 @@
       "one": 2.24,
       "tot": 23.06,
       "f1": 25.0,
-      "f23": 51.0,
-      "mat_var_unit": 0.116256
+      "f23": 51.0
     },
     {
       "month": "2023-07",
@@ -86,8 +80,7 @@
       "one": 2.92,
       "tot": 30.04,
       "f1": 40.0,
-      "f23": 59.0,
-      "mat_var_unit": 0.118563
+      "f23": 59.0
     },
     {
       "month": "2023-08",
@@ -98,8 +91,7 @@
       "one": 2.7,
       "tot": 29.88,
       "f1": 35.0,
-      "f23": 58.0,
-      "mat_var_unit": 0.118477
+      "f23": 58.0
     },
     {
       "month": "2023-09",
@@ -110,8 +102,7 @@
       "one": 2.23,
       "tot": 24.97,
       "f1": 25.0,
-      "f23": 52.0,
-      "mat_var_unit": 0.118316
+      "f23": 52.0
     },
     {
       "month": "2023-10",
@@ -122,8 +113,7 @@
       "one": 1.99,
       "tot": 25.7,
       "f1": 22.0,
-      "f23": 45.0,
-      "mat_var_unit": 0.157952
+      "f23": 45.0
     },
     {
       "month": "2023-11",
@@ -134,8 +124,7 @@
       "one": 2.2,
       "tot": 28.99,
       "f1": 23.0,
-      "f23": 51.0,
-      "mat_var_unit": 0.157854
+      "f23": 51.0
     },
     {
       "month": "2023-12",
@@ -146,8 +135,7 @@
       "one": 2.27,
       "tot": 27.58,
       "f1": 21.0,
-      "f23": 52.0,
-      "mat_var_unit": 0.157724
+      "f23": 52.0
     },
     {
       "month": "2024-01",
@@ -158,8 +146,7 @@
       "one": 2.31,
       "tot": 27.83,
       "f1": 24.0,
-      "f23": 50.0,
-      "mat_var_unit": 0.121924
+      "f23": 50.0
     },
     {
       "month": "2024-02",
@@ -170,8 +157,7 @@
       "one": 2.17,
       "tot": 23.85,
       "f1": 22.0,
-      "f23": 44.0,
-      "mat_var_unit": 0.122
+      "f23": 44.0
     },
     {
       "month": "2024-03",
@@ -182,8 +168,7 @@
       "one": 2.28,
       "tot": 24.82,
       "f1": 22.0,
-      "f23": 47.0,
-      "mat_var_unit": 0.121878
+      "f23": 47.0
     },
     {
       "month": "2024-04",
@@ -194,8 +179,7 @@
       "one": 2.43,
       "tot": 21.61,
       "f1": 19.0,
-      "f23": 46.0,
-      "mat_var_unit": 0.070396
+      "f23": 46.0
     },
     {
       "month": "2024-05",
@@ -206,8 +190,7 @@
       "one": 2.82,
       "tot": 23.68,
       "f1": 24.0,
-      "f23": 49.0,
-      "mat_var_unit": 0.070447
+      "f23": 49.0
     },
     {
       "month": "2024-06",
@@ -218,8 +201,7 @@
       "one": 2.97,
       "tot": 12.76,
       "f1": 23.0,
-      "f23": 54.0,
-      "mat_var_unit": 0.070405
+      "f23": 54.0
     },
     {
       "month": "2024-07",
@@ -230,8 +212,7 @@
       "one": 4.25,
       "tot": 43.26,
       "f1": 51.0,
-      "f23": 59.0,
-      "mat_var_unit": 0.161455
+      "f23": 59.0
     },
     {
       "month": "2024-08",
@@ -242,8 +223,7 @@
       "one": 3.83,
       "tot": 38.93,
       "f1": 41.0,
-      "f23": 58.0,
-      "mat_var_unit": 0.179091
+      "f23": 58.0
     },
     {
       "month": "2024-09",
@@ -254,8 +234,7 @@
       "one": 2.7,
       "tot": 32.08,
       "f1": 22.0,
-      "f23": 48.0,
-      "mat_var_unit": 0.167286
+      "f23": 48.0
     },
     {
       "month": "2024-10",
@@ -266,8 +245,7 @@
       "one": 2.82,
       "tot": 33.46,
       "f1": 22.0,
-      "f23": 51.0,
-      "mat_var_unit": 0.164521
+      "f23": 51.0
     },
     {
       "month": "2024-11",
@@ -278,8 +256,7 @@
       "one": 2.4,
       "tot": 30.16,
       "f1": 18.0,
-      "f23": 44.0,
-      "mat_var_unit": 0.180323
+      "f23": 44.0
     },
     {
       "month": "2024-12",
@@ -290,8 +267,7 @@
       "one": 2.9,
       "tot": 36.48,
       "f1": 21.0,
-      "f23": 54.0,
-      "mat_var_unit": 0.184267
+      "f23": 54.0
     },
     {
       "month": "2025-01",
@@ -302,8 +278,7 @@
       "one": 2.06,
       "tot": 34.27,
       "f1": 19.0,
-      "f23": 45.0,
-      "mat_var_unit": 0.201563
+      "f23": 45.0
     },
     {
       "month": "2025-02",
@@ -314,8 +289,7 @@
       "one": 2.06,
       "tot": 34.27,
       "f1": 18.0,
-      "f23": 46.0,
-      "mat_var_unit": 0.209375
+      "f23": 46.0
     },
     {
       "month": "2025-03",
@@ -326,8 +300,7 @@
       "one": 2.48,
       "tot": 35.35,
       "f1": 19.0,
-      "f23": 59.0,
-      "mat_var_unit": 0.175769
+      "f23": 59.0
     },
     {
       "month": "2025-04",
@@ -338,8 +311,7 @@
       "one": 2.22,
       "tot": 31.73,
       "f1": 18.0,
-      "f23": 52.0,
-      "mat_var_unit": 0.148714
+      "f23": 52.0
     },
     {
       "month": "2025-05",
@@ -350,8 +322,7 @@
       "one": 2.51,
       "tot": 33.44,
       "f1": 22.0,
-      "f23": 58.0,
-      "mat_var_unit": 0.141625
+      "f23": 58.0
     },
     {
       "month": "2025-06",
@@ -362,8 +333,7 @@
       "one": 2.66,
       "tot": 35.52,
       "f1": 28.0,
-      "f23": 57.0,
-      "mat_var_unit": 0.162353
+      "f23": 57.0
     },
     {
       "month": "2025-07",
@@ -374,8 +344,7 @@
       "one": 2.51,
       "tot": 34.94,
       "f1": 29.0,
-      "f23": 51.0,
-      "mat_var_unit": 0.17025
+      "f23": 51.0
     },
     {
       "month": "2025-08",
@@ -386,8 +355,7 @@
       "one": 2.63,
       "tot": 36.69,
       "f1": 26.0,
-      "f23": 58.0,
-      "mat_var_unit": 0.166548
+      "f23": 58.0
     },
     {
       "month": "2025-09",
@@ -398,8 +366,7 @@
       "one": 2.04,
       "tot": 32.62,
       "f1": 22.0,
-      "f23": 43.0,
-      "mat_var_unit": 0.164098
+      "f23": 43.0
     },
     {
       "month": "2025-10",
@@ -410,8 +377,7 @@
       "one": 1.79,
       "tot": 28.6,
       "f1": 20.0,
-      "f23": 37.0,
-      "mat_var_unit": 0.164098
+      "f23": 37.0
     },
     {
       "month": "2025-11",
@@ -422,8 +388,7 @@
       "one": 1.73,
       "tot": 28.34,
       "f1": 17.0,
-      "f23": 39.0,
-      "mat_var_unit": 0.176596
+      "f23": 39.0
     },
     {
       "month": "2025-12",
@@ -434,8 +399,7 @@
       "one": 2.07,
       "tot": 33.91,
       "f1": 20.0,
-      "f23": 47.0,
-      "mat_var_unit": 0.176596
+      "f23": 47.0
     },
     {
       "month": "2026-01",
@@ -446,8 +410,7 @@
       "one": 2.01,
       "tot": 32.9,
       "f1": 19.0,
-      "f23": 46.0,
-      "mat_var_unit": 0.176596
+      "f23": 46.0
     },
     {
       "month": "2026-02",
@@ -458,8 +421,7 @@
       "one": 1.61,
       "tot": 25.07,
       "f1": 19,
-      "f23": 34,
-      "mat_var_unit": 0.121698
+      "f23": 34
     },
     {
       "month": "2026-03",
@@ -470,8 +432,7 @@
       "one": 1.64,
       "tot": 24.84,
       "f1": 19,
-      "f23": 35,
-      "mat_var_unit": 0.114815
+      "f23": 35
     },
     {
       "month": "2026-04",
@@ -482,8 +443,7 @@
       "one": 1.61,
       "tot": 24.71,
       "f1": 19,
-      "f23": 34,
-      "mat_var_unit": 0.101887
+      "f23": 34
     },
     {
       "month": "2026-05",
@@ -494,8 +454,19 @@
       "one": 1.91,
       "tot": 26.26,
       "f1": 21,
-      "f23": 42,
-      "mat_var_unit": 0.098571
+      "f23": 42
+    },
+    {
+      "month": "2026-06",
+      "f": "Octopus",
+      "c": 86,
+      "mat": 16.17,
+      "tra": 9.12,
+      "one": 2.6,
+      "tot": 30.68,
+      "f1": 36,
+      "f23": 50,
+      "note": ""
     }
   ],
   "gas_monthly": [
@@ -507,8 +478,7 @@
       "tra": 11.39,
       "one": -10.98,
       "tot": 23.47,
-      "note": "Dato mensile reale (bolletta con dettaglio letture mese per mese)",
-      "mat_var_unit": 0.262917
+      "note": "Dato mensile reale (bolletta con dettaglio letture mese per mese)"
     },
     {
       "month": "2023-02",
@@ -518,8 +488,7 @@
       "tra": 9.87,
       "one": -8.09,
       "tot": 21.39,
-      "note": "Dato mensile reale (bolletta con dettaglio letture mese per mese)",
-      "mat_var_unit": 0.262917
+      "note": "Dato mensile reale (bolletta con dettaglio letture mese per mese)"
     },
     {
       "month": "2023-03",
@@ -529,8 +498,7 @@
       "tra": 4.94,
       "one": -4.04,
       "tot": 10.7,
-      "note": "Dato mensile reale (bolletta con dettaglio letture mese per mese)",
-      "mat_var_unit": 0.262917
+      "note": "Dato mensile reale (bolletta con dettaglio letture mese per mese)"
     },
     {
       "month": "2023-04",
@@ -540,8 +508,7 @@
       "tra": 4.63,
       "one": -1.84,
       "tot": 12.8,
-      "note": "Dato mensile reale (bolletta con dettaglio letture mese per mese)",
-      "mat_var_unit": 0.636
+      "note": "Dato mensile reale (bolletta con dettaglio letture mese per mese)"
     },
     {
       "month": "2023-05",
@@ -551,8 +518,7 @@
       "tra": 6.94,
       "one": -2.75,
       "tot": 19.21,
-      "note": "Dato mensile reale (bolletta con dettaglio letture mese per mese)",
-      "mat_var_unit": 0.636
+      "note": "Dato mensile reale (bolletta con dettaglio letture mese per mese)"
     },
     {
       "month": "2023-06",
@@ -562,8 +528,7 @@
       "tra": 5.64,
       "one": -2.18,
       "tot": 16.12,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 1.2
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2023-07",
@@ -573,8 +538,7 @@
       "tra": 5.64,
       "one": -2.18,
       "tot": 16.12,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 1.2
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2023-08",
@@ -584,8 +548,7 @@
       "tra": 5.64,
       "one": -2.18,
       "tot": 16.18,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 1.24
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2023-09",
@@ -595,8 +558,7 @@
       "tra": 5.64,
       "one": -2.18,
       "tot": 16.18,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 1.24
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2023-10",
@@ -606,8 +568,7 @@
       "tra": 6.4,
       "one": -2.18,
       "tot": 17.66,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.84
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2023-11",
@@ -617,8 +578,7 @@
       "tra": 6.4,
       "one": -2.18,
       "tot": 17.66,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.84
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2023-12",
@@ -628,8 +588,7 @@
       "tra": 11.24,
       "one": -1.95,
       "tot": 45.06,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.573433
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-01",
@@ -639,8 +598,7 @@
       "tra": 11.24,
       "one": -1.95,
       "tot": 45.06,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.573433
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-02",
@@ -650,8 +608,7 @@
       "tra": 9.01,
       "one": -1.84,
       "tot": 33.83,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.482564
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-03",
@@ -661,8 +618,7 @@
       "tra": 9.01,
       "one": -1.84,
       "tot": 33.83,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.482564
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-04",
@@ -672,8 +628,7 @@
       "tra": 6.44,
       "one": -1.88,
       "tot": 20.55,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.52
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-05",
@@ -683,8 +638,7 @@
       "tra": 6.44,
       "one": -1.88,
       "tot": 20.55,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.52
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-06",
@@ -694,8 +648,7 @@
       "tra": 6.31,
       "one": -1.9,
       "tot": 19.82,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.573333
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-07",
@@ -705,8 +658,7 @@
       "tra": 6.31,
       "one": -1.9,
       "tot": 19.82,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.573333
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-08",
@@ -716,8 +668,7 @@
       "tra": 6.38,
       "one": -1.89,
       "tot": 20.34,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.61
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-09",
@@ -727,8 +678,7 @@
       "tra": 6.38,
       "one": -1.89,
       "tot": 20.34,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.61
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-10",
@@ -738,8 +688,7 @@
       "tra": 7.68,
       "one": -1.71,
       "tot": 27.7,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.623158
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-11",
@@ -749,8 +698,7 @@
       "tra": 7.68,
       "one": -1.71,
       "tot": 27.7,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.623158
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2024-12",
@@ -760,8 +708,7 @@
       "tra": 12.43,
       "one": -0.78,
       "tot": 57.16,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.715758
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-01",
@@ -771,8 +718,7 @@
       "tra": 12.43,
       "one": -0.78,
       "tot": 57.16,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.715758
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-02",
@@ -782,8 +728,7 @@
       "tra": 7.47,
       "one": -1.73,
       "tot": 28.89,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.723
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-03",
@@ -793,8 +738,7 @@
       "tra": 7.47,
       "one": -1.73,
       "tot": 28.89,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.723
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-04",
@@ -804,8 +748,7 @@
       "tra": 6.48,
       "one": -1.72,
       "tot": 22.4,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.586667
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-05",
@@ -815,8 +758,7 @@
       "tra": 6.48,
       "one": -1.72,
       "tot": 22.4,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.586667
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-06",
@@ -826,8 +768,7 @@
       "tra": 6.08,
       "one": -1.78,
       "tot": 19.39,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.61
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-07",
@@ -837,8 +778,7 @@
       "tra": 6.08,
       "one": -1.78,
       "tot": 19.39,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.61
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-08",
@@ -848,8 +788,7 @@
       "tra": 6.2,
       "one": -1.73,
       "tot": 20.21,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.56
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-09",
@@ -859,8 +798,7 @@
       "tra": 6.2,
       "one": -1.73,
       "tot": 20.21,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.56
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-10",
@@ -870,8 +808,7 @@
       "tra": 7.08,
       "one": -1.5,
       "tot": 25.7,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.536471
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-11",
@@ -881,8 +818,7 @@
       "tra": 7.08,
       "one": -1.5,
       "tot": 25.7,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 0.536471
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2025-12",
@@ -892,8 +828,7 @@
       "tra": 8.87,
       "one": -0.97,
       "tot": 38.19,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 1.13
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2026-01",
@@ -903,8 +838,7 @@
       "tra": 8.87,
       "one": -0.97,
       "tot": 38.19,
-      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)",
-      "mat_var_unit": 1.13
+      "note": "Ripartizione 50/50 del bimestre (non ho dettaglio mensile reale per il gas Eni, a differenza della luce)"
     },
     {
       "month": "2026-02",
@@ -914,8 +848,7 @@
       "tra": 9.04,
       "one": -0.73,
       "tot": 29.86,
-      "note": "",
-      "mat_var_unit": 0.358
+      "note": ""
     },
     {
       "month": "2026-03",
@@ -925,8 +858,7 @@
       "tra": 8.03,
       "one": -1.35,
       "tot": 22.55,
-      "note": "",
-      "mat_var_unit": 0.362308
+      "note": ""
     },
     {
       "month": "2026-04",
@@ -936,8 +868,7 @@
       "tra": 6.08,
       "one": -1.75,
       "tot": 14.24,
-      "note": "",
-      "mat_var_unit": 0.3825
+      "note": ""
     },
     {
       "month": "2026-05",
@@ -947,8 +878,7 @@
       "tra": 7.24,
       "one": -1.5,
       "tot": 18.94,
-      "note": "",
-      "mat_var_unit": 0.361429
+      "note": ""
     },
     {
       "month": "2026-06",
@@ -958,8 +888,7 @@
       "tra": 5.28,
       "one": -2.04,
       "tot": 9.99,
-      "note": "",
-      "mat_var_unit": 0.33
+      "note": ""
     }
   ],
   "gas_conguaglio_note": [
@@ -985,37 +914,7 @@
     }
   ],
   "meta": {
-    "aggiornato": "2026-07-13",
-    "note": "Luce e Gas: dataset mensile completo gen23-2026. Gas: gen-mag23 con dati mensili reali; resto (giu23 in poi) ripartizione 50/50 dei bimestri."
-  },
-  "note_rilevanti": [
-    {
-      "data": "2026-07-13",
-      "tipo": "info",
-      "ambito": "Entrambe",
-      "titolo": "Aggiunto il costo unitario della sola materia prima variabile",
-      "testo": "Rilette tutte le bollette originali per scorporare, dalla materia prima, la quota fissa di commercializzazione dalla quota variabile legata al consumo. I grafici in cima alla pagina mostrano ora solo il prezzo unitario della componente variabile (EUR/kWh o EUR/Smc). Aggiunta anche questa sezione: da ora, ogni volta che carichi nuove bollette, eventuali rincari, dati mancanti o anomalie verranno segnalati qui."
-    },
-    {
-      "data": "2026-07-13",
-      "tipo": "rincaro",
-      "ambito": "Luce",
-      "titolo": "Quota fissa SEN aumentata da aprile 2023",
-      "testo": "La quota fissa mensile di commercializzazione SEN e' passata da 4,295 EUR/mese a 4,8666 EUR/mese a partire dalla bolletta aprile 2023 (+13%). E' rimasta invariata fino al passaggio a Eni (luglio 2024)."
-    },
-    {
-      "data": "2026-07-13",
-      "tipo": "rincaro",
-      "ambito": "Gas",
-      "titolo": "Quota fissa Eni gas aumentata tra il 2023 e il 2024",
-      "testo": "La quota fissa di commercializzazione gas Eni era 10 EUR/mese a inizio 2023 ed e' risultata 11 EUR/mese (12 EUR meno 1 EUR di sconto domiciliazione) nella bolletta di febbraio 2024. Non ho individuato la bolletta esatta del cambio; ho assunto convenzionalmente la transizione al 1 gennaio 2024. Se vuoi la data precisa, posso rileggere le bollette di fine 2023."
-    },
-    {
-      "data": "2026-07-13",
-      "tipo": "info",
-      "ambito": "Gas",
-      "titolo": "Prezzo unitario gas rumoroso nei mesi a consumo quasi nullo",
-      "testo": "Nei mesi estivi con consumo di pochi Smc, il prezzo unitario della sola materia variabile puo' apparire molto piu' alto o basso della norma: la quota fissa (assunta costante) assorbe quasi tutto l'importo, lasciando un residuo variabile minuscolo diviso per un consumo minuscolo. Questi valori vanno letti con cautela, meglio guardare la tendenza su piu' mesi che il singolo mese estivo."
-    }
-  ]
+    "aggiornato": "2026-07-17",
+    "note": "Luce e Gas: dataset mensile completo gen23-giu26. Gas: gen-mag23 con dati mensili reali; resto (giu23 in poi) ripartizione 50/50 dei bimestri."
+  }
 }
