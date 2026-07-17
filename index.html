@@ -560,8 +560,16 @@ function renderGas(){
       data ora <b>letta in bolletta</b>, non più assunta. La quota variabile è la somma delle sole voci a
       consumo (Corrispettivo Gas Index + Contributo al consumo) del mese, divisa per gli Smc del mese.
       <b>Nei mesi a consumo quasi nullo (tipicamente giugno-settembre) il valore resta rumoroso</b>: pochi
-      centesimi diviso pochi Smc — meglio guardare la tendenza che il singolo mese estivo. A luglio 2025 il
-      consumo è stato 0 Smc, quindi il prezzo unitario non è calcolabile e il punto manca. Per Octopus il
+      centesimi diviso pochi Smc — meglio guardare la tendenza che il singolo mese estivo.
+      <b>Luglio 2025 è il caso limite: consumo 0 Smc</b> (contatore fermo, segnante 1736 sia il 30/06 sia il
+      31/07). La divisione spesa/consumo non esiste, ma <b>il prezzo sì</b>: è mancato il consumo, non la
+      tariffa. Il valore è quindi preso <b>direttamente dalla tariffa esposta in bolletta</b> — Box dell'offerta,
+      tabella "Quota per consumi", Luglio 2025: Corrispettivo Gas Index 0,40428711 + Contributo al consumo
+      0,17305483 = <b>0,577342 €/Smc</b> (fatt. 2532353452). Il metodo è verificato su giugno 2025 della stessa
+      bolletta, che ha consumo &gt; 0 ed è quindi calcolabile in entrambi i modi: 0,431441 + 0,173055 = 0,604496,
+      contro lo 0,605 dello scontrino. Coincidono. Nel grafico "Costo unitario materia prima (fissa+variabile)"
+      qui sotto luglio 2025 resta invece vuoto, ed è corretto: quello è un rapporto spesa/consumo, e con 0 Smc
+      non è definito. Per Octopus il
       prezzo è dato direttamente in bolletta ("di cui spesa per vendita gas naturale" nel Box dell'offerta).
       <h4>Costo unitario materia prima (fissa+variabile)</h4>
       Stessa formula e stessa definizione di "Materia prima" della luce, applicata al gas: Materia prima
