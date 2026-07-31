@@ -3,646 +3,1361 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bollette Luce e Gas — Dashboard</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<meta name="color-scheme" content="light dark">
+<title>Bollette di casa — luce e gas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" crossorigin="anonymous"></script>
 <style>
-  :root {
-    --sen: #2a78d6; --eni: #e34948; --oct: #1baf7a;
-    --y2023: #9c6ade; --y2024: #2a78d6; --y2025: #e37a1f; --y2026: #1baf7a;
-    --ink: #1a1a1a; --sub: #666; --line: #e4e4e4; --bg: #fafafa; --card: #ffffff;
+/* ─────────────────────────────────────────────────────────────
+   Token system. Palette = validated data-viz reference instance
+   (categorical slots 1–4, ordinal blue ramp for the year scale,
+   fixed status colors for deltas and alerts).
+   ───────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: light;
+  --plane:#f9f9f7; --surface:#fcfcfb; --panel:#14181d; --panel-2:#1e242b;
+  --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
+  --rule:#e1e0d9; --axis:#c3c2b7; --hair:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+  --luce:#eda100; --gas:#2a78d6;
+  --good:#006300; --bad:#d03b3b; --serious:#ec835a;
+  --y1:#86b6ef; --y2:#5598e7; --y3:#2a78d6; --y4:#184f95;
+  --shadow:0 1px 2px rgba(11,11,11,.05), 0 8px 24px -18px rgba(11,11,11,.35);
+  --r:14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --plane:#0d0d0d; --surface:#1a1a19; --panel:#1a1a19; --panel-2:#242422;
+    --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+    --rule:#2c2c2a; --axis:#383835; --hair:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+    --luce:#eda100; --gas:#3987e5;
+    --good:#0ca30c; --bad:#d03b3b; --serious:#ec835a;
+    --y1:#184f95; --y2:#256abf; --y3:#3987e5; --y4:#9ec5f4;
+    --shadow:none;
   }
-  * { box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; max-width: 980px; margin: 0 auto; padding: 1.25rem 1rem 4rem; color: var(--ink); background: var(--bg); }
-  h1 { font-size: 1.35rem; font-weight: 700; margin: 0 0 .15rem; }
-  .updated { font-size: .78rem; color: var(--sub); margin-bottom: 1.25rem; }
-  h2 { font-size: 1.02rem; font-weight: 700; margin: 2.2rem 0 .5rem; padding-top: .4rem; border-top: 1px solid var(--line); }
-  h2:first-of-type { border-top: none; margin-top: 0; }
-  h3.sub { font-size: .82rem; font-weight: 700; color: var(--sub); margin: 1.4rem 0 .4rem; text-transform: uppercase; letter-spacing: .02em; }
-  .tabs { display: flex; gap: 8px; margin-bottom: 1.25rem; position: sticky; top: 0; background: var(--bg); padding: .5rem 0; z-index: 5; }
-  .tabs button { flex: 1; padding: 10px; border: 1px solid #ccc; background: #fff; border-radius: 10px; font-size: .92rem; font-weight: 600; cursor: pointer; color: var(--ink); }
-  .tabs button.active { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .chart-wrap { position: relative; width: 100%; height: 250px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: .75rem; margin-bottom: .3rem; }
-  .chart-wrap.tall { height: 300px; }
-  .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: .74rem; color: var(--sub); margin: 0 0 .4rem; }
-  .legend span { display: inline-flex; align-items: center; gap: 4px; }
-  .dot { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
-  .src { font-size: .68rem; color: #9a9a9a; margin: 0 0 1.2rem; line-height: 1.5; font-family: ui-monospace, Menlo, Consolas, monospace; }
-  .src b { color: #777; font-family: inherit; }
-  .note-inline { font-size: .72rem; color: #999; margin: 0 0 1.1rem; line-height: 1.5; }
-  .callout { background: #eef6ff; border: 1px solid #c9dcf5; border-radius: 8px; padding: .6rem .8rem; font-size: .76rem; color: #2c4c72; margin: 0 0 1.1rem; line-height: 1.5; }
-  .notes { font-size: .74rem; color: #888; line-height: 1.6; margin-bottom: 1rem; }
-  .notes h4 { font-size: .78rem; margin: .8rem 0 .3rem; color: #555; }
-  table.data { width: 100%; border-collapse: collapse; font-size: .8rem; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 1rem; }
-  table.data th, table.data td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--line); }
-  table.data th:first-child, table.data td:first-child { text-align: left; }
-  table.data th { background: #f2f2f2; font-weight: 600; font-size: .7rem; color: var(--sub); }
-  .verdict { background: #fff8e6; border: 1px solid #f0dca0; border-radius: 10px; padding: .9rem; font-size: .85rem; line-height: 1.6; margin-bottom: 1rem; }
-  .verdict b { color: #7a5b00; }
-  #gasPane { display: none; }
-  #gasError { display:none; background:#fde8e8; border:1px solid #f0a0a0; border-radius:8px; padding:.8rem; font-size:.8rem; color:#7a2020; margin-bottom:1rem; white-space:pre-wrap; font-family:monospace; }
-  #noteSection { margin-bottom: 1.75rem; }
-  .note-item { background: var(--card); border: 1px solid var(--line); border-left: 4px solid #999; border-radius: 8px; padding: .7rem .9rem; margin-bottom: .6rem; font-size: .82rem; line-height: 1.5; }
-  .note-item.tipo-rincaro { border-left-color: #d9534f; }
-  .note-item.tipo-anomalia { border-left-color: #e37a1f; }
-  .note-item.tipo-dati_mancanti { border-left-color: #999; }
-  .note-item.tipo-info { border-left-color: #2a78d6; }
-  .note-head { display: flex; align-items: center; gap: 8px; margin-bottom: .25rem; flex-wrap: wrap; }
-  .note-date { font-size: .68rem; color: var(--sub); font-family: ui-monospace, Menlo, Consolas, monospace; }
-  .note-title { font-weight: 700; font-size: .84rem; }
-  .badge { display: inline-block; font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; padding: 2px 8px; border-radius: 20px; color: #fff; }
-  .badge-rincaro { background: #d9534f; }
-  .badge-anomalia { background: #e37a1f; }
-  .badge-dati_mancanti { background: #999; }
-  .badge-info { background: #2a78d6; }
-  .note-empty { font-size: .78rem; color: #999; background: var(--card); border: 1px dashed var(--line); border-radius: 8px; padding: .7rem .9rem; }
-  #noteScope { font-size: .72rem; color: var(--sub); font-weight: 400; }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --plane:#0d0d0d; --surface:#1a1a19; --panel:#1a1a19; --panel-2:#242422;
+  --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+  --rule:#2c2c2a; --axis:#383835; --hair:rgba(255,255,255,.10);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+  --luce:#eda100; --gas:#3987e5;
+  --good:#0ca30c; --bad:#d03b3b; --serious:#ec835a;
+  --y1:#184f95; --y2:#256abf; --y3:#3987e5; --y4:#9ec5f4;
+  --shadow:none;
+}
+
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body {
+  margin:0; background:var(--plane); color:var(--ink);
+  font-family:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size:15px; line-height:1.55;
+}
+.wrap { max-width:1040px; margin:0 auto; padding:0 clamp(14px,4vw,28px) 88px; }
+h1,h2,h3 { font-family:Archivo, system-ui, sans-serif; letter-spacing:-.015em; margin:0; }
+a { color:inherit; }
+:focus-visible { outline:2px solid var(--s1); outline-offset:2px; border-radius:6px; }
+.num { font-variant-numeric:tabular-nums; }
+
+/* ── Masthead ─────────────────────────────────────────────── */
+.masthead { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:34px 0 22px; }
+.eyebrow { font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:.68rem; font-weight:500;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:0 0 8px; }
+h1 { font-size:clamp(1.5rem,4.5vw,2.05rem); font-weight:700; line-height:1.12; }
+.masthead-meta { margin:.5rem 0 0; font-size:.82rem; color:var(--ink-2); }
+.iconbtn { flex:none; width:38px; height:38px; border-radius:11px; border:1px solid var(--hair);
+  background:var(--surface); color:var(--ink-2); cursor:pointer; font-size:1rem; line-height:1;
+  display:grid; place-items:center; }
+.iconbtn:hover { color:var(--ink); border-color:var(--axis); }
+
+/* ── Hero: pannello di lettura ────────────────────────────── */
+.hero { background:var(--panel); border:1px solid var(--hair); border-radius:var(--r);
+  padding:clamp(20px,4vw,30px); color:#fff; box-shadow:var(--shadow); }
+.hero-label { margin:0; font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:.7rem;
+  font-weight:500; letter-spacing:.13em; text-transform:uppercase; color:rgba(255,255,255,.55); }
+.hero-figure { margin:.35rem 0 0; font-size:clamp(2.6rem,10vw,3.9rem); font-weight:600;
+  line-height:1; letter-spacing:-.03em; }
+.hero-figure .cur { font-size:.44em; font-weight:500; color:rgba(255,255,255,.6); margin-left:.14em; letter-spacing:0; }
+.hero-delta { margin:.7rem 0 0; font-size:.88rem; color:rgba(255,255,255,.72); }
+.hero-delta .chip { margin-right:.5rem; }
+.hero-split { margin-top:22px; }
+.splitbar { display:flex; gap:3px; height:12px; }
+.splitbar span { border-radius:3px; min-width:3px; }
+.split-legend { display:flex; flex-wrap:wrap; gap:8px 26px; list-style:none; margin:12px 0 0; padding:0; font-size:.85rem; }
+.split-legend li { display:flex; align-items:baseline; gap:8px; color:rgba(255,255,255,.62); }
+.split-legend b { color:#fff; font-weight:600; }
+.split-legend .dot { align-self:center; }
+.dot { width:9px; height:9px; border-radius:3px; display:inline-block; flex:none; }
+
+/* delta chip: colore + icona + testo, mai colore da solo */
+.chip { display:inline-flex; align-items:center; gap:5px; font-size:.78rem; font-weight:600;
+  padding:2px 9px 2px 7px; border-radius:999px; white-space:nowrap;
+  background:color-mix(in srgb, currentColor 14%, transparent); }
+.chip.up { color:var(--bad); } .chip.down { color:var(--good); } .chip.flat { color:var(--ink-3); }
+.hero .chip.up { color:#ff8e8a; } .hero .chip.down { color:#5fd05f; } .hero .chip.flat { color:rgba(255,255,255,.6); }
+.chip .arrow { font-size:.72em; }
+
+/* ── Barra di navigazione appiccicata ─────────────────────── */
+.navbar { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:14px;
+  margin:26px 0 20px; padding:9px 0; background:color-mix(in srgb, var(--plane) 88%, transparent);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border-bottom:1px solid var(--rule); }
+.seg { display:inline-flex; flex:none; gap:3px; padding:3px; border-radius:11px;
+  background:color-mix(in srgb, var(--ink) 6%, transparent); }
+.seg button { border:0; background:transparent; cursor:pointer; color:var(--ink-2);
+  font:600 .85rem/1 "IBM Plex Sans", sans-serif; padding:8px 13px; border-radius:8px;
+  display:inline-flex; align-items:center; gap:6px; }
+.seg button:hover { color:var(--ink); }
+.seg button.on { background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.10); }
+.seg.sm button { font-size:.78rem; padding:6px 11px; }
+.chiprow { display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; padding:2px 0; }
+.chiprow::-webkit-scrollbar { display:none; }
+.chiprow a { flex:none; text-decoration:none; color:var(--ink-3); font-size:.78rem; font-weight:500;
+  padding:6px 10px; border-radius:8px; white-space:nowrap; }
+.chiprow a:hover { color:var(--ink); background:color-mix(in srgb, var(--ink) 5%, transparent); }
+.chiprow a.on { color:var(--ink); background:color-mix(in srgb, var(--ink) 8%, transparent); }
+
+/* ── Riquadri di sintesi ──────────────────────────────────── */
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:10px; margin-bottom:30px; }
+.stat { background:var(--surface); border:1px solid var(--hair); border-radius:var(--r);
+  padding:15px 16px 12px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:2px; }
+.stat-label { font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:.65rem; font-weight:500;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
+.stat-value { font-size:1.62rem; font-weight:600; letter-spacing:-.025em; line-height:1.15; margin-top:3px; }
+.stat-value .u { font-size:.5em; font-weight:500; color:var(--ink-3); margin-left:.2em; letter-spacing:0; }
+.stat-sub { font-size:.78rem; color:var(--ink-2); margin-top:2px; }
+.spark { display:block; width:100%; height:30px; margin-top:9px; }
+
+/* ── Sezioni ──────────────────────────────────────────────── */
+.sec { margin:0 0 34px; scroll-margin-top:76px; }
+.sec-head { display:flex; align-items:flex-end; justify-content:space-between; gap:14px 20px;
+  flex-wrap:wrap; margin-bottom:12px; }
+.sec-title { font-size:1.18rem; font-weight:700; }
+.sec-deck { margin:.3rem 0 0; font-size:.85rem; color:var(--ink-2); max-width:62ch; }
+.sec-num { font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:.65rem; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:5px; }
+
+.card { background:var(--surface); border:1px solid var(--hair); border-radius:var(--r);
+  padding:14px 14px 10px; box-shadow:var(--shadow); }
+.plot { position:relative; width:100%; height:250px; }
+.plot.tall { height:310px; }
+.view { display:none; } .view.on { display:block; }
+
+.legend { display:flex; flex-wrap:wrap; gap:7px 16px; font-size:.76rem; color:var(--ink-2);
+  margin:10px 2px 2px; }
+.legend span.item { display:inline-flex; align-items:center; gap:6px; }
+.legend .ghost { width:9px; height:9px; border-radius:3px; border:1.5px solid var(--ink-3); background:var(--surface); }
+
+details.howto { margin-top:9px; border-top:1px solid var(--rule); }
+details.howto > summary { cursor:pointer; list-style:none; padding:9px 2px 0; font-size:.76rem;
+  font-weight:600; color:var(--ink-3); display:flex; align-items:center; gap:6px; }
+details.howto > summary::-webkit-details-marker { display:none; }
+details.howto > summary::before { content:"+"; font-family:"IBM Plex Mono",monospace; width:14px; }
+details.howto[open] > summary::before { content:"−"; }
+details.howto > summary:hover { color:var(--ink); }
+.howto-body { font-size:.79rem; color:var(--ink-2); line-height:1.6; padding:8px 2px 4px 20px; }
+.howto-body b { color:var(--ink); font-weight:600; }
+
+/* ── Tabelle ──────────────────────────────────────────────── */
+.tablewrap { overflow-x:auto; border:1px solid var(--hair); border-radius:var(--r);
+  background:var(--surface); box-shadow:var(--shadow); }
+table.data { width:100%; border-collapse:collapse; font-size:.82rem; }
+table.data th, table.data td { padding:9px 12px; text-align:right; white-space:nowrap;
+  border-bottom:1px solid var(--rule); font-variant-numeric:tabular-nums; }
+table.data tr:last-child td { border-bottom:0; }
+table.data th { font-size:.68rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--ink-3); background:color-mix(in srgb, var(--ink) 3%, transparent); }
+table.data th:first-child, table.data td:first-child { text-align:left; position:sticky; left:0;
+  background:var(--surface); font-weight:600; }
+table.data thead th:first-child { background:color-mix(in srgb, var(--ink) 3%, var(--surface)); }
+table.data tbody tr:hover td { background:color-mix(in srgb, var(--ink) 3%, var(--surface)); }
+
+/* ── Note ─────────────────────────────────────────────────── */
+.notes-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:11px; }
+.note { background:var(--surface); border:1px solid var(--hair); border-left:3px solid var(--ink-3);
+  border-radius:10px; padding:12px 15px; margin-bottom:8px; box-shadow:var(--shadow); }
+.note.t-rincaro { border-left-color:var(--bad); }
+.note.t-anomalia { border-left-color:var(--serious); }
+.note.t-dati_mancanti { border-left-color:var(--ink-3); }
+.note.t-info { border-left-color:var(--s1); }
+.note-head { display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:4px; }
+.tag { display:inline-flex; align-items:center; gap:5px; font-size:.67rem; font-weight:700;
+  letter-spacing:.04em; text-transform:uppercase; padding:2px 9px; border-radius:999px;
+  border:1px solid currentColor; }
+.tag.t-rincaro { color:var(--bad); } .tag.t-anomalia { color:var(--serious); }
+.tag.t-dati_mancanti { color:var(--ink-3); } .tag.t-info { color:var(--s1); }
+.note-date { font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:.7rem; color:var(--ink-3); }
+.note-title { font-weight:600; font-size:.92rem; margin-bottom:2px; }
+.note-body { font-size:.85rem; color:var(--ink-2); }
+.empty { font-size:.84rem; color:var(--ink-2); background:var(--surface);
+  border:1px dashed var(--axis); border-radius:10px; padding:14px 16px; }
+
+/* ── Verdetto / avvisi ────────────────────────────────────── */
+.verdict { background:var(--surface); border:1px solid var(--hair); border-left:3px solid var(--s4);
+  border-radius:var(--r); padding:16px 18px; font-size:.86rem; line-height:1.65;
+  color:var(--ink-2); box-shadow:var(--shadow); margin-bottom:12px; }
+.verdict b { color:var(--ink); font-weight:600; }
+.alert { background:color-mix(in srgb, var(--bad) 8%, var(--surface)); border:1px solid var(--bad);
+  border-radius:10px; padding:13px 16px; font-size:.82rem; color:var(--ink); margin-bottom:14px;
+  white-space:pre-wrap; }
+#gasError { display:none; }
+
+/* ── Metodologia ──────────────────────────────────────────── */
+details.method { background:var(--surface); border:1px solid var(--hair); border-radius:var(--r);
+  padding:2px 18px; box-shadow:var(--shadow); }
+details.method > summary { cursor:pointer; list-style:none; padding:15px 0; font-weight:600;
+  font-size:.95rem; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+details.method > summary::-webkit-details-marker { display:none; }
+details.method > summary::after { content:"Apri"; font-size:.75rem; font-weight:500; color:var(--ink-3); }
+details.method[open] > summary::after { content:"Chiudi"; }
+.method-body { font-size:.85rem; color:var(--ink-2); line-height:1.68; padding-bottom:18px; }
+.method-body h4 { font-family:Archivo, sans-serif; font-size:.85rem; color:var(--ink);
+  margin:18px 0 5px; letter-spacing:0; }
+.method-body h4:first-child { margin-top:4px; }
+.method-body b { color:var(--ink); font-weight:600; }
+
+#gasPane { display:none; }
+.foot { margin-top:44px; padding-top:18px; border-top:1px solid var(--rule);
+  font-size:.76rem; color:var(--ink-3); }
+
+@media (max-width:640px) {
+  .sec-head { align-items:flex-start; }
+  .plot { height:224px; } .plot.tall { height:270px; }
+  .stat-value { font-size:1.42rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration:.001ms !important; transition-duration:.001ms !important; }
+}
 </style>
 </head>
 <body>
-<h1>Dashboard costi e consumi — luce e gas</h1>
-<div class="updated" id="updatedLine"></div>
+<div class="wrap">
 
-<div id="noteSection">
-  <h2 style="margin-top:0;">Note e anomalie <span id="noteScope"></span></h2>
+<header class="masthead">
+  <div>
+    <p class="eyebrow">Bollette di casa</p>
+    <h1>Luce e gas, mese per mese</h1>
+    <p class="masthead-meta" id="updatedLine">Carico i dati…</p>
+  </div>
+  <button class="iconbtn" id="themeBtn" type="button" aria-label="Cambia tema chiaro/scuro" title="Tema chiaro/scuro">◐</button>
+</header>
+
+<section class="hero" id="hero" aria-label="Sintesi ultimi 12 mesi">
+  <p class="hero-label">Spesa degli ultimi 12 mesi</p>
+  <p class="hero-figure" id="heroFigure">—</p>
+  <p class="hero-delta" id="heroDelta"></p>
+  <div class="hero-split">
+    <div class="splitbar" id="heroBar"></div>
+    <ul class="split-legend" id="heroLegend"></ul>
+  </div>
+</section>
+
+<nav class="navbar" aria-label="Navigazione">
+  <div class="seg" id="utilitySwitch" role="tablist" aria-label="Utenza">
+    <button role="tab" id="btn-luce" class="on" aria-selected="true" aria-controls="lucePane">
+      <span class="dot" style="background:var(--luce)"></span>Luce</button>
+    <button role="tab" id="btn-gas" aria-selected="false" aria-controls="gasPane">
+      <span class="dot" style="background:var(--gas)"></span>Gas</button>
+  </div>
+  <div class="chiprow" id="chiprow"></div>
+</nav>
+
+<div class="stats" id="statsBox"></div>
+
+<section class="sec" id="noteSection">
+  <div class="notes-head">
+    <div>
+      <span class="sec-num" id="noteScope">Segnalazioni</span>
+      <h2 class="sec-title">Da tenere d'occhio</h2>
+    </div>
+    <div class="seg sm" id="noteRange" role="group" aria-label="Periodo delle segnalazioni">
+      <button class="on" data-range="12">Ultimi 12 mesi</button>
+      <button data-range="all">Tutte</button>
+    </div>
+  </div>
   <div id="noteList"></div>
+</section>
+
+<!-- ══════════════════════ LUCE ══════════════════════ -->
+<div id="lucePane" role="tabpanel" aria-labelledby="btn-luce">
+
+  <section class="sec" id="l-prezzo" data-sec="prezzo">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Prezzo</span>
+        <h2 class="sec-title">Quanto costa l'energia</h2>
+        <p class="sec-deck">Il prezzo di un kWh di sola energia, senza la quota fissa mensile. È la parte del conto che si muove con il mercato.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on">
+          <div class="plot"><canvas id="l_chartVarUnit"></canvas></div>
+          <div class="legend" id="l_legendVarUnit"></div>
+        </div>
+        <div class="view"><div class="plot tall"><canvas id="l_chartSeasonVarUnit"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_srcVarUnit"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="l-spesa" data-sec="spesa">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Spesa</span>
+        <h2 class="sec-title">Quanto ho pagato</h2>
+        <p class="sec-deck">Il totale di ogni bolletta riportato al singolo mese, canone RAI escluso.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on">
+          <div class="plot"><canvas id="l_chartCost"></canvas></div>
+          <div class="legend" id="l_legend1"></div>
+        </div>
+        <div class="view"><div class="plot tall"><canvas id="l_chartSeasonCost"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src1"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="l-consumo" data-sec="consumo">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Consumo</span>
+        <h2 class="sec-title">Quanta energia ho usato</h2>
+        <p class="sec-deck">I kWh effettivi del mese, ricavati dalle letture del contatore.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on">
+          <div class="plot"><canvas id="l_chartConsumo"></canvas></div>
+          <div class="legend" id="l_legend2"></div>
+        </div>
+        <div class="view"><div class="plot tall"><canvas id="l_chartSeasonCons"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src2"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="l-prezzopieno" data-sec="prezzopieno">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Prezzo pieno</span>
+        <h2 class="sec-title">Con dentro anche la quota fissa</h2>
+        <p class="sec-deck">Stessa energia, ma spalmando sul consumo anche il canone mensile del fornitore. È il numero da usare per confrontare un fornitore con l'altro.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on">
+          <div class="plot"><canvas id="l_chartUnit"></canvas></div>
+          <div class="legend" id="l_legend3"></div>
+        </div>
+        <div class="view"><div class="plot tall"><canvas id="l_chartSeasonUnit"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src3"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="l-voci" data-sec="voci">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Composizione</span>
+        <h2 class="sec-title">Dove finiscono i soldi</h2>
+        <p class="sec-deck">Ogni bolletta si divide in quattro: l'energia, la rete che la trasporta, gli oneri di sistema e le imposte.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Colonne</button><button data-view="1">Linee</button><button data-view="2">%</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on"><div class="plot tall"><canvas id="l_chartBreak"></canvas></div></div>
+        <div class="view"><div class="plot tall"><canvas id="l_chartVoci"></canvas></div></div>
+        <div class="view"><div class="plot tall"><canvas id="l_chartComposizione"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src7"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="l-fascia" data-sec="fascia">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Fasce orarie</span>
+        <h2 class="sec-title">Di giorno o di sera</h2>
+        <p class="sec-deck">F1 sono le ore di punta dei feriali, dalle 8 alle 19. F23 è tutto il resto: sere, notti, sabato e domenica.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">kWh</button><button data-view="1">%</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on"><div class="plot tall"><canvas id="l_chartFascia"></canvas></div></div>
+        <div class="view"><div class="plot tall"><canvas id="l_chartFasciaPct"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src10"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="l-fornitori" data-sec="fornitori">
+    <div class="sec-head"><div>
+      <span class="sec-num">Fornitori</span>
+      <h2 class="sec-title">Chi è costato meno</h2>
+      <p class="sec-deck">Totali per fornitore su tutto il periodo in cui ha fatturato. L'ultima colonna è il confronto vero: prezzo pieno per kWh.</p>
+    </div></div>
+    <div class="tablewrap"><table class="data" id="l_riepilogoTable"></table></div>
+  </section>
+
+  <section class="sec" id="l-anni" data-sec="anni">
+    <div class="sec-head"><div>
+      <span class="sec-num">Anno per anno</span>
+      <h2 class="sec-title">Le medie mensili, per anno</h2>
+      <p class="sec-deck">Gli stessi numeri dei grafici, ridotti a una media per anno. Utile per vedere la direzione senza il rumore dei singoli mesi.</p>
+    </div></div>
+    <div class="tablewrap" style="margin-bottom:12px"><table class="data" id="l_annualCostTable"></table></div>
+    <div class="tablewrap"><table class="data" id="l_annualFasciaTable"></table></div>
+  </section>
+
+  <section class="sec" id="l-metodo" data-sec="metodo">
+    <details class="method">
+      <summary>Da dove arrivano questi numeri — luce</summary>
+      <div class="method-body" id="l_metodologia"></div>
+    </details>
+  </section>
 </div>
 
-<div class="tabs">
-  <button id="btn-luce" class="active">Luce</button>
-  <button id="btn-gas">Gas</button>
+<!-- ══════════════════════ GAS ══════════════════════ -->
+<div id="gasPane" role="tabpanel" aria-labelledby="btn-gas">
+  <div class="alert" id="gasError"></div>
+
+  <section class="sec" id="g-prezzo" data-sec="prezzo">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Prezzo</span>
+        <h2 class="sec-title">Quanto costa il gas</h2>
+        <p class="sec-deck">Il prezzo di uno Smc di solo gas, senza la quota fissa mensile. Nei mesi quasi senza consumo, tipicamente d'estate, il valore è rumoroso: guarda la tendenza, non il singolo mese.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on">
+          <div class="plot"><canvas id="g_chartVarUnit"></canvas></div>
+          <div class="legend" id="g_legendVarUnit"></div>
+        </div>
+        <div class="view"><div class="plot tall"><canvas id="g_chartSeasonVarUnit"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_srcVarUnit"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="g-spesa" data-sec="spesa">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Spesa</span>
+        <h2 class="sec-title">Quanto ho pagato</h2>
+        <p class="sec-deck">Il totale di ogni bolletta riportato al singolo mese.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on">
+          <div class="plot"><canvas id="g_chartCost"></canvas></div>
+          <div class="legend" id="g_legend1"></div>
+        </div>
+        <div class="view"><div class="plot tall"><canvas id="g_chartSeasonCost"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src1"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="g-consumo" data-sec="consumo">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Consumo</span>
+        <h2 class="sec-title">Quanto gas ho usato</h2>
+        <p class="sec-deck">Gli Smc effettivi del mese, ricavati dalle letture del contatore.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on">
+          <div class="plot"><canvas id="g_chartConsumo"></canvas></div>
+          <div class="legend" id="g_legend2"></div>
+        </div>
+        <div class="view"><div class="plot tall"><canvas id="g_chartSeasonCons"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src2"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="g-prezzopieno" data-sec="prezzopieno">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Prezzo pieno</span>
+        <h2 class="sec-title">Con dentro anche la quota fissa</h2>
+        <p class="sec-deck">Stesso gas, ma spalmando sul consumo anche il canone mensile del fornitore. È il numero da usare per confrontare un fornitore con l'altro.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on">
+          <div class="plot"><canvas id="g_chartUnit"></canvas></div>
+          <div class="legend" id="g_legend3"></div>
+        </div>
+        <div class="view"><div class="plot tall"><canvas id="g_chartSeasonUnit"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src3"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="g-voci" data-sec="voci">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Composizione</span>
+        <h2 class="sec-title">Dove finiscono i soldi</h2>
+        <p class="sec-deck">Ogni bolletta si divide in quattro: il gas, la rete che lo trasporta, gli oneri di sistema e le imposte.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Colonne</button><button data-view="1">Linee</button><button data-view="2">%</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on"><div class="plot tall"><canvas id="g_chartBreak"></canvas></div></div>
+        <div class="view"><div class="plot tall"><canvas id="g_chartVoci"></canvas></div></div>
+        <div class="view"><div class="plot tall"><canvas id="g_chartComposizione"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src7"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="g-ricalcolo" data-sec="ricalcolo">
+    <div class="sec-head"><div>
+      <span class="sec-num">Verifica</span>
+      <h2 class="sec-title">Il ricalcolo Eni, controllato</h2>
+      <p class="sec-deck">Sei mesi fatturati a stima e poi corretti in blocco. Qui il confronto con le stagioni precedenti, ora tutte su letture reali.</p>
+    </div></div>
+    <div class="verdict" id="gasVerdict"></div>
+    <div class="tablewrap"><table class="data" id="gasCheckTable"></table></div>
+  </section>
+
+  <section class="sec" id="g-fornitori" data-sec="fornitori">
+    <div class="sec-head"><div>
+      <span class="sec-num">Fornitori</span>
+      <h2 class="sec-title">Chi è costato meno</h2>
+      <p class="sec-deck">Totali per fornitore su tutto il periodo in cui ha fatturato. L'ultima colonna è il confronto vero: prezzo pieno per Smc.</p>
+    </div></div>
+    <div class="tablewrap"><table class="data" id="g_riepilogoTable"></table></div>
+  </section>
+
+  <section class="sec" id="g-anni" data-sec="anni">
+    <div class="sec-head"><div>
+      <span class="sec-num">Anno per anno</span>
+      <h2 class="sec-title">Le medie mensili, per anno</h2>
+      <p class="sec-deck">Gli stessi numeri dei grafici, ridotti a una media per anno.</p>
+    </div></div>
+    <div class="tablewrap"><table class="data" id="g_annualCostTable"></table></div>
+  </section>
+
+  <section class="sec" id="g-metodo" data-sec="metodo">
+    <details class="method">
+      <summary>Da dove arrivano questi numeri — gas</summary>
+      <div class="method-body" id="g_metodologia"></div>
+    </details>
+  </section>
 </div>
 
-<div id="lucePane">
-  <h2 style="margin-top:0;">Costo materia prima — sola quota variabile</h2>
-  <div class="callout">Solo il prezzo che si muove con il consumo (energia comprata), esclusa la quota fissa di commercializzazione che, per definizione, non dovrebbe cambiare.</div>
-  <h3 class="sub">Andamento mese per mese</h3>
-  <div class="chart-wrap"><canvas id="l_chartVarUnit"></canvas></div>
-  <div class="legend" id="l_legendVarUnit"></div>
-  <div class="src" id="l_srcVarUnit"></div>
-  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
-  <div class="chart-wrap tall"><canvas id="l_chartSeasonVarUnit"></canvas></div>
-  <div class="src" id="l_srcSeasonVarUnit"></div>
-
-  <h2>Costo totale</h2>
-  <h3 class="sub">Andamento mese per mese</h3>
-  <div class="chart-wrap"><canvas id="l_chartCost"></canvas></div>
-  <div class="legend" id="l_legend1"></div>
-  <div class="src" id="l_src1"></div>
-  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
-  <div class="chart-wrap tall"><canvas id="l_chartSeasonCost"></canvas></div>
-  <div class="src" id="l_src4"></div>
-
-  <h2>Consumo</h2>
-  <h3 class="sub">Andamento mese per mese</h3>
-  <div class="chart-wrap"><canvas id="l_chartConsumo"></canvas></div>
-  <div class="legend" id="l_legend2"></div>
-  <div class="src" id="l_src2"></div>
-  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
-  <div class="chart-wrap tall"><canvas id="l_chartSeasonCons"></canvas></div>
-  <div class="src" id="l_src5"></div>
-
-  <h2>Costo unitario materia prima (fissa+variabile)</h2>
-  <h3 class="sub">Andamento mese per mese</h3>
-  <div class="chart-wrap"><canvas id="l_chartUnit"></canvas></div>
-  <div class="legend" id="l_legend3"></div>
-  <div class="src" id="l_src3"></div>
-  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
-  <div class="chart-wrap tall"><canvas id="l_chartSeasonUnit"></canvas></div>
-  <div class="src" id="l_src6"></div>
-
-  <h2>Dettaglio costi (materia / rete / oneri / imposte)</h2>
-  <div class="note-inline">Tre viste della stessa scomposizione: valori assoluti come linee, come colonne impilate, e in percentuale.</div>
-  <h3 class="sub">Trend di tutte le voci di costo</h3>
-  <div class="chart-wrap tall"><canvas id="l_chartVoci"></canvas></div>
-  <div class="src" id="l_src7"></div>
-  <h3 class="sub">Breakdown per periodo (colonne impilate)</h3>
-  <div class="chart-wrap tall"><canvas id="l_chartBreak"></canvas></div>
-  <div class="legend" id="l_legend4"></div>
-  <div class="src" id="l_src9"></div>
-  <h3 class="sub">Composizione % nel tempo</h3>
-  <div class="chart-wrap tall"><canvas id="l_chartComposizione"></canvas></div>
-  <div class="src" id="l_src8"></div>
-
-  <h2>Consumo per fascia oraria</h2>
-  <div class="note-inline">Stesso dato, in valore assoluto e in percentuale sul mese.</div>
-  <h3 class="sub">F1 vs F23 (valore assoluto)</h3>
-  <div class="chart-wrap tall"><canvas id="l_chartFascia"></canvas></div>
-  <div class="src" id="l_src10"></div>
-  <h3 class="sub">F1 vs F23 (% sul mese, 100%)</h3>
-  <div class="chart-wrap tall"><canvas id="l_chartFasciaPct"></canvas></div>
-  <div class="src" id="l_src11"></div>
-
-  <h2>Confronto fornitori</h2>
-  <table class="data" id="l_riepilogoTable"></table>
-
-  <h2>Riepiloghi annuali</h2>
-  <h3 class="sub">Medie mensili per voce di costo, per anno</h3>
-  <table class="data" id="l_annualCostTable"></table>
-  <h3 class="sub">Fascia oraria, per anno</h3>
-  <table class="data" id="l_annualFasciaTable"></table>
-
-  <h2>Come sono calcolati i dati (metodologia)</h2>
-  <div class="notes" id="l_metodologia"></div>
-</div>
-
-<div id="gasPane">
-  <div id="gasError"></div>
-  <h2 style="margin-top:0;">Costo materia prima — sola quota variabile</h2>
-  <div class="callout">Solo il prezzo che si muove con il consumo (gas comprato), esclusa la quota fissa di commercializzazione che, per definizione, non dovrebbe cambiare. Nei mesi a consumo quasi nullo (estate) questo valore puo' essere rumoroso: vedi la nota in "Come sono calcolati i dati" qui sotto.</div>
-  <h3 class="sub">Andamento mese per mese</h3>
-  <div class="chart-wrap"><canvas id="g_chartVarUnit"></canvas></div>
-  <div class="legend" id="g_legendVarUnit"></div>
-  <div class="src" id="g_srcVarUnit"></div>
-  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
-  <div class="chart-wrap tall"><canvas id="g_chartSeasonVarUnit"></canvas></div>
-  <div class="src" id="g_srcSeasonVarUnit"></div>
-
-  <h2>Costo totale</h2>
-  <h3 class="sub">Andamento mese per mese</h3>
-  <div class="chart-wrap"><canvas id="g_chartCost"></canvas></div>
-  <div class="legend" id="g_legend1"></div>
-  <div class="src" id="g_src1"></div>
-  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
-  <div class="chart-wrap tall"><canvas id="g_chartSeasonCost"></canvas></div>
-  <div class="src" id="g_src4"></div>
-
-  <h2>Consumo</h2>
-  <h3 class="sub">Andamento mese per mese</h3>
-  <div class="chart-wrap"><canvas id="g_chartConsumo"></canvas></div>
-  <div class="legend" id="g_legend2"></div>
-  <div class="src" id="g_src2"></div>
-  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
-  <div class="chart-wrap tall"><canvas id="g_chartSeasonCons"></canvas></div>
-  <div class="src" id="g_src5"></div>
-
-  <h2>Costo unitario materia prima (fissa+variabile)</h2>
-  <h3 class="sub">Andamento mese per mese</h3>
-  <div class="chart-wrap"><canvas id="g_chartUnit"></canvas></div>
-  <div class="legend" id="g_legend3"></div>
-  <div class="src" id="g_src3"></div>
-  <h3 class="sub">Stagionalità — stesso mese, anni a confronto</h3>
-  <div class="chart-wrap tall"><canvas id="g_chartSeasonUnit"></canvas></div>
-  <div class="src" id="g_src6"></div>
-
-  <h2>Dettaglio costi (materia / rete / oneri / imposte)</h2>
-  <div class="note-inline">Tre viste della stessa scomposizione: valori assoluti come linee, come colonne impilate, e in percentuale.</div>
-  <h3 class="sub">Trend di tutte le voci di costo</h3>
-  <div class="chart-wrap tall"><canvas id="g_chartVoci"></canvas></div>
-  <div class="src" id="g_src7"></div>
-  <h3 class="sub">Breakdown per periodo (colonne impilate)</h3>
-  <div class="chart-wrap tall"><canvas id="g_chartBreak"></canvas></div>
-  <div class="legend" id="g_legend4"></div>
-  <div class="src" id="g_src9"></div>
-  <h3 class="sub">Composizione % nel tempo</h3>
-  <div class="chart-wrap tall"><canvas id="g_chartComposizione"></canvas></div>
-  <div class="src" id="g_src8"></div>
-
-  <h2>Verifica ricalcolo gas ago25–gen26 vs storico</h2>
-  <div class="verdict" id="gasVerdict"></div>
-  <table class="data" id="gasCheckTable"></table>
-
-  <h2>Confronto fornitori</h2>
-  <table class="data" id="g_riepilogoTable"></table>
-
-  <h2>Riepiloghi annuali</h2>
-  <h3 class="sub">Medie mensili per voce di costo, per anno</h3>
-  <table class="data" id="g_annualCostTable"></table>
-
-  <h2>Come sono calcolati i dati (metodologia)</h2>
-  <div class="notes" id="g_metodologia"></div>
+<p class="foot" id="footNote"></p>
 </div>
 
 <script>
-const COL_HEX = {SEN:"#2a78d6", Eni:"#e34948", Octopus:"#1baf7a"};
-const YEAR_COL = {2023:"#9c6ade", 2024:"#2a78d6", 2025:"#e37a1f", 2026:"#1baf7a"};
+/* ═══════════════════════ Tema ═══════════════════════ */
+const mq = window.matchMedia('(prefers-color-scheme: dark)');
+function themeName(){
+  const t = document.documentElement.getAttribute('data-theme');
+  return (t === 'dark' || t === 'light') ? t : (mq.matches ? 'dark' : 'light');
+}
+try { const saved = localStorage.getItem('tema'); if (saved) document.documentElement.setAttribute('data-theme', saved); } catch(e){}
+
+const PALETTE = {
+  light: { s1:'#2a78d6', s2:'#eb6834', s3:'#1baf7a', s4:'#eda100',
+           years:['#86b6ef','#5598e7','#2a78d6','#184f95'],
+           luce:'#eda100', gas:'#2a78d6',
+           surface:'#fcfcfb', grid:'#e1e0d9', axis:'#c3c2b7', tick:'#898781',
+           ink:'#0b0b0b', tipBg:'#14181d', tipInk:'#ffffff' },
+  dark:  { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500',
+           years:['#184f95','#256abf','#3987e5','#9ec5f4'],
+           luce:'#eda100', gas:'#3987e5',
+           surface:'#1a1a19', grid:'#2c2c2a', axis:'#383835', tick:'#898781',
+           ink:'#ffffff', tipBg:'#2c2c2a', tipInk:'#ffffff' }
+};
+let T = PALETTE[themeName()];
+
+/* ═══════════════════════ Utilità ═══════════════════════ */
 const MESI = ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
+const MESI_LUNGHI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+const FORNITORE_ESTESO = { SEN:'Servizio Elettrico Nazionale', Eni:'Eni Plenitude', Octopus:'Octopus Energy' };
+
 const round2 = v => v==null ? null : Math.round(v*100)/100;
-const isRip = r => !!(r && r.ripartito);   // mese ricavato per ripartizione pro-rata, non da lettura reale
 const round4 = v => v==null ? null : Math.round(v*10000)/10000;
-const fmtEUR = v => v.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' EUR';
-const allLabels = { autoSkip:false, maxRotation:90, minRotation:90, font:{size:9} };
-const stackedInteraction = { mode: 'index', intersect: false };
+const isRip  = r => !!(r && r.ripartito);
+const nf  = (v,d=2) => v==null ? '—' : v.toLocaleString('it-IT',{minimumFractionDigits:d, maximumFractionDigits:d});
+const eur  = v => nf(v,2) + ' €';
+const eur0 = v => v==null ? '—' : Math.round(v).toLocaleString('it-IT') + ' €';
+const int  = v => v==null ? '—' : Math.round(v).toLocaleString('it-IT');
+const monthLabel = ym => { const [y,m] = ym.split('-'); return MESI[+m-1] + String(y).slice(2); };
+const monthLong  = ym => { const [y,m] = ym.split('-'); return MESI_LUNGHI[+m-1] + ' ' + y; };
+const fmtDataIt  = iso => { const [y,m,d] = iso.split('-'); return d+'/'+m+'/'+y; };
+function fmtDataLunga(iso){ const [y,m,d] = iso.split('-'); return +d + ' ' + MESI_LUNGHI[+m-1] + ' ' + y; }
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 let DATA = null;
-let charts = [];
+let chartById = {};
 let gasRendered = false;
+let activeKind = 'luce';
+let noteRange = '12';
 
-function monthLabel(ym){ const [y,m] = ym.split('-'); return MESI[parseInt(m,10)-1] + String(y).slice(2); }
-
-const TIPO_LABEL = {rincaro:'Rincaro', anomalia:'Anomalia', dati_mancanti:'Dati mancanti', info:'Info'};
-const NOTE_ORIZZONTE_MESI = 12;   // in pagina restano solo le note piu' recenti di cosi'
-function fmtDataIt(iso){ const [y,m,d] = iso.split('-'); return d+'/'+m+'/'+y; }
-
-// 'data' di una nota = data dell'EVENTO segnalato, non quella in cui e' stata scritta.
-function noteVisibili(notes, kind){
-  const lim = new Date();
-  lim.setMonth(lim.getMonth() - NOTE_ORIZZONTE_MESI);
-  const limIso = lim.toISOString().slice(0,10);
-  return (notes || [])
-    .filter(n => n.data >= limIso)
-    .filter(n => { const a = (n.ambito||'').toLowerCase(); return a === 'entrambe' || a === kind; })
-    .sort((a,b) => b.data.localeCompare(a.data));
+function destroyCharts(prefix){
+  Object.keys(chartById).forEach(id => {
+    if (prefix && !id.startsWith(prefix)) return;
+    chartById[id].destroy(); delete chartById[id];
+  });
+}
+function mkChart(id, cfg){
+  const el = document.getElementById(id);
+  if (!el) return null;
+  if (chartById[id]) chartById[id].destroy();
+  chartById[id] = new Chart(el, cfg);
+  return chartById[id];
 }
 
-function renderNotes(kind){
-  if (!DATA) return;
-  const etichetta = kind === 'gas' ? 'Gas' : 'Luce';
-  document.getElementById('noteScope').textContent = '— ' + etichetta + ', ultimi 12 mesi';
-  const list = noteVisibili(DATA.note_rilevanti, kind);
-  const el = document.getElementById('noteList');
-  if (!list.length) {
-    el.innerHTML = '<div class="note-empty">Nessuna segnalazione per la sezione ' + etichetta +
-      ' negli ultimi 12 mesi. Rincari, anomalie o dati mancanti rilevati sulle nuove bollette compaiono qui.</div>';
-    return;
+/* Crosshair: una linea verticale sottile sull'indice attivo. */
+const crosshair = {
+  id:'crosshair',
+  afterDatasetsDraw(c){
+    const act = c.tooltip?.getActiveElements?.() || [];
+    if (!act.length) return;
+    const x = act[0].element.x, {top, bottom} = c.chartArea, ctx = c.ctx;
+    ctx.save(); ctx.beginPath(); ctx.lineWidth = 1; ctx.strokeStyle = T.axis;
+    ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke(); ctx.restore();
   }
-  el.innerHTML = list.map(n => `
-    <div class="note-item tipo-${n.tipo}">
-      <div class="note-head">
-        <span class="badge badge-${n.tipo}">${TIPO_LABEL[n.tipo] || n.tipo}</span>
-        ${n.ambito ? `<span class="note-date">${n.ambito}</span>` : ''}
-        <span class="note-date">${fmtDataIt(n.data)}</span>
-      </div>
-      <div class="note-title">${n.titolo}</div>
-      <div>${n.testo}</div>
-    </div>
-  `).join('');
+};
+Chart.register(crosshair);
+
+function applyChartDefaults(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  Chart.defaults.font.family = '"IBM Plex Sans", system-ui, sans-serif';
+  Chart.defaults.font.size = 11;
+  Chart.defaults.color = T.tick;
+  Chart.defaults.animation = reduce ? false : { duration: 420 };
+  Chart.defaults.plugins.tooltip.backgroundColor = T.tipBg;
+  Chart.defaults.plugins.tooltip.titleColor = T.tipInk;
+  Chart.defaults.plugins.tooltip.bodyColor = T.tipInk;
+  Chart.defaults.plugins.tooltip.padding = 11;
+  Chart.defaults.plugins.tooltip.cornerRadius = 9;
+  Chart.defaults.plugins.tooltip.boxPadding = 5;
+  Chart.defaults.plugins.tooltip.usePointStyle = true;
+  Chart.defaults.plugins.tooltip.titleFont = { weight:'600', size:12 };
+  Chart.defaults.plugins.tooltip.bodyFont = { size:12 };
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.legend.labels.boxWidth = 8;
+  Chart.defaults.plugins.legend.labels.boxHeight = 8;
+  Chart.defaults.plugins.legend.labels.padding = 14;
+  Chart.defaults.plugins.legend.labels.font = { size:11 };
 }
 
+const xTicks = () => ({ autoSkip:false, maxRotation:90, minRotation:90, font:{size:9}, color:T.tick });
+const xAxis  = () => ({ grid:{display:false}, border:{color:T.axis}, ticks:xTicks() });
+const xAxisM = () => ({ grid:{display:false}, border:{color:T.axis}, ticks:{color:T.tick} });
+const yAxis  = (cb, opts={}) => Object.assign({
+  border:{display:false}, grid:{color:T.grid, drawTicks:false},
+  ticks:{callback:cb, color:T.tick, padding:8}
+}, opts);
+const idxHover = { mode:'index', intersect:false };
+
+/* Sfumatura sotto la linea principale */
+function areaFill(ctx, hex){
+  const {chart} = ctx, {ctx:c, chartArea} = chart;
+  if (!chartArea) return 'transparent';
+  const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+  g.addColorStop(0, hex + '2e'); g.addColorStop(1, hex + '00');
+  return g;
+}
+
+/* Sparkline SVG: nessuna dipendenza, gestisce i buchi nella serie. */
+function sparkline(values, color){
+  const w=200, h=32, pad=4;
+  const nums = values.filter(v => v!=null);
+  if (nums.length < 2) return '';
+  const min = Math.min(...nums), max = Math.max(...nums), span = (max-min) || 1;
+  const X = i => pad + i*(w-2*pad)/(values.length-1);
+  const Y = v => h-pad - (v-min)/span*(h-2*pad);
+  let d = '', pen = false, last = -1;
+  values.forEach((v,i) => {
+    if (v == null) { pen = false; return; }
+    d += (pen ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1) + ' ';
+    pen = true; last = i;
+  });
+  const dot = `M${X(last).toFixed(1)} ${Y(values[last]).toFixed(1)} L${X(last).toFixed(1)} ${Y(values[last]).toFixed(1)}`;
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <path d="${d}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round"
+      stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity=".85"/>
+    <path d="${dot}" stroke="${color}" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+  </svg>`;
+}
+
+/* Variazione: freccia + parola, mai il solo colore. Per costi e consumi, salire è peggio. */
+function deltaChip(now, before, {invertito=false}={}){
+  if (before == null || now == null || !before) return '';
+  const pct = (now/before - 1) * 100;
+  const abs = Math.abs(pct);
+  if (abs < 0.5) return '<span class="chip flat">invariato</span>';
+  const su = pct > 0;
+  const buono = invertito ? su : !su;
+  return `<span class="chip ${buono ? 'down' : 'up'}"><span class="arrow">${su ? '▲' : '▼'}</span>${nf(abs, abs<10?1:0)}%</span>`;
+}
+
+/* ═══════════════════════ Caricamento ═══════════════════════ */
 async function loadData(){
   try {
-    const res = await fetch('data.json', {cache: 'no-store'});
-    if (!res.ok) throw new Error('data.json non trovato (HTTP ' + res.status + ').');
+    const res = await fetch('data.json', {cache:'no-store'});
+    if (!res.ok) throw new Error('data.json non raggiungibile (HTTP ' + res.status + ').');
     DATA = await res.json();
-    document.getElementById('updatedLine').textContent = 'Dati aggiornati al ' + DATA.meta.aggiornato;
-    renderNotes('luce');
-    renderUtility({
-      rows: DATA.luce_monthly, unit: 'kWh', p: 'l_', fornitori: ['SEN','Eni','Octopus'], fascia: true
-    });
-    document.getElementById('l_metodologia').innerHTML = `
-      <h4>Base mensile</h4>
-      Le bollette SEN ed Eni sono bimestrali (o trimestrali, per l'ultima bolletta Eni nov25-gen26).
-      Il <b>consumo e la fascia oraria (F1/F23) di ogni singolo mese</b> sono ricostruiti dalle letture
-      reali riportate nelle bollette originali. Il <b>costo di ogni mese</b> è ottenuto <b>ripartendo
-      proporzionalmente</b> il costo dell'intera bolletta in base alla quota di consumo di quel mese sul
-      totale del periodo fatturato. Fa eccezione la bolletta Eni nov25-gen26, dove la ripartizione è quella
-      reale letta dal dettaglio tariffario. Octopus fattura già mensilmente: dati diretti, nessuna ripartizione.
-      <h4>Costo materia prima — sola quota variabile</h4>
-      Rilette le "Elementi di Dettaglio" di ogni bolletta per scorporare la <b>quota energia</b> (variabile,
-      dipende dal consumo) dalla <b>quota fissa di commercializzazione</b> (fissa, non dipende dal consumo).
-      Il grafico in cima alla pagina mostra solo il prezzo unitario della quota variabile (spesa variabile /
-      consumo del mese). Per SEN il prezzo è quello regolato ARERA, costante per trimestre (stesso valore per
-      i mesi dello stesso trimestre). Per Eni il prezzo è ricostruito voce per voce dal dettaglio tariffario
-      mensile (indicizzato PUN/PSV, cambia ogni mese); per le due bollette più recenti (set-ott25 e nov25-gen26)
-      non avevo il dettaglio mensile completo e ho usato il prezzo medio dell'intera bolletta, uguale per tutti
-      i mesi coperti. Per Octopus il prezzo è dato direttamente in bolletta ("di cui spesa per vendita energia
-      elettrica" nel Box dell'offerta).
-      <h4>Costo unitario materia prima (fissa+variabile)</h4>
-      Formula: <b>Materia prima (EUR) / Consumo (kWh)</b>. "Materia prima" qui = tutta la voce "Spesa per la
-      vendita di energia" (fissa + variabile), esclude sempre trasporto/rete e oneri di sistema. E' la metrica
-      storica usata per confrontare i fornitori tra loro (vedi sezione "Confronto fornitori"). Per Octopus
-      non coincide con il "prezzo medio" di pagina 1 della bolletta (quello esclude la quota fissa): il
-      numero corretto è il "TOTALE" della sezione "Spesa per la vendita di energia" negli Elementi di Dettaglio.
-      <h4>Fascia oraria F1/F23</h4>
-      F23 = F2+F3 combinate. Per Octopus (tariffa monoraria) calcolata dalle letture del contatore.
-    `;
+    applyChartDefaults();
+
+    const nMesi = Math.max(DATA.luce_monthly.length, DATA.gas_monthly.length);
+    document.getElementById('updatedLine').textContent =
+      'Aggiornato al ' + fmtDataLunga(DATA.meta.aggiornato) + ' · ' + nMesi + ' mesi di bollette';
+    document.getElementById('footNote').textContent =
+      'Dashboard statica: legge data.json a ogni apertura. Per aggiornare i numeri basta sostituire quel file.';
+
+    renderHero();
+    renderNotes();
+    renderChips();
+    renderStats();
+    renderLuce();
+    watchSections();
   } catch (err) {
-    document.body.insertAdjacentHTML('afterbegin', errorBanner(err));
+    document.querySelector('.wrap').insertAdjacentHTML('afterbegin',
+      '<div class="alert">Non riesco a caricare i dati.\n' + esc(err && err.message ? err.message : err) +
+      '\n\nCopia questo messaggio e incollalo in chat.</div>');
     console.error(err);
   }
 }
 
-function errorBanner(err){
-  return '<div style="background:#fde8e8;border:1px solid #f0a0a0;border-radius:8px;padding:.8rem;font-size:.8rem;color:#7a2020;margin-bottom:1rem;white-space:pre-wrap;font-family:monospace;">' +
-    'Errore: ' + (err && err.message ? err.message : err) + '\n\nCopia questo messaggio e incollalo in chat.</div>';
+/* ═══════════════════════ Hero ═══════════════════════ */
+function ultimi12(rows, key){
+  const v = rows.slice(-12).map(r => r[key]).filter(x => x != null);
+  return v.length ? v.reduce((a,b)=>a+b, 0) : null;
+}
+function precedenti12(rows, key){
+  const slice = rows.slice(-24, -12);
+  if (slice.length < 6) return null;
+  const v = slice.map(r => r[key]).filter(x => x != null);
+  return v.length ? v.reduce((a,b)=>a+b, 0) : null;
 }
 
-// ---------------- Rendering generico Luce/Gas ----------------
-function renderUtility(cfg){
-  const { rows, unit, p, fornitori, fascia } = cfg;
-  const labels = rows.map(r=>monthLabel(r.month));
-  const fillCol = rows.map(r=>COL_HEX[r.f]);
+function renderHero(){
+  const l = DATA.luce_monthly, g = DATA.gas_monthly;
+  const lTot = ultimi12(l,'tot') || 0, gTot = ultimi12(g,'tot') || 0;
+  const tot = lTot + gTot;
+  const prec = (precedenti12(l,'tot') || 0) + (precedenti12(g,'tot') || 0);
 
-  // --- Mesi ripartiti pro-rata (flag "ripartito" in data.json): non sono letture mensili reali.
-  // Resa grafica: punto vuoto + segmento tratteggiato, per non confonderli con i mesi letti davvero.
+  document.getElementById('heroFigure').innerHTML = nf(tot,2) + '<span class="cur">€</span>';
+  document.getElementById('heroDelta').innerHTML = prec
+    ? deltaChip(tot, prec) + 'rispetto ai 12 mesi precedenti, chiusi a ' + eur(prec)
+    : 'Luce e gas insieme, ultimi 12 mesi di bollette.';
+
+  const lPct = tot ? lTot/tot*100 : 50;
+  document.getElementById('heroBar').innerHTML =
+    `<span style="flex:${lPct}; background:${PALETTE.dark.luce}"></span>` +
+    `<span style="flex:${100-lPct}; background:${PALETTE.dark.gas}"></span>`;
+  document.getElementById('heroLegend').innerHTML =
+    `<li><span class="dot" style="background:${PALETTE.dark.luce}"></span>Luce <b>${eur(lTot)}</b> · ${Math.round(lPct)}%</li>` +
+    `<li><span class="dot" style="background:${PALETTE.dark.gas}"></span>Gas <b>${eur(gTot)}</b> · ${Math.round(100-lPct)}%</li>`;
+}
+
+/* ═══════════════════════ Riquadri di sintesi ═══════════════════════ */
+function renderStats(){
+  const gas = activeKind === 'gas';
+  const rows = gas ? DATA.gas_monthly : DATA.luce_monthly;
+  const unit = gas ? 'Smc' : 'kWh';
+  const col  = gas ? T.gas : T.luce;
+  const last = rows[rows.length-1];
+
+  const spesa = ultimi12(rows,'tot'), spesaPrec = precedenti12(rows,'tot');
+  const cons  = ultimi12(rows,'c'),   consPrec  = precedenti12(rows,'c');
+
+  const prezzi = rows.map(r => r.mat_var_unit);
+  let li = -1; for (let i=prezzi.length-1; i>=0; i--) if (prezzi[i] != null) { li = i; break; }
+  const prezzoOra = li >= 0 ? prezzi[li] : null;
+  const prezzoAnnoPrima = li-12 >= 0 ? prezzi[li-12] : null;
+
+  const tiles = [
+    { label:'Ultima bolletta', value:nf(last.tot,2), unit:'€',
+      sub:monthLong(last.month) + ' · ' + (FORNITORE_ESTESO[last.f] || last.f),
+      spark:rows.slice(-24).map(r=>r.tot) },
+    { label:'Spesa 12 mesi', value:nf(spesa,2), unit:'€',
+      sub:(spesaPrec ? deltaChip(spesa, spesaPrec) + ' sui 12 precedenti' : 'storico troppo corto per il confronto'),
+      spark:rows.slice(-24).map(r=>r.tot) },
+    { label:'Consumo 12 mesi', value:int(cons), unit:unit,
+      sub:(consPrec ? deltaChip(cons, consPrec) + ' sui 12 precedenti' : 'storico troppo corto per il confronto'),
+      spark:rows.slice(-24).map(r=>r.c) },
+    { label:'Prezzo ' + (gas ? 'del gas' : "dell'energia"), value:prezzoOra!=null ? nf(prezzoOra,4) : '—', unit:'€/'+unit,
+      sub:(prezzoAnnoPrima ? deltaChip(prezzoOra, prezzoAnnoPrima) + ' su un anno fa' : 'sola quota variabile'),
+      spark:rows.slice(-24).map(r=>r.mat_var_unit) }
+  ];
+
+  document.getElementById('statsBox').innerHTML = tiles.map(t => `
+    <div class="stat">
+      <span class="stat-label">${t.label}</span>
+      <span class="stat-value">${t.value}<span class="u">${t.unit}</span></span>
+      <span class="stat-sub">${t.sub}</span>
+      ${sparkline(t.spark, col)}
+    </div>`).join('');
+}
+
+/* ═══════════════════════ Note ═══════════════════════ */
+const TIPO_LABEL = { rincaro:'Rincaro', anomalia:'Anomalia', dati_mancanti:'Dati mancanti', info:'Info' };
+const TIPO_ICONA = { rincaro:'▲', anomalia:'!', dati_mancanti:'?', info:'i' };
+const NOTE_ORIZZONTE_MESI = 12;
+
+function noteVisibili(notes, kind){
+  const lim = new Date(); lim.setMonth(lim.getMonth() - NOTE_ORIZZONTE_MESI);
+  const limIso = lim.toISOString().slice(0,10);
+  return (notes || [])
+    .filter(n => noteRange === 'all' || n.data >= limIso)
+    .filter(n => { const a = (n.ambito||'').toLowerCase(); return a === 'entrambe' || a === kind; })
+    .sort((a,b) => b.data.localeCompare(a.data));
+}
+
+function renderNotes(){
+  if (!DATA) return;
+  const etichetta = activeKind === 'gas' ? 'Gas' : 'Luce';
+  const periodo = noteRange === 'all' ? 'tutto lo storico' : 'ultimi 12 mesi';
+  document.getElementById('noteScope').textContent = 'Segnalazioni · ' + etichetta + ' · ' + periodo;
+  const list = noteVisibili(DATA.note_rilevanti, activeKind);
+  const el = document.getElementById('noteList');
+  if (!list.length) {
+    el.innerHTML = '<div class="empty">Niente da segnalare sulla ' + etichetta.toLowerCase() +
+      ' in questo periodo. Rincari, anomalie e dati mancanti compaiono qui appena vengono rilevati su una bolletta nuova.' +
+      (noteRange === '12' ? ' Passa a “Tutte” per rivedere lo storico.' : '') + '</div>';
+    return;
+  }
+  el.innerHTML = list.map(n => `
+    <article class="note t-${n.tipo}">
+      <div class="note-head">
+        <span class="tag t-${n.tipo}"><span aria-hidden="true">${TIPO_ICONA[n.tipo]||'•'}</span>${TIPO_LABEL[n.tipo] || n.tipo}</span>
+        <span class="note-date">${esc(n.ambito||'')} · ${fmtDataIt(n.data)}</span>
+      </div>
+      <div class="note-title">${esc(n.titolo)}</div>
+      <div class="note-body">${esc(n.testo)}</div>
+    </article>`).join('');
+}
+
+/* ═══════════════════════ Indice sezioni ═══════════════════════ */
+const SEZIONI = {
+  luce: [['prezzo','Prezzo'],['spesa','Spesa'],['consumo','Consumo'],['prezzopieno','Prezzo pieno'],
+         ['voci','Composizione'],['fascia','Fasce'],['fornitori','Fornitori'],['anni','Anno per anno'],['metodo','Metodo']],
+  gas:  [['prezzo','Prezzo'],['spesa','Spesa'],['consumo','Consumo'],['prezzopieno','Prezzo pieno'],
+         ['voci','Composizione'],['ricalcolo','Verifica'],['fornitori','Fornitori'],['anni','Anno per anno'],['metodo','Metodo']]
+};
+function renderChips(){
+  const pre = activeKind === 'gas' ? 'g-' : 'l-';
+  document.getElementById('chiprow').innerHTML =
+    SEZIONI[activeKind].map(([id,label]) => `<a href="#${pre}${id}" data-target="${id}">${label}</a>`).join('');
+}
+let sectionObserver = null;
+function watchSections(){
+  if (sectionObserver) sectionObserver.disconnect();
+  sectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const sec = e.target.dataset.sec;
+      document.querySelectorAll('#chiprow a').forEach(a => a.classList.toggle('on', a.dataset.target === sec));
+    });
+  }, { rootMargin:'-76px 0px -65% 0px', threshold:0 });
+  document.querySelectorAll('section[data-sec]').forEach(s => sectionObserver.observe(s));
+}
+
+/* ═══════════════════════ Grafici ═══════════════════════ */
+function renderUtility(cfg){
+  const { rows, unit, p, fornitori, fascia, kind } = cfg;
+  const labels = rows.map(r => monthLabel(r.month));
+  const SUPPLIER = { SEN:T.s1, Eni:T.s2, Octopus:T.s3 };
+  const tinta = kind === 'gas' ? T.gas : T.luce;
+
+  // Mesi ripartiti pro-rata: non sono letture reali. Punto vuoto + tratteggio.
   const rip = rows.map(isRip);
   const anyRip = rip.some(Boolean);
-  const ptBg = rows.map((r,i) => rip[i] ? '#ffffff' : COL_HEX[r.f]);
-  const ptBd = rows.map(r => COL_HEX[r.f]);
-  const dashSeg = { borderDash: ctx => (rip[ctx.p0DataIndex] || rip[ctx.p1DataIndex]) ? [5,4] : undefined };
-  const ripTag = i => rip[i] ? ' — ripartito pro-rata, non letto' : '';
+  const ptBg = rows.map((r,i) => rip[i] ? T.surface : SUPPLIER[r.f]);
+  const ptBd = rows.map(r => SUPPLIER[r.f]);
+  const dashSeg = { borderDash: c => (rip[c.p0DataIndex] || rip[c.p1DataIndex]) ? [5,4] : undefined };
+  const ripTag = i => rip[i] ? ' · ripartito, non letto' : '';
 
-  charts.push(new Chart(document.getElementById(p+'chartCost'), {
-    type:'line',
-    data:{labels, datasets:[{label:'Costo totale', data:rows.map(r=>r.tot), borderColor:'#2a78d6', backgroundColor:'#2a78d6', pointBackgroundColor:ptBg, pointBorderColor:ptBd, pointBorderWidth:2, pointRadius:4, borderWidth:2, tension:0.15, segment:dashSeg}]},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>ctx.parsed.y.toFixed(2)+' EUR ('+rows[ctx.dataIndex].f+')'+ripTag(ctx.dataIndex)}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' EUR'}}, x:{grid:{display:false}, ticks:allLabels}}}
-  }));
-  document.getElementById(p+'src1').innerHTML = '<b>Fonte:</b> bollette dei fornitori (ripartite su base mensile dove bimestrali). <b>Formula:</b> costo totale di bolletta' + (unit==='kWh' ? ', al netto del canone RAI.' : '.') + ripLegenda();
+  const lineaBase = (extra={}) => Object.assign({
+    pointBackgroundColor:ptBg, pointBorderColor:ptBd, pointBorderWidth:2,
+    pointRadius:4, pointHoverRadius:6, borderWidth:2, tension:.2, segment:dashSeg, fill:true
+  }, extra);
 
-  charts.push(new Chart(document.getElementById(p+'chartConsumo'), {
-    type:'bar',
-    data:{labels, datasets:[{label:'Consumo', data:rows.map(r=>r.c), backgroundColor:rows.map((r,i)=> rip[i] ? COL_HEX[r.f]+'38' : COL_HEX[r.f]), borderColor:ptBd, borderWidth:rows.map((r,i)=> rip[i] ? 1.5 : 0), borderRadius:3}]},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>(ctx.parsed.y??'n.d.')+' '+unit+ripTag(ctx.dataIndex)}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' '+unit}}, x:{grid:{display:false}, ticks:allLabels}}}
-  }));
-  document.getElementById(p+'src2').innerHTML = '<b>Fonte:</b> letture/consumi fatturati, ripartiti su base mensile dove il fornitore fattura a bimestre. Nessun calcolo aggiuntivo.' + ripLegenda();
+  const optBase = (yCb, yOpts={}) => ({
+    responsive:true, maintainAspectRatio:false, interaction:idxHover,
+    plugins:{ legend:{display:false}, tooltip:{} },
+    scales:{ y:yAxis(yCb, yOpts), x:xAxis() }
+  });
 
-  const unitRows = rows.map(r=> r.mat!=null && r.c ? round4(r.mat/r.c) : null);
-  charts.push(new Chart(document.getElementById(p+'chartUnit'), {
-    type:'line',
-    data:{labels, datasets:[{label:'Costo unitario materia', data:unitRows, borderColor:'#eda100', backgroundColor:'#eda100', pointBackgroundColor:ptBg, pointBorderColor:ptBd, pointBorderWidth:2, pointRadius:4, borderWidth:2, spanGaps:true, tension:0.15, segment:dashSeg}]},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit+' ('+rows[ctx.dataIndex].f+')'+ripTag(ctx.dataIndex):'n.d.'}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}, ticks:allLabels}}}
-  }));
-  document.getElementById(p+'src3').innerHTML = '<b>Formula:</b> Materia prima (EUR) / Consumo (' + unit + '). Vedi "Come sono calcolati i dati" per cosa include "Materia prima".' + ripLegenda();
-
+  /* — Prezzo materia, sola quota variabile — */
   const varUnitRows = rows.map(r => r.mat_var_unit != null ? r.mat_var_unit : null);
-  charts.push(new Chart(document.getElementById(p+'chartVarUnit'), {
+  mkChart(p+'chartVarUnit', {
     type:'line',
-    data:{labels, datasets:[{label:'Materia prima (sola variabile)', data:varUnitRows, borderColor:'#e34948', backgroundColor:'#e34948', pointBackgroundColor:ptBg, pointBorderColor:ptBd, pointBorderWidth:2, pointRadius:4, borderWidth:2, spanGaps:true, tension:0.15, segment:dashSeg}]},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit+' ('+rows[ctx.dataIndex].f+')'+ripTag(ctx.dataIndex):'n.d.'}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}, ticks:allLabels}}}
-  }));
-  document.getElementById(p+'srcVarUnit').innerHTML = '<b>Fonte:</b> bollette originali, sezione "Elementi di Dettaglio" — quota energia (variabile) scorporata dalla quota fissa di commercializzazione. <b>Formula:</b> spesa per la sola quota variabile / consumo del mese (' + unit + '). Per SEN e Octopus il prezzo variabile e i suoi cambi sono riportati direttamente in bolletta; per Eni \u00e8 ricostruito riga per riga dal dettaglio tariffario.' + ripLegenda();
+    data:{labels, datasets:[lineaBase({
+      label:'Prezzo variabile', data:varUnitRows, borderColor:tinta, spanGaps:true,
+      backgroundColor:c => areaFill(c, tinta)
+    })]},
+    options:Object.assign(optBase(v => nf(v,2)+' €'), {
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{
+        label:c => c.parsed.y!=null ? nf(c.parsed.y,4)+' €/'+unit+' · '+rows[c.dataIndex].f+ripTag(c.dataIndex) : 'dato non disponibile' }}}
+    })
+  });
 
-  function ripLegenda(){
-    return anyRip ? ' <b>Punti vuoti e tratteggio</b> = mesi ricavati per ripartizione pro-rata (contatore non letto): affidabile il totale del periodo, non il singolo mese. Vedi metodologia.' : '';
-  }
+  /* — Costo totale — */
+  mkChart(p+'chartCost', {
+    type:'line',
+    data:{labels, datasets:[lineaBase({
+      label:'Totale bolletta', data:rows.map(r=>r.tot), borderColor:tinta,
+      backgroundColor:c => areaFill(c, tinta)
+    })]},
+    options:Object.assign(optBase(v => v+' €', {beginAtZero:true}), {
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{
+        label:c => eur(c.parsed.y)+' · '+rows[c.dataIndex].f+ripTag(c.dataIndex) }}}
+    })
+  });
 
-  const legendHTML = fornitori.map(f => `<span><span class="dot" style="background:${COL_HEX[f]};"></span>${f==='SEN'?'Servizio Elettrico Nazionale':f==='Eni'?'Eni Plenitude':'Octopus Energy'}</span>`).join('');
-  [p+'legend1', p+'legend2', p+'legend3', p+'legend4', p+'legendVarUnit'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = legendHTML; });
+  /* — Consumo — */
+  mkChart(p+'chartConsumo', {
+    type:'bar',
+    data:{labels, datasets:[{
+      label:'Consumo', data:rows.map(r=>r.c),
+      backgroundColor:rows.map((r,i) => rip[i] ? SUPPLIER[r.f]+'3d' : SUPPLIER[r.f]),
+      borderColor:ptBd, borderWidth:rows.map((r,i) => rip[i] ? 1.5 : 0),
+      borderRadius:{topLeft:4, topRight:4}, borderSkipped:'bottom', maxBarThickness:26
+    }]},
+    options:Object.assign(optBase(v => v+' '+unit, {beginAtZero:true}), {
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{
+        label:c => (c.parsed.y ?? 'n.d.')+' '+unit+' · '+rows[c.dataIndex].f+ripTag(c.dataIndex) }}}
+    })
+  });
 
-  const years = [...new Set(rows.map(r=>r.month.slice(0,4)))].map(Number).sort();
+  /* — Prezzo pieno (fissa + variabile) — */
+  const unitRows = rows.map(r => r.mat!=null && r.c ? round4(r.mat/r.c) : null);
+  mkChart(p+'chartUnit', {
+    type:'line',
+    data:{labels, datasets:[lineaBase({
+      label:'Prezzo pieno', data:unitRows, borderColor:tinta, spanGaps:true,
+      backgroundColor:c => areaFill(c, tinta)
+    })]},
+    options:Object.assign(optBase(v => nf(v,2)+' €'), {
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{
+        label:c => c.parsed.y!=null ? nf(c.parsed.y,4)+' €/'+unit+' · '+rows[c.dataIndex].f+ripTag(c.dataIndex) : 'dato non disponibile' }}}
+    })
+  });
+
+  /* — Legenda fornitori (identità mai affidata al solo colore) — */
+  const legendHTML =
+    fornitori.map(f => `<span class="item"><span class="dot" style="background:${SUPPLIER[f]}"></span>${FORNITORE_ESTESO[f]||f}</span>`).join('') +
+    (anyRip ? '<span class="item"><span class="ghost"></span>mese ripartito, non letto</span>' : '');
+  [p+'legend1', p+'legend2', p+'legend3', p+'legendVarUnit'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.innerHTML = legendHTML;
+  });
+
+  /* — Stagionalità: anni = categorie ordinate → rampa a un solo blu — */
+  const years = [...new Set(rows.map(r => +r.month.slice(0,4)))].sort((a,b)=>a-b);
+  const yearColor = y => T.years[Math.min(years.indexOf(y), T.years.length-1)] || T.s1;
   function seasonalDatasets(valueFn){
-    return years.map(y => {
-      const rowsY = MESI.map((_, mi) => rows.find(rr=>rr.month===`${y}-${String(mi+1).padStart(2,'0')}`) || null);
-      const data = rowsY.map(r => r ? valueFn(r) : null);
+    return years.map((y,i) => {
+      const rowsY = MESI.map((_, mi) => rows.find(rr => rr.month === `${y}-${String(mi+1).padStart(2,'0')}`) || null);
       const ripY = rowsY.map(isRip);
-      return {label:String(y), data, ripY, borderColor:YEAR_COL[y], backgroundColor:YEAR_COL[y],
-        pointBackgroundColor: ripY.map(x => x ? '#ffffff' : YEAR_COL[y]),
-        pointBorderColor: YEAR_COL[y], pointBorderWidth: 2,
-        segment: { borderDash: ctx => (ripY[ctx.p0DataIndex] || ripY[ctx.p1DataIndex]) ? [5,4] : undefined },
-        spanGaps:false, tension:0.15, pointRadius:3};
+      const col = yearColor(y);
+      const ultimo = i === years.length-1;
+      return { label:String(y), data:rowsY.map(r => r ? valueFn(r) : null), ripY,
+        borderColor:col, backgroundColor:col,
+        pointBackgroundColor:ripY.map(x => x ? T.surface : col),
+        pointBorderColor:col, pointBorderWidth:2,
+        borderWidth:ultimo ? 2.5 : 1.8, pointRadius:ultimo ? 4 : 3, pointHoverRadius:6,
+        segment:{ borderDash:c => (ripY[c.p0DataIndex] || ripY[c.p1DataIndex]) ? [5,4] : undefined },
+        spanGaps:false, tension:.2, fill:false };
     });
   }
-  const seasonTag = ctx => (ctx.dataset.ripY && ctx.dataset.ripY[ctx.dataIndex]) ? ' — ripartito pro-rata, non letto' : '';
-  charts.push(new Chart(document.getElementById(p+'chartSeasonCost'), {
-    type:'line',
-    data:{labels:MESI, datasets:seasonalDatasets(r=>r.tot)},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y.toFixed(2)+' EUR'+seasonTag(ctx):'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' EUR'}}, x:{grid:{display:false}}}}
-  }));
-  document.getElementById(p+'src4').innerHTML = '<b>Fonte:</b> stessa colonna "Costo totale" di sopra, riorganizzata per mese-anno.' + ripLegenda();
+  const seasonTag = c => (c.dataset.ripY && c.dataset.ripY[c.dataIndex]) ? ' · ripartito' : '';
+  const seasonOpts = (fmt, yOpts={}) => ({
+    responsive:true, maintainAspectRatio:false, interaction:idxHover,
+    plugins:{ legend:{position:'top', align:'end'}, tooltip:{callbacks:{
+      label:c => c.dataset.label + ': ' + (c.parsed.y!=null ? fmt(c.parsed.y)+seasonTag(c) : 'n.d.') }}},
+    scales:{ y:yAxis(yOpts.tick, yOpts.scale||{}), x:xAxisM() }
+  });
 
-  charts.push(new Chart(document.getElementById(p+'chartSeasonCons'), {
-    type:'line',
-    data:{labels:MESI, datasets:seasonalDatasets(r=>r.c)},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y+' '+unit+seasonTag(ctx):'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v+' '+unit}}, x:{grid:{display:false}}}}
-  }));
-  document.getElementById(p+'src5').innerHTML = '<b>Fonte:</b> stessa colonna "Consumo" di sopra, riorganizzata per mese-anno.' + ripLegenda();
+  mkChart(p+'chartSeasonVarUnit', { type:'line', data:{labels:MESI, datasets:seasonalDatasets(r=>r.mat_var_unit)},
+    options:seasonOpts(v => nf(v,4)+' €/'+unit, {tick:v => nf(v,2)+' €'}) });
+  mkChart(p+'chartSeasonCost', { type:'line', data:{labels:MESI, datasets:seasonalDatasets(r=>r.tot)},
+    options:seasonOpts(v => eur(v), {tick:v => v+' €', scale:{beginAtZero:true}}) });
+  mkChart(p+'chartSeasonCons', { type:'line', data:{labels:MESI, datasets:seasonalDatasets(r=>r.c)},
+    options:seasonOpts(v => v+' '+unit, {tick:v => v+' '+unit, scale:{beginAtZero:true}}) });
+  mkChart(p+'chartSeasonUnit', { type:'line', data:{labels:MESI, datasets:seasonalDatasets(r => r.mat!=null && r.c ? round4(r.mat/r.c) : null)},
+    options:seasonOpts(v => nf(v,4)+' €/'+unit, {tick:v => nf(v,2)+' €'}) });
 
-  charts.push(new Chart(document.getElementById(p+'chartSeasonUnit'), {
-    type:'line',
-    data:{labels:MESI, datasets:seasonalDatasets(r=> r.mat!=null && r.c ? round4(r.mat/r.c) : null)},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit+seasonTag(ctx):'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}}}}
-  }));
-  document.getElementById(p+'src6').innerHTML = '<b>Formula:</b> stessa di "Costo unitario materia prima (fissa+variabile)" sopra, riorganizzata per mese-anno.' + ripLegenda();
+  /* — Composizione: 4 slot categoriali, ordine fisso — */
+  const imposte = rows.map(r => round2(r.tot - r.mat - r.tra - r.one));
+  const VOCI = [
+    ['Energia',        rows.map(r=>r.mat), T.s1],
+    ['Rete',           rows.map(r=>r.tra), T.s2],
+    ['Oneri',          rows.map(r=>r.one), T.s3],
+    ['Imposte e IVA',  imposte,            T.s4]
+  ];
+  const VOCI_GAS = kind === 'gas' ? [['Gas', VOCI[0][1], T.s1]].concat(VOCI.slice(1)) : VOCI;
 
-  charts.push(new Chart(document.getElementById(p+'chartSeasonVarUnit'), {
-    type:'line',
-    data:{labels:MESI, datasets:seasonalDatasets(r=>r.mat_var_unit)},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}, tooltip:{callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?ctx.parsed.y.toFixed(4)+' EUR/'+unit+seasonTag(ctx):'n.d.')}}}, scales:{y:{beginAtZero:true, ticks:{callback:v=>v.toFixed(2)}}, x:{grid:{display:false}}}}
-  }));
-  document.getElementById(p+'srcSeasonVarUnit').innerHTML = '<b>Fonte:</b> stessa colonna del grafico "Andamento mese per mese" sopra, riorganizzata per mese-anno per confrontare la stagionalita\'.' + ripLegenda();
+  mkChart(p+'chartBreak', {
+    type:'bar',
+    data:{labels, datasets:VOCI_GAS.map(([label,data,col]) => ({
+      label, data, backgroundColor:col, stack:'s',
+      borderColor:T.surface, borderWidth:2, borderSkipped:false, borderRadius:3, maxBarThickness:26
+    }))},
+    options:{ responsive:true, maintainAspectRatio:false, interaction:idxHover,
+      plugins:{ legend:{position:'top', align:'end'}, tooltip:{callbacks:{label:c => c.dataset.label+': '+eur(c.parsed.y)}} },
+      scales:{ y:Object.assign(yAxis(v => v+' €'), {stacked:true}), x:Object.assign(xAxis(), {stacked:true}) } }
+  });
 
-  const imposte = rows.map(r => round2(r.tot-r.mat-r.tra-r.one));
-  charts.push(new Chart(document.getElementById(p+'chartVoci'), {
+  mkChart(p+'chartVoci', {
     type:'line',
-    data:{labels, datasets:[
-      {label:'Materia prima', data:rows.map(r=>r.mat), borderColor:'#2a78d6', backgroundColor:'#2a78d6', tension:0.15},
-      {label:'Trasporto/rete', data:rows.map(r=>r.tra), borderColor:'#1baf7a', backgroundColor:'#1baf7a', tension:0.15},
-      {label:'Oneri sistema', data:rows.map(r=>r.one), borderColor:'#eda100', backgroundColor:'#eda100', tension:0.15},
-      {label:'Imposte+IVA+altro', data:imposte, borderColor:'#e87ba4', backgroundColor:'#e87ba4', tension:0.15},
-    ]},
-    options:{responsive:true, maintainAspectRatio:false, interaction:stackedInteraction, plugins:{legend:{position:'top', labels:{boxWidth:10, font:{size:10}}}, tooltip:stackedInteraction}, scales:{y:{ticks:{callback:v=>v+' EUR'}}, x:{grid:{display:false}, ticks:allLabels}}}
-  }));
-  document.getElementById(p+'src7').innerHTML = '<b>Fonte:</b> colonne Materia/Trasporto/Oneri di ciascuna bolletta. <b>Formula "Imposte+IVA+altro":</b> Totale − Materia − Trasporto − Oneri (residuo).';
+    data:{labels, datasets:VOCI_GAS.map(([label,data,col]) => ({
+      label, data, borderColor:col, backgroundColor:col, borderWidth:2,
+      pointRadius:0, pointHoverRadius:5, tension:.2, fill:false
+    }))},
+    options:{ responsive:true, maintainAspectRatio:false, interaction:idxHover,
+      plugins:{ legend:{position:'top', align:'end'}, tooltip:{callbacks:{label:c => c.dataset.label+': '+eur(c.parsed.y)}} },
+      scales:{ y:yAxis(v => v+' €'), x:xAxis() } }
+  });
 
   const compData = rows.map(r => {
-    const imp = round2(r.tot-r.mat-r.tra-r.one);
-    const tot = r.tot || 1;
+    const imp = round2(r.tot - r.mat - r.tra - r.one), tot = r.tot || 1;
     return [r.mat/tot, r.tra/tot, r.one/tot, imp/tot];
   });
-  charts.push(new Chart(document.getElementById(p+'chartComposizione'), {
+  mkChart(p+'chartComposizione', {
     type:'bar',
-    data:{labels, datasets:[
-      {label:'Materia prima', data:compData.map(c=>c[0]), backgroundColor:'#2a78d6', stack:'s'},
-      {label:'Trasporto/rete', data:compData.map(c=>c[1]), backgroundColor:'#1baf7a', stack:'s'},
-      {label:'Oneri sistema', data:compData.map(c=>c[2]), backgroundColor:'#eda100', stack:'s'},
-      {label:'Imposte+IVA+altro', data:compData.map(c=>c[3]), backgroundColor:'#e87ba4', stack:'s'},
-    ]},
-    options:{responsive:true, maintainAspectRatio:false, interaction:stackedInteraction, plugins:{legend:{position:'top', labels:{boxWidth:10, font:{size:10}}}, tooltip:{mode:'index', intersect:false, callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y*100).toFixed(1)+'%'}}}, scales:{y:{stacked:true, max:1, ticks:{callback:v=>(v*100)+'%'}}, x:{stacked:true, grid:{display:false}, ticks:allLabels}}}
-  }));
-  document.getElementById(p+'src8').innerHTML = '<b>Formula:</b> ciascuna voce di costo del mese / Costo totale del mese (100% per colonna).';
+    data:{labels, datasets:VOCI_GAS.map(([label,,col], i) => ({
+      label, data:compData.map(c => c[i]), backgroundColor:col, stack:'s',
+      borderColor:T.surface, borderWidth:2, borderSkipped:false, borderRadius:3, maxBarThickness:26
+    }))},
+    options:{ responsive:true, maintainAspectRatio:false, interaction:idxHover,
+      plugins:{ legend:{position:'top', align:'end'}, tooltip:{callbacks:{label:c => c.dataset.label+': '+nf(c.parsed.y*100,1)+'%'}} },
+      scales:{ y:Object.assign(yAxis(v => Math.round(v*100)+'%'), {stacked:true, max:1}), x:Object.assign(xAxis(), {stacked:true}) } }
+  });
 
-  charts.push(new Chart(document.getElementById(p+'chartBreak'), {
-    type:'bar',
-    data:{labels, datasets:[
-      {label:'Materia prima', data:rows.map(r=>r.mat), backgroundColor:'#2a78d6', stack:'s'},
-      {label:'Rete/trasporto', data:rows.map(r=>r.tra), backgroundColor:'#1baf7a', stack:'s'},
-      {label:'Oneri sistema', data:rows.map(r=>r.one), backgroundColor:'#eda100', stack:'s'},
-      {label:'Imposte+IVA+altro', data:imposte, backgroundColor:'#e87ba4', stack:'s'}
-    ]},
-    options:{responsive:true, maintainAspectRatio:false, interaction:stackedInteraction, plugins:{legend:{position:'top', labels:{boxWidth:10, font:{size:10}}}, tooltip:stackedInteraction}, scales:{y:{stacked:true, ticks:{callback:v=>v+' EUR'}}, x:{stacked:true, grid:{display:false}, ticks:allLabels}}}
-  }));
-  document.getElementById(p+'src9').innerHTML = '<b>Fonte/Formula:</b> stessa di "Trend di tutte le voci di costo" sopra, vista come colonne impilate. Passa il mouse su una colonna per vedere tutti i valori insieme.';
-
+  /* — Fasce orarie — */
   if (fascia) {
-    charts.push(new Chart(document.getElementById(p+'chartFascia'), {
+    const fasce = [['F1 · ore di punta', rows.map(r=>r.f1), T.s1], ['F23 · sere, notti e weekend', rows.map(r=>r.f23), T.s2]];
+    mkChart(p+'chartFascia', {
       type:'bar',
-      data:{labels, datasets:[
-        {label:'F1 (ore piene)', data:rows.map(r=>r.f1), backgroundColor:'#2a78d6', stack:'s'},
-        {label:'F23 (ore vuote)', data:rows.map(r=>r.f23), backgroundColor:'#c9d9ef', stack:'s'},
-      ]},
-      options:{responsive:true, maintainAspectRatio:false, interaction:stackedInteraction, plugins:{legend:{position:'top', labels:{boxWidth:10, font:{size:10}}}, tooltip:stackedInteraction}, scales:{y:{stacked:true, ticks:{callback:v=>v+' kWh'}}, x:{stacked:true, grid:{display:false}, ticks:allLabels}}}
-    }));
-    document.getElementById(p+'src10').innerHTML = '<b>Fonte:</b> letture F1/F2/F3 del contatore riportate in bolletta (F23 = F2+F3). Per Octopus: differenza tra letture consecutive.';
+      data:{labels, datasets:fasce.map(([label,data,col]) => ({
+        label, data, backgroundColor:col, stack:'s',
+        borderColor:T.surface, borderWidth:2, borderSkipped:false, borderRadius:3, maxBarThickness:26
+      }))},
+      options:{ responsive:true, maintainAspectRatio:false, interaction:idxHover,
+        plugins:{ legend:{position:'top', align:'end'}, tooltip:{callbacks:{label:c => c.dataset.label+': '+c.parsed.y+' kWh'}} },
+        scales:{ y:Object.assign(yAxis(v => v+' kWh'), {stacked:true}), x:Object.assign(xAxis(), {stacked:true}) } }
+    });
 
     const fasciaPct = rows.map(r => {
-      if (r.f1==null || r.f23==null) return [null, null];
-      const t = r.f1 + r.f23 || 1;
+      if (r.f1 == null || r.f23 == null) return [null, null];
+      const t = (r.f1 + r.f23) || 1;
       return [r.f1/t, r.f23/t];
     });
-    charts.push(new Chart(document.getElementById(p+'chartFasciaPct'), {
+    mkChart(p+'chartFasciaPct', {
       type:'bar',
-      data:{labels, datasets:[
-        {label:'% F1', data:fasciaPct.map(f=>f[0]), backgroundColor:'#2a78d6', stack:'s'},
-        {label:'% F23', data:fasciaPct.map(f=>f[1]), backgroundColor:'#c9d9ef', stack:'s'},
-      ]},
-      options:{responsive:true, maintainAspectRatio:false, interaction:stackedInteraction, plugins:{legend:{position:'top', labels:{boxWidth:10, font:{size:10}}}, tooltip:{mode:'index', intersect:false, callbacks:{label:(ctx)=>ctx.dataset.label+': '+(ctx.parsed.y!=null?(ctx.parsed.y*100).toFixed(1)+'%':'n.d.')}}}, scales:{y:{stacked:true, max:1, ticks:{callback:v=>(v*100)+'%'}}, x:{stacked:true, grid:{display:false}, ticks:allLabels}}}
-    }));
-    document.getElementById(p+'src11').innerHTML = '<b>Formula:</b> F1 / (F1+F23) e F23 / (F1+F23) per ciascun mese.';
+      data:{labels, datasets:fasce.map(([label,,col], i) => ({
+        label, data:fasciaPct.map(f => f[i]), backgroundColor:col, stack:'s',
+        borderColor:T.surface, borderWidth:2, borderSkipped:false, borderRadius:3, maxBarThickness:26
+      }))},
+      options:{ responsive:true, maintainAspectRatio:false, interaction:idxHover,
+        plugins:{ legend:{position:'top', align:'end'}, tooltip:{callbacks:{label:c => c.dataset.label+': '+(c.parsed.y!=null ? nf(c.parsed.y*100,1)+'%' : 'n.d.')}} },
+        scales:{ y:Object.assign(yAxis(v => Math.round(v*100)+'%'), {stacked:true, max:1}), x:Object.assign(xAxis(), {stacked:true}) } }
+    });
   }
 
-  let html = '<tr><th>Fornitore</th><th>N. mesi</th><th>Consumo tot.</th><th>Costo tot.</th><th>Costo medio unitario materia</th></tr>';
-  fornitori.forEach(forn => {
-    const fr = rows.filter(r=>r.f===forn);
-    const n = fr.length;
-    const consTot = fr.reduce((s,r)=>s+(r.c||0),0);
-    const costTot = fr.reduce((s,r)=>s+(r.tot||0),0);
-    const matTot = fr.filter(r=>r.mat!=null).reduce((s,r)=>s+r.mat,0);
-    const consMat = fr.filter(r=>r.mat!=null).reduce((s,r)=>s+(r.c||0),0);
-    const unitAvg = consMat ? (matTot/consMat) : null;
-    html += `<tr><td>${forn}</td><td>${n}</td><td>${consTot.toLocaleString('it-IT')} ${unit}</td><td>${fmtEUR(costTot)}</td><td>${unitAvg!=null? unitAvg.toFixed(4)+' EUR/'+unit:'-'}</td></tr>`;
-  });
-  document.getElementById(p+'riepilogoTable').innerHTML = html;
+  /* — Testi "Come si legge" — */
+  const ripNota = anyRip
+    ? ' <b>Punto vuoto e tratteggio</b> segnano i mesi ricavati per ripartizione, con il contatore non letto: affidabile il totale del periodo, non il singolo mese.'
+    : '';
+  const materia = kind === 'gas' ? 'gas' : 'energia';
+  const testi = {
+    srcVarUnit: `<b>Da dove viene:</b> sezione "Elementi di dettaglio" della bolletta, dove la quota ${materia} (che varia col consumo) è separata dalla quota fissa di commercializzazione. <b>Calcolo:</b> spesa variabile del mese ÷ ${unit} del mese.${ripNota}`,
+    src1: `<b>Da dove viene:</b> il totale fatturato, riportato al mese dove il fornitore fattura a bimestre.${unit==='kWh' ? ' Il canone RAI è escluso.' : ''}${ripNota}`,
+    src2: `<b>Da dove viene:</b> i consumi fatturati, così come sono in bolletta. Nessun calcolo aggiuntivo.${ripNota}`,
+    src3: `<b>Calcolo:</b> materia prima in € ÷ ${unit} del mese, quota fissa inclusa. Sempre esclusi rete e oneri di sistema.${ripNota}`,
+    src7: `<b>Da dove viene:</b> le colonne materia prima, rete e oneri di ogni bolletta. <b>La voce "Imposte e IVA"</b> è quel che resta: totale − materia − rete − oneri. Passa il dito o il mouse su un mese per vedere tutte e quattro le voci insieme.`,
+    src10: `<b>Da dove viene:</b> le letture F1, F2 e F3 del contatore riportate in bolletta; F23 è la somma di F2 e F3. Per Octopus, tariffa monoraria, le fasce sono ricostruite dalla differenza tra letture consecutive.`
+  };
+  Object.entries(testi).forEach(([k,v]) => { const el = document.getElementById(p+k); if (el) el.innerHTML = v; });
 
-  let costHtml = '<tr><th>Anno</th><th>N. mesi</th><th>Materia variabile (EUR/'+unit+', media)</th><th>Materia (media/mese)</th><th>Materia (EUR/'+unit+', fissa+var.)</th><th>Trasporto (media/mese)</th><th>Oneri (media/mese)</th><th>Imposte+altro (media/mese)</th><th>Totale (media/mese)</th></tr>';
-  years.forEach(y => {
-    const yr = rows.filter(r=>r.month.startsWith(String(y)));
-    const n = yr.length;
-    const avg = key => round2(yr.reduce((s,r)=>s+r[key],0)/n);
-    const avgImp = round2(yr.reduce((s,r)=>s+(r.tot-r.mat-r.tra-r.one),0)/n);
-    const matTot = yr.reduce((s,r)=>s+r.mat,0);
-    const consTot = yr.reduce((s,r)=>s+(r.c||0),0);
-    const unitMat = consTot ? (matTot/consTot) : null;
-    const varRows = yr.filter(r=>r.mat_var_unit!=null);
-    const avgVarUnit = varRows.length ? (varRows.reduce((s,r)=>s+r.mat_var_unit,0)/varRows.length) : null;
-    costHtml += `<tr><td>${y}</td><td>${n}</td><td>${avgVarUnit!=null?avgVarUnit.toFixed(4)+' EUR/'+unit:'-'}</td><td>${fmtEUR(avg('mat'))}</td><td>${unitMat!=null?unitMat.toFixed(4)+' EUR/'+unit:'-'}</td><td>${fmtEUR(avg('tra'))}</td><td>${fmtEUR(avg('one'))}</td><td>${fmtEUR(avgImp)}</td><td>${fmtEUR(avg('tot'))}</td></tr>`;
+  /* — Tabella fornitori — */
+  let html = '<thead><tr><th>Fornitore</th><th>Mesi</th><th>Consumo totale</th><th>Speso in totale</th><th>Prezzo pieno medio</th></tr></thead><tbody>';
+  fornitori.forEach(f => {
+    const fr = rows.filter(r => r.f === f);
+    const consTot = fr.reduce((s,r) => s + (r.c||0), 0);
+    const costTot = fr.reduce((s,r) => s + (r.tot||0), 0);
+    const matTot  = fr.filter(r => r.mat!=null).reduce((s,r) => s + r.mat, 0);
+    const consMat = fr.filter(r => r.mat!=null).reduce((s,r) => s + (r.c||0), 0);
+    const unitAvg = consMat ? matTot/consMat : null;
+    html += `<tr><td>${FORNITORE_ESTESO[f]||f}</td><td>${fr.length}</td><td>${int(consTot)} ${unit}</td>` +
+            `<td>${eur(costTot)}</td><td>${unitAvg!=null ? nf(unitAvg,4)+' €/'+unit : '—'}</td></tr>`;
   });
-  document.getElementById(p+'annualCostTable').innerHTML = costHtml;
+  document.getElementById(p+'riepilogoTable').innerHTML = html + '</tbody>';
+
+  /* — Tabella medie annuali — */
+  let costHtml = `<thead><tr><th>Anno</th><th>Mesi</th><th>Prezzo ${materia} (€/${unit})</th>` +
+    `<th>Prezzo pieno (€/${unit})</th><th>Materia prima</th><th>Rete</th><th>Oneri</th><th>Imposte e IVA</th><th>Totale al mese</th></tr></thead><tbody>`;
+  years.forEach(y => {
+    const yr = rows.filter(r => r.month.startsWith(String(y)));
+    const n = yr.length;
+    const avg = k => round2(yr.reduce((s,r) => s + r[k], 0) / n);
+    const avgImp = round2(yr.reduce((s,r) => s + (r.tot-r.mat-r.tra-r.one), 0) / n);
+    const consTot = yr.reduce((s,r) => s + (r.c||0), 0);
+    const unitMat = consTot ? yr.reduce((s,r) => s + r.mat, 0) / consTot : null;
+    const varRows = yr.filter(r => r.mat_var_unit != null);
+    const avgVar = varRows.length ? varRows.reduce((s,r) => s + r.mat_var_unit, 0) / varRows.length : null;
+    costHtml += `<tr><td>${y}</td><td>${n}</td><td>${avgVar!=null ? nf(avgVar,4) : '—'}</td>` +
+      `<td>${unitMat!=null ? nf(unitMat,4) : '—'}</td><td>${eur(avg('mat'))}</td><td>${eur(avg('tra'))}</td>` +
+      `<td>${eur(avg('one'))}</td><td>${eur(avgImp)}</td><td>${eur(avg('tot'))}</td></tr>`;
+  });
+  document.getElementById(p+'annualCostTable').innerHTML = costHtml + '</tbody>';
 
   if (fascia) {
-    let fasciaHtml = '<tr><th>Anno</th><th>N. mesi con dato</th><th>F1 (media/mese)</th><th>F23 (media/mese)</th><th>% F1</th><th>% F23</th></tr>';
+    let fh = '<thead><tr><th>Anno</th><th>Mesi con dato</th><th>F1 al mese</th><th>F23 al mese</th><th>Quota F1</th><th>Quota F23</th></tr></thead><tbody>';
     years.forEach(y => {
-      const yr = rows.filter(r=>r.month.startsWith(String(y)) && r.f1!=null);
-      const n = yr.length;
-      if (!n) { fasciaHtml += `<tr><td>${y}</td><td>0</td><td colspan="4">n.d.</td></tr>`; return; }
-      const avgF1 = round2(yr.reduce((s,r)=>s+r.f1,0)/n);
-      const avgF23 = round2(yr.reduce((s,r)=>s+r.f23,0)/n);
-      const t = avgF1+avgF23;
-      fasciaHtml += `<tr><td>${y}</td><td>${n}</td><td>${avgF1} kWh</td><td>${avgF23} kWh</td><td>${(avgF1/t*100).toFixed(1)}%</td><td>${(avgF23/t*100).toFixed(1)}%</td></tr>`;
+      const yr = rows.filter(r => r.month.startsWith(String(y)) && r.f1 != null);
+      if (!yr.length) { fh += `<tr><td>${y}</td><td>0</td><td colspan="4">nessun dato</td></tr>`; return; }
+      const f1 = round2(yr.reduce((s,r) => s + r.f1, 0) / yr.length);
+      const f23 = round2(yr.reduce((s,r) => s + r.f23, 0) / yr.length);
+      const t = f1 + f23;
+      fh += `<tr><td>${y}</td><td>${yr.length}</td><td>${nf(f1,0)} kWh</td><td>${nf(f23,0)} kWh</td>` +
+            `<td>${nf(f1/t*100,1)}%</td><td>${nf(f23/t*100,1)}%</td></tr>`;
     });
-    document.getElementById('l_annualFasciaTable').innerHTML = fasciaHtml;
+    document.getElementById('l_annualFasciaTable').innerHTML = fh + '</tbody>';
   }
 }
 
-// ---------------- GAS ----------------
+/* ═══════════════════════ Pannello luce ═══════════════════════ */
+function renderLuce(){
+  renderUtility({ rows:DATA.luce_monthly, unit:'kWh', p:'l_', kind:'luce', fornitori:['SEN','Eni','Octopus'], fascia:true });
+  document.getElementById('l_metodologia').innerHTML = `
+    <h4>Come nasce il dato mensile</h4>
+    Le bollette SEN ed Eni sono bimestrali, o trimestrali nel caso dell'ultima Eni (nov 25 – gen 26).
+    <b>Consumo e fasce orarie di ogni singolo mese</b> sono ricostruiti dalle letture reali riportate in bolletta.
+    Il <b>costo di ogni mese</b> è invece ottenuto <b>ripartendo il totale della bolletta</b> in proporzione al consumo
+    di quel mese. Fa eccezione la bolletta Eni nov 25 – gen 26, dove la ripartizione è quella reale letta dal
+    dettaglio tariffario. Octopus fattura già a mese: dati diretti, nessuna ripartizione.
+    <h4>Prezzo dell'energia, sola quota variabile</h4>
+    Rilette le "Elementi di dettaglio" di ogni bolletta per separare la <b>quota energia</b>, che dipende dal consumo,
+    dalla <b>quota fissa di commercializzazione</b>, che non dipende da nulla. Il grafico in cima mostra solo la prima:
+    spesa variabile ÷ consumo del mese. Per SEN il prezzo è quello regolato ARERA, costante per trimestre. Per Eni è
+    ricostruito voce per voce dal dettaglio tariffario mensile, indicizzato PUN/PSV; per le due bollette più recenti
+    (set–ott 25 e nov 25 – gen 26) il dettaglio mensile non c'era, quindi vale il prezzo medio dell'intera bolletta,
+    uguale per tutti i mesi coperti. Per Octopus il prezzo è già in bolletta, alla voce "di cui spesa per vendita
+    energia elettrica" nel Box dell'offerta.
+    <h4>Prezzo pieno, quota fissa inclusa</h4>
+    Formula: <b>materia prima in € ÷ consumo in kWh</b>. "Materia prima" qui è tutta la voce "Spesa per la vendita di
+    energia", quota fissa compresa, sempre al netto di rete e oneri di sistema. È la metrica storica con cui confronto
+    i fornitori tra loro. Per Octopus non coincide con il "prezzo medio" di pagina 1, che esclude la quota fissa:
+    il numero giusto è il "TOTALE" della sezione "Spesa per la vendita di energia" negli Elementi di dettaglio.
+    <h4>Fasce F1 e F23</h4>
+    F23 è la somma di F2 e F3. Per Octopus, che ha tariffa monoraria, le fasce sono calcolate dalle letture del contatore.`;
+}
+
+/* ═══════════════════════ Pannello gas ═══════════════════════ */
 function renderGas(){
   if (gasRendered) return;
   gasRendered = true;
   try {
-    renderUtility({
-      rows: DATA.gas_monthly, unit: 'Smc', p: 'g_', fornitori: ['Eni','Octopus'], fascia: false
-    });
+    renderUtility({ rows:DATA.gas_monthly, unit:'Smc', p:'g_', kind:'gas', fornitori:['Eni','Octopus'], fascia:false });
     renderGasCheck();
     document.getElementById('g_metodologia').innerHTML = `
-      <h4>Base mensile — letture reali</h4>
-      Da <b>giugno 2023 a gennaio 2026</b> consumo e costi di ogni mese sono <b>reali</b>, letti riga per riga
-      dagli <b>"Elementi di dettaglio"</b> delle bollette Eni: ogni voce di spesa è già spezzata per mese
-      (<i>DAL 01/10 AL 31/10</i>, <i>DAL 01/11 AL 30/11</i>…) con la relativa quantità in Smc. Nessuna
-      ripartizione 50/50, nessuna proporzione: sono gli importi che Eni ha attribuito a quel mese.
-      Per <b>gennaio-maggio 2023</b> il consumo è reale e il costo ripartito in proporzione al consumo.
-      Octopus fattura già mensilmente: dati diretti.
+      <h4>Letture reali, mese per mese</h4>
+      Da <b>giugno 2023 a gennaio 2026</b> consumo e costi di ogni mese sono <b>reali</b>, letti riga per riga dagli
+      "Elementi di dettaglio" delle bollette Eni: ogni voce di spesa è già spezzata per mese (<i>DAL 01/10 AL 31/10</i>,
+      <i>DAL 01/11 AL 30/11</i>…) con la quantità in Smc accanto. Nessuna ripartizione a metà, nessuna proporzione:
+      sono gli importi che Eni ha attribuito a quel mese. Per <b>gennaio–maggio 2023</b> il consumo è reale e il costo
+      ripartito in proporzione. Octopus fattura già a mese: dati diretti.
       <h4>La catena degli acconti</h4>
-      Quando il distributore non riesce a leggere il contatore, Eni fattura il mese <b>in acconto</b> (stima) e
-      lo <b>storna</b> nella bolletta successiva, rifatturandolo sulla lettura reale. Qui vengono tenuti solo
-      gli addebiti definitivi: stime e storni si annullano a vicenda (verificato al centesimo su ogni catena)
-      e la somma dei mesi ricostruiti coincide esattamente con la somma dei totali fatturati.
-      <h4>Unica eccezione dichiarata: agosto 2025 – gennaio 2026</h4>
-      In quei sei mesi il contatore è risultato <b>inaccessibile a ogni tentativo di lettura</b>: esiste una
-      sola lettura reale, quella di cessazione del 31/01/2026 (segnante 1858), pari a <b>124 Smc</b> per
-      l'intero periodo. Il totale è reale, ma <b>il dettaglio mensile non esiste</b>: la ripartizione mostrata
-      è quella pro-rata sui giorni applicata da Eni stessa nel ricalcolo. Da leggere come periodo, non mese per mese.
-      Per questo quei sei mesi sono <b>disegnati diversamente in tutti i grafici</b>: punto vuoto e linea
-      tratteggiata (barre sbiadite con bordo, nel grafico dei consumi). Serve a non farli sembrare letture reali —
-      senza questa distinzione il confronto stagionale mostrava agosto-ottobre 2025 a ~20 Smc, come se il
-      riscaldamento fosse acceso in piena estate, mentre negli stessi mesi del 2023 e 2024 il consumo reale
-      è stato di 1-3 Smc. La forma di quella curva è un effetto della ripartizione, non un comportamento.
-      <h4>Costo materia prima — sola quota variabile</h4>
-      La quota fissa di commercializzazione è 10,00 EUR/mese fino ad aprile 2023 e <b>11,00 EUR/mese dal 1°
-      maggio 2023</b> (12,00 meno 1,00 di sconto domiciliazione), col passaggio all'offerta TREND CASA GAS:
-      data ora <b>letta in bolletta</b>, non più assunta. La quota variabile è la somma delle sole voci a
-      consumo (Corrispettivo Gas Index + Contributo al consumo) del mese, divisa per gli Smc del mese.
-      <b>Nei mesi a consumo quasi nullo (tipicamente giugno-settembre) il valore resta rumoroso</b>: pochi
-      centesimi diviso pochi Smc — meglio guardare la tendenza che il singolo mese estivo.
-      <b>Luglio 2025 è il caso limite: consumo 0 Smc</b> (contatore fermo, segnante 1736 sia il 30/06 sia il
-      31/07). La divisione spesa/consumo non esiste, ma <b>il prezzo sì</b>: è mancato il consumo, non la
-      tariffa. Il valore è quindi preso <b>direttamente dalla tariffa esposta in bolletta</b> — Box dell'offerta,
-      tabella "Quota per consumi", Luglio 2025: Corrispettivo Gas Index 0,40428711 + Contributo al consumo
-      0,17305483 = <b>0,577342 €/Smc</b> (fatt. 2532353452). Il metodo è verificato su giugno 2025 della stessa
-      bolletta, che ha consumo &gt; 0 ed è quindi calcolabile in entrambi i modi: 0,431441 + 0,173055 = 0,604496,
-      contro lo 0,605 dello scontrino. Coincidono. Nel grafico "Costo unitario materia prima (fissa+variabile)"
-      qui sotto luglio 2025 resta invece vuoto, ed è corretto: quello è un rapporto spesa/consumo, e con 0 Smc
-      non è definito. Per Octopus il
-      prezzo è dato direttamente in bolletta ("di cui spesa per vendita gas naturale" nel Box dell'offerta).
-      <h4>Costo unitario materia prima (fissa+variabile)</h4>
-      Stessa formula e stessa definizione di "Materia prima" della luce, applicata al gas: Materia prima
-      (EUR) / Consumo (Smc), sempre esclusi trasporto/rete e oneri di sistema. E' la metrica storica usata
-      per confrontare i fornitori tra loro.
-      <h4>Bollette di ricalcolo: ora integrate</h4>
-      La bolletta di cessazione (76,37 EUR) e il ricalcolo di marzo 2026 (60,16 EUR) <b>non sono più escluse</b>:
-      sono la fonte della lettura reale di 124 Smc e sono confluite nei mesi ago25-gen26 qui sopra. Ogni euro
-      fatturato da Eni è ora attribuito a un mese.
-    `;
+      Quando il distributore non riesce a leggere il contatore, Eni fattura il mese <b>in acconto</b>, cioè a stima, e
+      lo <b>storna</b> nella bolletta dopo, rifatturandolo sulla lettura vera. Qui restano solo gli addebiti definitivi:
+      stime e storni si annullano a vicenda, verificato al centesimo su ogni catena, e la somma dei mesi ricostruiti
+      coincide esattamente con la somma dei totali fatturati.
+      <h4>L'unica eccezione: agosto 2025 – gennaio 2026</h4>
+      In quei sei mesi il contatore è risultato <b>inaccessibile a ogni tentativo di lettura</b>. Esiste una sola lettura
+      reale, quella di cessazione del 31/01/2026 (segnante 1858), pari a <b>124 Smc per l'intero periodo</b>. Il totale è
+      reale, ma <b>il dettaglio mensile non esiste</b>: la ripartizione mostrata è quella pro-rata sui giorni applicata da
+      Eni stessa nel ricalcolo. Va letta come periodo, non mese per mese. Per questo quei sei mesi sono <b>disegnati
+      diversamente in tutti i grafici</b>: punto vuoto e linea tratteggiata, barre sbiadite con bordo nel grafico dei
+      consumi. Senza quella distinzione il confronto stagionale mostrava agosto–ottobre 2025 a circa 20 Smc, come se il
+      riscaldamento fosse acceso in piena estate, mentre negli stessi mesi del 2023 e 2024 il consumo reale è stato di
+      1–3 Smc. La forma di quella curva è un effetto della ripartizione, non un comportamento.
+      <h4>Prezzo del gas, sola quota variabile</h4>
+      La quota fissa di commercializzazione è 10,00 €/mese fino ad aprile 2023 e <b>11,00 €/mese dal 1° maggio 2023</b>
+      (12,00 meno 1,00 di sconto domiciliazione), col passaggio all'offerta TREND CASA GAS: data <b>letta in bolletta</b>,
+      non più assunta. La quota variabile è la somma delle sole voci a consumo — Corrispettivo Gas Index più Contributo al
+      consumo — divisa per gli Smc del mese. <b>Nei mesi quasi senza consumo, tipicamente giugno–settembre, il valore
+      resta rumoroso</b>: pochi centesimi divisi per pochi Smc. Meglio guardare la tendenza che il singolo mese estivo.
+      <b>Luglio 2025 è il caso limite: consumo 0 Smc</b>, contatore fermo, segnante 1736 sia il 30/06 sia il 31/07. La
+      divisione spesa ÷ consumo non esiste, ma <b>il prezzo sì</b>: è mancato il consumo, non la tariffa. Il valore è
+      quindi preso <b>direttamente dalla tariffa esposta in bolletta</b> — Box dell'offerta, tabella "Quota per consumi",
+      luglio 2025: Corrispettivo Gas Index 0,40428711 + Contributo al consumo 0,17305483 = <b>0,577342 €/Smc</b>
+      (fattura 2532353452). Il metodo è verificato su giugno 2025 della stessa bolletta, che ha consumo maggiore di zero
+      ed è quindi calcolabile in entrambi i modi: 0,431441 + 0,173055 = 0,604496 contro lo 0,605 dello scontrino.
+      Coincidono. Nel grafico "Con dentro anche la quota fissa" luglio 2025 resta invece vuoto, ed è corretto: quello è un
+      rapporto spesa ÷ consumo, e con 0 Smc non è definito. Per Octopus il prezzo è già in bolletta, alla voce
+      "di cui spesa per vendita gas naturale" nel Box dell'offerta.
+      <h4>Prezzo pieno, quota fissa inclusa</h4>
+      Stessa formula della luce applicata al gas: materia prima in € ÷ consumo in Smc, sempre esclusi rete e oneri.
+      È la metrica storica con cui confronto i fornitori tra loro.
+      <h4>Le bollette di ricalcolo, ora integrate</h4>
+      La bolletta di cessazione (76,37 €) e il ricalcolo di marzo 2026 (60,16 €) <b>non sono più escluse</b>: sono la fonte
+      della lettura reale di 124 Smc e sono confluite nei mesi ago 25 – gen 26 qui sopra. Ogni euro fatturato da Eni è
+      ora attribuito a un mese.`;
   } catch (err) {
     const el = document.getElementById('gasError');
     el.style.display = 'block';
-    el.textContent = 'Errore nel rendering della sezione Gas: ' + (err && err.message ? err.message : err) +
-      '\n\nCopia questo messaggio e incollalo in chat così lo sistemo.';
+    el.textContent = 'Non riesco a disegnare la sezione Gas.\n' + (err && err.message ? err.message : err) +
+      '\n\nCopia questo messaggio e incollalo in chat.';
     console.error(err);
     gasRendered = false;
   }
 }
 
 function renderGasCheck(){
-  // Tutto calcolato dal dataset: nessun valore hardcoded.
   const byMonth = {};
   DATA.gas_monthly.forEach(r => byMonth[r.month] = r.c);
-  const sum2 = (m1, m2) => round2((byMonth[m1]||0) + (byMonth[m2]||0));
-  // stagione ago-gen a cavallo d'anno: y = anno di agosto
-  const stagione = y => ({
-    agoSet: sum2(y+'-08', y+'-09'),
-    ottNov: sum2(y+'-10', y+'-11'),
-    dicGen: sum2(y+'-12', (y+1)+'-01'),
-  });
+  const sum2 = (a,b) => round2((byMonth[a]||0) + (byMonth[b]||0));
+  const stagione = y => ({ agoSet:sum2(y+'-08', y+'-09'), ottNov:sum2(y+'-10', y+'-11'), dicGen:sum2(y+'-12', (y+1)+'-01') });
   const S = [2023, 2024, 2025].map(y => { const s = stagione(y); s.y = y; s.tot = round2(s.agoSet + s.ottNov + s.dicGen); return s; });
 
-  let html = '<tr><th>Stagione</th><th>Ago-Set</th><th>Ott-Nov</th><th>Dic-Gen</th><th>Totale ago-gen (Smc)</th></tr>';
+  let html = '<thead><tr><th>Stagione</th><th>Ago–Set</th><th>Ott–Nov</th><th>Dic–Gen</th><th>Totale (Smc)</th></tr></thead><tbody>';
   S.forEach(s => {
     const nota = s.y === 2025 ? ' *' : '';
-    html += `<tr><td>${s.y}-${String(s.y+1).slice(2)} (ago${String(s.y).slice(2)}-gen${String(s.y+1).slice(2)})${nota}</td>` +
+    html += `<tr><td>ago ${String(s.y).slice(2)} – gen ${String(s.y+1).slice(2)}${nota}</td>` +
             `<td>${s.agoSet}</td><td>${s.ottNov}</td><td>${s.dicGen}</td><td><b>${s.tot}</b></td></tr>`;
   });
-  document.getElementById('gasCheckTable').innerHTML = html;
+  document.getElementById('gasCheckTable').innerHTML = html + '</tbody>';
 
   const [a, b, c] = S;
-  const pct = (x, base) => (base ? Math.round((x/base - 1)*100) : 0);
-
+  const pct = (x, base) => base ? Math.round((x/base - 1) * 100) : 0;
   document.getElementById('gasVerdict').innerHTML = `
-    <b>Confronto ora omogeneo:</b> tutte e tre le stagioni sono letture reali del distributore, non stime.
-    Il periodo <b>ago25-gen26 (${c.tot} Smc)</b> resta il più alto: <b>+${pct(c.tot, a.tot)}%</b> vs ${a.y}-${String(a.y+1).slice(2)}
-    (${a.tot} Smc) e <b>+${pct(c.tot, b.tot)}%</b> vs ${b.y}-${String(b.y+1).slice(2)} (${b.tot} Smc).<br><br>
-    È un salto reale ma <b>molto meno estremo di quanto sembrava prima</b>: il vecchio confronto metteva una lettura
-    reale contro delle stime in acconto, gonfiando lo scarto. L'origine del problema è documentata nelle bollette:
-    <b>il contatore è risultato inaccessibile alla lettura ogni mese da agosto a dicembre 2025</b>, quindi Eni ha
-    fatturato sei mesi su stime al ribasso, poi corrette in blocco alla cessazione (bollette da 76,37 EUR e 60,16 EUR,
-    entrambe verificate aritmeticamente corrette e ora <b>integrate</b> nei grafici mensili qui sopra).<br><br>
-    <span style="font-size:.9em">* Per ago25-gen26 la ripartizione interna nelle tre colonne è pro-rata sui giorni
-    (unica lettura reale sul periodo, vedi metodologia): è affidabile il <b>totale</b>, non la singola colonna.</span>
-  `;
+    <b>Ora il confronto è omogeneo:</b> tutte e tre le stagioni sono letture reali del distributore, non stime.
+    Il periodo <b>ago 25 – gen 26 (${c.tot} Smc)</b> resta il più alto: <b>+${pct(c.tot, a.tot)}%</b> sul
+    ${a.y}–${String(a.y+1).slice(2)} (${a.tot} Smc) e <b>+${pct(c.tot, b.tot)}%</b> sul ${b.y}–${String(b.y+1).slice(2)} (${b.tot} Smc).<br><br>
+    È un salto vero, ma <b>molto meno estremo di quanto sembrava</b>: il vecchio confronto metteva una lettura reale
+    contro delle stime, gonfiando lo scarto. L'origine è documentata nelle bollette — <b>il contatore è risultato
+    inaccessibile alla lettura ogni mese da agosto a dicembre 2025</b>, quindi Eni ha fatturato sei mesi su stime al
+    ribasso, poi corrette in blocco alla cessazione (76,37 € e 60,16 €, entrambe verificate aritmeticamente e ora
+    integrate nei grafici qui sopra).<br><br>
+    <span style="font-size:.9em">* Per ago 25 – gen 26 la ripartizione nelle tre colonne è pro-rata sui giorni:
+    c'è una sola lettura reale sul periodo. È affidabile il <b>totale</b>, non la singola colonna.</span>`;
 }
 
-document.getElementById('btn-luce').onclick = ()=>{
-  document.getElementById('btn-luce').classList.add('active');
-  document.getElementById('btn-gas').classList.remove('active');
-  document.getElementById('lucePane').style.display='block';
-  document.getElementById('gasPane').style.display='none';
-  renderNotes('luce');
+/* ═══════════════════════ Interazione ═══════════════════════ */
+function switchTo(kind){
+  activeKind = kind;
+  const gas = kind === 'gas';
+  document.getElementById('btn-luce').classList.toggle('on', !gas);
+  document.getElementById('btn-gas').classList.toggle('on', gas);
+  document.getElementById('btn-luce').setAttribute('aria-selected', String(!gas));
+  document.getElementById('btn-gas').setAttribute('aria-selected', String(gas));
+  document.getElementById('lucePane').style.display = gas ? 'none' : 'block';
+  document.getElementById('gasPane').style.display  = gas ? 'block' : 'none';
+  renderChips(); renderNotes(); renderStats();
+  if (gas) setTimeout(renderGas, 20);
+  // I grafici costruiti mentre il pannello era nascosto nascono a larghezza zero.
+  setTimeout(resizeVisible, 40);
+}
+function resizeVisible(){
+  Object.values(chartById).forEach(c => { if (c.canvas.offsetParent) c.resize(); });
+}
+document.getElementById('btn-luce').onclick = () => switchTo('luce');
+document.getElementById('btn-gas').onclick  = () => switchTo('gas');
+
+/* Alternanza vista dentro una sezione */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.seg[data-viewgroup] button');
+  if (!btn) return;
+  const seg = btn.parentElement;
+  seg.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const views = seg.closest('.sec').querySelectorAll('.views > .view');
+  const idx = +btn.dataset.view;
+  views.forEach((v,i) => v.classList.toggle('on', i === idx));
+  views[idx]?.querySelectorAll('canvas').forEach(cv => chartById[cv.id]?.resize());
+});
+
+/* Periodo delle segnalazioni */
+document.getElementById('noteRange').addEventListener('click', e => {
+  const btn = e.target.closest('button'); if (!btn) return;
+  noteRange = btn.dataset.range;
+  e.currentTarget.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+  renderNotes();
+});
+
+/* Tema */
+function applyTheme(){
+  T = PALETTE[themeName()];
+  applyChartDefaults();
+  if (!DATA) return;
+  destroyCharts();
+  const gasEra = gasRendered;
+  gasRendered = false;
+  renderLuce();
+  if (gasEra) renderGas();
+  renderStats();
+  watchSections();
+  setTimeout(resizeVisible, 40);
+}
+document.getElementById('themeBtn').onclick = () => {
+  const next = themeName() === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('tema', next); } catch(e){}
+  applyTheme();
 };
-document.getElementById('btn-gas').onclick = ()=>{
-  document.getElementById('btn-gas').classList.add('active');
-  document.getElementById('btn-luce').classList.remove('active');
-  document.getElementById('gasPane').style.display='block';
-  document.getElementById('lucePane').style.display='none';
-  renderNotes('gas');
-  setTimeout(renderGas, 30);
-};
+mq.addEventListener('change', () => { if (!document.documentElement.getAttribute('data-theme')) applyTheme(); });
+
 loadData();
 </script>
 </body>
