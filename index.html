@@ -677,11 +677,14 @@ const crosshair = {
 Chart.register(crosshair);
 
 function applyChartDefaults(){
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   Chart.defaults.font.family = '"IBM Plex Sans", system-ui, sans-serif';
   Chart.defaults.font.size = 11;
   Chart.defaults.color = T.tick;
-  Chart.defaults.animation = reduce ? false : { duration: 420 };
+  // Animazioni disattivate di proposito. Con le animazioni attive Chart.js disegna solo
+  // dentro requestAnimationFrame: se la pagina si apre in una scheda in secondo piano
+  // (o il telefono e' in risparmio energetico) il frame non arriva mai e i grafici restano
+  // vuoti per sempre. Senza animazione il disegno e' sincrono e non dipende da nulla.
+  Chart.defaults.animation = false;
   Chart.defaults.plugins.tooltip.backgroundColor = T.tipBg;
   Chart.defaults.plugins.tooltip.titleColor = T.tipInk;
   Chart.defaults.plugins.tooltip.bodyColor = T.tipInk;
@@ -769,6 +772,7 @@ async function loadData(){
     renderStats();
     renderLuce();
     watchSections();
+    resizeVisible();
   } catch (err) {
     document.querySelector('.wrap').insertAdjacentHTML('afterbegin',
       '<div class="alert">Non riesco a caricare i dati.\n' + esc(err && err.message ? err.message : err) +
@@ -1310,8 +1314,15 @@ function switchTo(kind){
   setTimeout(resizeVisible, 40);
 }
 function resizeVisible(){
-  Object.values(chartById).forEach(c => { if (c.canvas.offsetParent) c.resize(); });
+  Object.values(chartById).forEach(c => {
+    if (!c.canvas.offsetParent) return;
+    c.resize();
+    if (c.width > 0 && c.height > 0) c.draw();
+  });
 }
+// Se la pagina è stata caricata mentre era in secondo piano, ridisegna al ritorno.
+document.addEventListener('visibilitychange', () => { if (!document.hidden) resizeVisible(); });
+window.addEventListener('pageshow', resizeVisible);
 document.getElementById('btn-luce').onclick = () => switchTo('luce');
 document.getElementById('btn-gas').onclick  = () => switchTo('gas');
 
@@ -1325,7 +1336,11 @@ document.addEventListener('click', e => {
   const views = seg.closest('.sec').querySelectorAll('.views > .view');
   const idx = +btn.dataset.view;
   views.forEach((v,i) => v.classList.toggle('on', i === idx));
-  views[idx]?.querySelectorAll('canvas').forEach(cv => chartById[cv.id]?.resize());
+  views[idx]?.querySelectorAll('canvas').forEach(cv => {
+    const ch = chartById[cv.id]; if (!ch) return;
+    ch.resize();
+    if (ch.width > 0 && ch.height > 0) ch.draw();
+  });
 });
 
 /* Periodo delle segnalazioni */
