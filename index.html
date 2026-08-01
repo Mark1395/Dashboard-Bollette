@@ -23,7 +23,6 @@
   --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
   --luce:#eda100; --gas:#2a78d6;
   --good:#006300; --bad:#d03b3b; --serious:#ec835a;
-  --y1:#86b6ef; --y2:#5598e7; --y3:#2a78d6; --y4:#184f95;
   --shadow:0 1px 2px rgba(11,11,11,.05), 0 8px 24px -18px rgba(11,11,11,.35);
   --r:14px;
 }
@@ -36,7 +35,6 @@
     --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
     --luce:#eda100; --gas:#3987e5;
     --good:#0ca30c; --bad:#d03b3b; --serious:#ec835a;
-    --y1:#184f95; --y2:#256abf; --y3:#3987e5; --y4:#9ec5f4;
     --shadow:none;
   }
 }
@@ -48,7 +46,6 @@
   --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
   --luce:#eda100; --gas:#3987e5;
   --good:#0ca30c; --bad:#d03b3b; --serious:#ec835a;
-  --y1:#184f95; --y2:#256abf; --y3:#3987e5; --y4:#9ec5f4;
   --shadow:none;
 }
 
@@ -152,6 +149,18 @@ h1 { font-size:clamp(1.5rem,4.5vw,2.05rem); font-weight:700; line-height:1.12; }
   margin:10px 2px 2px; }
 .legend span.item { display:inline-flex; align-items:center; gap:6px; }
 .legend .ghost { width:9px; height:9px; border-radius:3px; border:1.5px solid var(--ink-3); background:var(--surface); }
+
+/* Selettore dell'anno messo in evidenza nei confronti stagionali */
+.yearpick { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:2px 2px 12px; }
+.yearpick .lab { font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:.64rem; font-weight:500;
+  letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); margin-right:2px; }
+.yearpick button { display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+  border:1px solid var(--hair); background:transparent; border-radius:999px; padding:4px 11px;
+  font:600 .74rem/1.3 "IBM Plex Sans", sans-serif; color:var(--ink-2); }
+.yearpick button:hover { color:var(--ink); border-color:var(--axis); }
+.yearpick button.on { color:var(--ink); border-color:var(--ink-3);
+  background:color-mix(in srgb, var(--ink) 5%, transparent); }
+.yearpick .dot { width:8px; height:8px; border-radius:2px; }
 
 details.howto { margin-top:9px; border-top:1px solid var(--rule); }
 details.howto > summary { cursor:pointer; list-style:none; padding:9px 2px 0; font-size:.76rem;
@@ -303,7 +312,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
           <div class="plot"><canvas id="l_chartVarUnit"></canvas></div>
           <div class="legend" id="l_legendVarUnit"></div>
         </div>
-        <div class="view"><div class="plot tall"><canvas id="l_chartSeasonVarUnit"></canvas></div></div>
+        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="l_chartSeasonVarUnit"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_srcVarUnit"></div></details>
     </div>
@@ -326,7 +335,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
           <div class="plot"><canvas id="l_chartCost"></canvas></div>
           <div class="legend" id="l_legend1"></div>
         </div>
-        <div class="view"><div class="plot tall"><canvas id="l_chartSeasonCost"></canvas></div></div>
+        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="l_chartSeasonCost"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src1"></div></details>
     </div>
@@ -349,7 +358,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
           <div class="plot"><canvas id="l_chartConsumo"></canvas></div>
           <div class="legend" id="l_legend2"></div>
         </div>
-        <div class="view"><div class="plot tall"><canvas id="l_chartSeasonCons"></canvas></div></div>
+        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="l_chartSeasonCons"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src2"></div></details>
     </div>
@@ -372,7 +381,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
           <div class="plot"><canvas id="l_chartUnit"></canvas></div>
           <div class="legend" id="l_legend3"></div>
         </div>
-        <div class="view"><div class="plot tall"><canvas id="l_chartSeasonUnit"></canvas></div></div>
+        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="l_chartSeasonUnit"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src3"></div></details>
     </div>
@@ -467,7 +476,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
           <div class="plot"><canvas id="g_chartVarUnit"></canvas></div>
           <div class="legend" id="g_legendVarUnit"></div>
         </div>
-        <div class="view"><div class="plot tall"><canvas id="g_chartSeasonVarUnit"></canvas></div></div>
+        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="g_chartSeasonVarUnit"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_srcVarUnit"></div></details>
     </div>
@@ -490,7 +499,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
           <div class="plot"><canvas id="g_chartCost"></canvas></div>
           <div class="legend" id="g_legend1"></div>
         </div>
-        <div class="view"><div class="plot tall"><canvas id="g_chartSeasonCost"></canvas></div></div>
+        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="g_chartSeasonCost"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src1"></div></details>
     </div>
@@ -513,7 +522,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
           <div class="plot"><canvas id="g_chartConsumo"></canvas></div>
           <div class="legend" id="g_legend2"></div>
         </div>
-        <div class="view"><div class="plot tall"><canvas id="g_chartSeasonCons"></canvas></div></div>
+        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="g_chartSeasonCons"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src2"></div></details>
     </div>
@@ -536,7 +545,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
           <div class="plot"><canvas id="g_chartUnit"></canvas></div>
           <div class="legend" id="g_legend3"></div>
         </div>
-        <div class="view"><div class="plot tall"><canvas id="g_chartSeasonUnit"></canvas></div></div>
+        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="g_chartSeasonUnit"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src3"></div></details>
     </div>
@@ -611,14 +620,17 @@ function themeName(){
 }
 try { const saved = localStorage.getItem('tema'); if (saved) document.documentElement.setAttribute('data-theme', saved); } catch(e){}
 
+// 'greys' = rampa ordinale per gli anni non in evidenza nei confronti stagionali,
+// dal piu' sbiadito al piu' marcato. Verificata su monotonia, distanza fra passi
+// e contrasto minimo (2:1) rispetto alla superficie, da 2 a 5 anni passati.
 const PALETTE = {
   light: { s1:'#2a78d6', s2:'#eb6834', s3:'#1baf7a', s4:'#eda100',
-           years:['#86b6ef','#5598e7','#2a78d6','#184f95'],
+           greys:['#b5b3aa','#9b998f','#807e77','#66645f','#4d4c49'],
            luce:'#eda100', gas:'#2a78d6',
            surface:'#fcfcfb', grid:'#e1e0d9', axis:'#c3c2b7', tick:'#898781',
            ink:'#0b0b0b', tipBg:'#14181d', tipInk:'#ffffff' },
   dark:  { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500',
-           years:['#184f95','#256abf','#3987e5','#9ec5f4'],
+           greys:['#5a5854','#75736c','#908e86','#abaaa0','#c6c4b9'],
            luce:'#eda100', gas:'#3987e5',
            surface:'#1a1a19', grid:'#2c2c2a', axis:'#383835', tick:'#898781',
            ink:'#ffffff', tipBg:'#2c2c2a', tipInk:'#ffffff' }
@@ -648,6 +660,9 @@ let chartById = {};
 let gasRendered = false;
 let activeKind = 'luce';
 let noteRange = '12';
+let annoEvidenza = null;                              // anno colorato nei confronti stagionali
+const seasonalRestylers = { l_: [], g_: [] };         // ridisegnano i grafici stagionali
+const pickerPainters    = { l_: [], g_: [] };         // ridisegnano i selettori dell'anno
 
 function destroyCharts(prefix){
   Object.keys(chartById).forEach(id => {
@@ -1006,40 +1021,89 @@ function renderUtility(cfg){
     const el = document.getElementById(id); if (el) el.innerHTML = legendHTML;
   });
 
-  /* — Stagionalità: anni = categorie ordinate → rampa a un solo blu — */
+  /* — Stagionalità —
+     Quattro anni sovrapposti non si distinguono con quattro tinte: sulla superficie scura
+     nessuna quaterna della palette supera i test di separazione a tutte le coppie. Quindi
+     un anno alla volta prende il colore dell'utenza e gli altri arretrano su una rampa di
+     grigi ordinata (il piu' vecchio e' il piu' sbiadito). L'anno in evidenza si sceglie. */
   const years = [...new Set(rows.map(r => +r.month.slice(0,4)))].sort((a,b)=>a-b);
-  const yearColor = y => T.years[Math.min(years.indexOf(y), T.years.length-1)] || T.s1;
+  if (annoEvidenza == null) annoEvidenza = years[years.length-1];
+
+  function seasonColors(){
+    const sel = years.includes(annoEvidenza) ? annoEvidenza : years[years.length-1];
+    const passati = years.filter(y => y !== sel);
+    const scala = T.greys, n = passati.length;
+    const map = {};
+    passati.forEach((y,i) => {
+      map[y] = n <= 1 ? scala[scala.length-1] : scala[Math.round(i*(scala.length-1)/(n-1))];
+    });
+    map[sel] = tinta;
+    return { map, sel };
+  }
+
   function seasonalDatasets(valueFn){
-    return years.map((y,i) => {
+    const { map, sel } = seasonColors();
+    // L'anno in evidenza va per ultimo cosi' viene disegnato sopra agli altri.
+    const ordine = years.filter(y => y !== sel).concat(sel);
+    return ordine.map(y => {
       const rowsY = MESI.map((_, mi) => rows.find(rr => rr.month === `${y}-${String(mi+1).padStart(2,'0')}`) || null);
       const ripY = rowsY.map(isRip);
-      const col = yearColor(y);
-      const ultimo = i === years.length-1;
-      return { label:String(y), data:rowsY.map(r => r ? valueFn(r) : null), ripY,
+      const col = map[y], on = y === sel;
+      return { label:String(y), data:rowsY.map(r => r ? valueFn(r) : null), ripY, anno:y,
         borderColor:col, backgroundColor:col,
         pointBackgroundColor:ripY.map(x => x ? T.surface : col),
         pointBorderColor:col, pointBorderWidth:2,
-        borderWidth:ultimo ? 2.5 : 1.8, pointRadius:ultimo ? 4 : 3, pointHoverRadius:6,
+        borderWidth:on ? 3 : 1.5, pointRadius:on ? 4 : 2.5, pointHoverRadius:6,
         segment:{ borderDash:c => (ripY[c.p0DataIndex] || ripY[c.p1DataIndex]) ? [5,4] : undefined },
         spanGaps:false, tension:.2, fill:false };
     });
   }
   const seasonTag = c => (c.dataset.ripY && c.dataset.ripY[c.dataIndex]) ? ' · ripartito' : '';
+  const byYear = (a,b) => a.text.localeCompare(b.text);
   const seasonOpts = (fmt, yOpts={}) => ({
     responsive:true, maintainAspectRatio:false, interaction:idxHover,
-    plugins:{ legend:{position:'top', align:'end'}, tooltip:{callbacks:{
-      label:c => c.dataset.label + ': ' + (c.parsed.y!=null ? fmt(c.parsed.y)+seasonTag(c) : 'n.d.') }}},
+    plugins:{
+      legend:{ position:'top', align:'end', labels:{ sort:byYear } },
+      tooltip:{ itemSort:(a,b) => a.dataset.label.localeCompare(b.dataset.label), callbacks:{
+        label:c => c.dataset.label + ': ' + (c.parsed.y!=null ? fmt(c.parsed.y)+seasonTag(c) : 'n.d.') }}
+    },
     scales:{ y:yAxis(yOpts.tick, yOpts.scale||{}), x:xAxisM() }
   });
 
-  mkChart(p+'chartSeasonVarUnit', { type:'line', data:{labels:MESI, datasets:seasonalDatasets(r=>r.mat_var_unit)},
-    options:seasonOpts(v => nf(v,4)+' €/'+unit, {tick:v => nf(v,2)+' €'}) });
-  mkChart(p+'chartSeasonCost', { type:'line', data:{labels:MESI, datasets:seasonalDatasets(r=>r.tot)},
-    options:seasonOpts(v => eur(v), {tick:v => v+' €', scale:{beginAtZero:true}}) });
-  mkChart(p+'chartSeasonCons', { type:'line', data:{labels:MESI, datasets:seasonalDatasets(r=>r.c)},
-    options:seasonOpts(v => v+' '+unit, {tick:v => v+' '+unit, scale:{beginAtZero:true}}) });
-  mkChart(p+'chartSeasonUnit', { type:'line', data:{labels:MESI, datasets:seasonalDatasets(r => r.mat!=null && r.c ? round4(r.mat/r.c) : null)},
-    options:seasonOpts(v => nf(v,4)+' €/'+unit, {tick:v => nf(v,2)+' €'}) });
+  const STAGIONALI = [
+    { id:'chartSeasonVarUnit', fn:r => r.mat_var_unit,
+      fmt:v => nf(v,4)+' €/'+unit, tick:v => nf(v,2)+' €' },
+    { id:'chartSeasonCost', fn:r => r.tot,
+      fmt:v => eur(v), tick:v => v+' €', scale:{beginAtZero:true} },
+    { id:'chartSeasonCons', fn:r => r.c,
+      fmt:v => v+' '+unit, tick:v => v+' '+unit, scale:{beginAtZero:true} },
+    { id:'chartSeasonUnit', fn:r => r.mat!=null && r.c ? round4(r.mat/r.c) : null,
+      fmt:v => nf(v,4)+' €/'+unit, tick:v => nf(v,2)+' €' }
+  ];
+  seasonalRestylers[p] = [];
+  STAGIONALI.forEach(s => {
+    mkChart(p+s.id, { type:'line', data:{labels:MESI, datasets:seasonalDatasets(s.fn)},
+      options:seasonOpts(s.fmt, {tick:s.tick, scale:s.scale}) });
+    const ch = chartById[p+s.id];
+    if (!ch) return;
+    seasonalRestylers[p].push(() => {
+      ch.data.datasets = seasonalDatasets(s.fn);
+      ch.update();
+      if (ch.canvas.offsetParent && ch.width > 0 && ch.height > 0) ch.draw();
+    });
+  });
+
+  /* Selettore dell'anno: una sola scelta, ripetuta sopra ogni grafico stagionale. */
+  const paneEl = document.getElementById(kind === 'gas' ? 'gasPane' : 'lucePane');
+  function paintPickers(){
+    const { map, sel } = seasonColors();
+    const html = '<span class="lab">Anno in evidenza</span>' + years.map(y =>
+      `<button type="button" data-anno="${y}" class="${y === sel ? 'on' : ''}" aria-pressed="${y === sel}">` +
+      `<span class="dot" style="background:${map[y]}"></span>${y}</button>`).join('');
+    paneEl.querySelectorAll('.yearpick').forEach(el => el.innerHTML = html);
+  }
+  pickerPainters[p] = [paintPickers];
+  paintPickers();
 
   /* — Composizione: 4 slot categoriali, ordine fisso — */
   const imposte = rows.map(r => round2(r.tot - r.mat - r.tra - r.one));
@@ -1124,11 +1188,12 @@ function renderUtility(cfg){
     ? ' <b>Punto vuoto e tratteggio</b> segnano i mesi ricavati per ripartizione, con il contatore non letto: affidabile il totale del periodo, non il singolo mese.'
     : '';
   const materia = kind === 'gas' ? 'gas' : 'energia';
+  const stagioneNota = ' <b>Nella vista “Per stagione”</b> gli anni sono sovrapposti mese su mese: quello che scegli va a colori, gli altri restano in grigio, dal più vecchio, il più sbiadito, al più recente.';
   const testi = {
-    srcVarUnit: `<b>Da dove viene:</b> sezione "Elementi di dettaglio" della bolletta, dove la quota ${materia} (che varia col consumo) è separata dalla quota fissa di commercializzazione. <b>Calcolo:</b> spesa variabile del mese ÷ ${unit} del mese.${ripNota}`,
-    src1: `<b>Da dove viene:</b> il totale fatturato, riportato al mese dove il fornitore fattura a bimestre.${unit==='kWh' ? ' Il canone RAI è escluso.' : ''}${ripNota}`,
-    src2: `<b>Da dove viene:</b> i consumi fatturati, così come sono in bolletta. Nessun calcolo aggiuntivo.${ripNota}`,
-    src3: `<b>Calcolo:</b> materia prima in € ÷ ${unit} del mese, quota fissa inclusa. Sempre esclusi rete e oneri di sistema.${ripNota}`,
+    srcVarUnit: `<b>Da dove viene:</b> sezione "Elementi di dettaglio" della bolletta, dove la quota ${materia} (che varia col consumo) è separata dalla quota fissa di commercializzazione. <b>Calcolo:</b> spesa variabile del mese ÷ ${unit} del mese.${ripNota}${stagioneNota}`,
+    src1: `<b>Da dove viene:</b> il totale fatturato, riportato al mese dove il fornitore fattura a bimestre.${unit==='kWh' ? ' Il canone RAI è escluso.' : ''}${ripNota}${stagioneNota}`,
+    src2: `<b>Da dove viene:</b> i consumi fatturati, così come sono in bolletta. Nessun calcolo aggiuntivo.${ripNota}${stagioneNota}`,
+    src3: `<b>Calcolo:</b> materia prima in € ÷ ${unit} del mese, quota fissa inclusa. Sempre esclusi rete e oneri di sistema.${ripNota}${stagioneNota}`,
     src7: `<b>Da dove viene:</b> le colonne materia prima, rete e oneri di ogni bolletta. <b>La voce "Imposte e IVA"</b> è quel che resta: totale − materia − rete − oneri. Passa il dito o il mouse su un mese per vedere tutte e quattro le voci insieme.`,
     src10: `<b>Da dove viene:</b> le letture F1, F2 e F3 del contatore riportate in bolletta; F23 è la somma di F2 e F3. Per Octopus, tariffa monoraria, le fasce sono ricostruite dalla differenza tra letture consecutive.`
   };
@@ -1340,6 +1405,17 @@ document.addEventListener('click', e => {
     const ch = chartById[cv.id]; if (!ch) return;
     ch.resize();
     if (ch.width > 0 && ch.height > 0) ch.draw();
+  });
+});
+
+/* Anno in evidenza nei confronti stagionali: scelta unica, valida per luce e gas */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.yearpick button');
+  if (!btn) return;
+  annoEvidenza = +btn.dataset.anno;
+  ['l_','g_'].forEach(p => {
+    seasonalRestylers[p].forEach(f => f());
+    pickerPainters[p].forEach(f => f());
   });
 });
 

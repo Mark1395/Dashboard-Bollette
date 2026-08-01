@@ -148,8 +148,12 @@ Tema chiaro e scuro: segue le impostazioni del telefono, con interruttore in alt
   piano, o il telefono è in risparmio energetico, quel frame non arriva mai e i grafici restano
   vuoti. Senza animazione il disegno è sincrono e non dipende da nulla.
 - La tavolozza dei grafici è verificata per contrasto e daltonismo (protanopia/deuteranopia).
-  Gli anni, nei confronti stagionali, usano una scala di blu chiaro→scuro perché sono categorie
-  ordinate; l'anno in corso è il più marcato.
+- Nei confronti stagionali gli anni **non** hanno un colore ciascuno: nessuna quaterna della
+  tavolozza supera i test di separazione a tutte le coppie sulla superficie scura, e quattro
+  linee sovrapposte diventavano illeggibili. Un anno alla volta prende il colore dell'utenza
+  (ambra per la luce, blu per il gas) e gli altri arretrano su una scala di grigi ordinata, dal
+  più vecchio — il più sbiadito — al più recente. L'anno in evidenza si sceglie con i pulsanti
+  sopra al grafico, e la scelta vale per tutti i confronti stagionali di entrambe le utenze.
 
 ## File
 
