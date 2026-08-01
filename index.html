@@ -51,6 +51,7 @@
 
 * { box-sizing:border-box; }
 html { -webkit-text-size-adjust:100%; }
+html, body { max-width:100%; overflow-x:hidden; }
 body {
   margin:0; background:var(--plane); color:var(--ink);
   font-family:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -112,7 +113,8 @@ h1 { font-size:clamp(1.5rem,4.5vw,2.05rem); font-weight:700; line-height:1.12; }
 .seg button:hover { color:var(--ink); }
 .seg button.on { background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.10); }
 .seg.sm button { font-size:.78rem; padding:6px 11px; }
-.chiprow { display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; padding:2px 0; }
+.chiprow { display:flex; flex:1 1 auto; min-width:0; gap:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none; -ms-overflow-style:none; padding:2px 0; }
 .chiprow::-webkit-scrollbar { display:none; }
 .chiprow a { flex:none; text-decoration:none; color:var(--ink-3); font-size:.78rem; font-weight:500;
   padding:6px 10px; border-radius:8px; white-space:nowrap; }
@@ -150,18 +152,6 @@ h1 { font-size:clamp(1.5rem,4.5vw,2.05rem); font-weight:700; line-height:1.12; }
 .legend span.item { display:inline-flex; align-items:center; gap:6px; }
 .legend .ghost { width:9px; height:9px; border-radius:3px; border:1.5px solid var(--ink-3); background:var(--surface); }
 
-/* Selettore dell'anno messo in evidenza nei confronti stagionali */
-.yearpick { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:2px 2px 12px; }
-.yearpick .lab { font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:.64rem; font-weight:500;
-  letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); margin-right:2px; }
-.yearpick button { display:inline-flex; align-items:center; gap:6px; cursor:pointer;
-  border:1px solid var(--hair); background:transparent; border-radius:999px; padding:4px 11px;
-  font:600 .74rem/1.3 "IBM Plex Sans", sans-serif; color:var(--ink-2); }
-.yearpick button:hover { color:var(--ink); border-color:var(--axis); }
-.yearpick button.on { color:var(--ink); border-color:var(--ink-3);
-  background:color-mix(in srgb, var(--ink) 5%, transparent); }
-.yearpick .dot { width:8px; height:8px; border-radius:2px; }
-
 details.howto { margin-top:9px; border-top:1px solid var(--rule); }
 details.howto > summary { cursor:pointer; list-style:none; padding:9px 2px 0; font-size:.76rem;
   font-weight:600; color:var(--ink-3); display:flex; align-items:center; gap:6px; }
@@ -173,8 +163,8 @@ details.howto > summary:hover { color:var(--ink); }
 .howto-body b { color:var(--ink); font-weight:600; }
 
 /* ── Tabelle ──────────────────────────────────────────────── */
-.tablewrap { overflow-x:auto; border:1px solid var(--hair); border-radius:var(--r);
-  background:var(--surface); box-shadow:var(--shadow); }
+.tablewrap { overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--hair);
+  border-radius:var(--r); background:var(--surface); box-shadow:var(--shadow); }
 table.data { width:100%; border-collapse:collapse; font-size:.82rem; }
 table.data th, table.data td { padding:9px 12px; text-align:right; white-space:nowrap;
   border-bottom:1px solid var(--rule); font-variant-numeric:tabular-nums; }
@@ -235,9 +225,37 @@ details.method[open] > summary::after { content:"Chiudi"; }
   font-size:.76rem; color:var(--ink-3); }
 
 @media (max-width:640px) {
-  .sec-head { align-items:flex-start; }
+  .wrap { padding-bottom:64px; }
+  .masthead { padding:22px 0 16px; gap:10px; }
+  .navbar { gap:8px; margin:18px 0 16px; }
+  .seg.sm { width:100%; }
+  .seg.sm button { flex:1; justify-content:center; padding:9px 10px; font-size:.8rem; }
+  #noteRange.seg.sm { width:auto; }
+  #noteRange.seg.sm button { flex:none; padding:8px 12px; }
+  [data-viewgroup] { width:100%; }
+  .chiprow a { padding:8px 11px; }
+  .iconbtn { width:40px; height:40px; }
+
+  .stats { grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; margin-bottom:24px; }
+  .stat { padding:12px 12px 10px; }
+  .stat-value { font-size:1.32rem; }
+  .stat-label { font-size:.6rem; }
+
+  .sec { margin-bottom:28px; }
+  .sec-head { align-items:flex-start; gap:10px 14px; }
+  .sec-title { font-size:1.05rem; }
+  .sec-deck { max-width:none; }
+
   .plot { height:224px; } .plot.tall { height:270px; }
-  .stat-value { font-size:1.42rem; }
+  .card { padding:12px 12px 8px; }
+
+  table.data th, table.data td { padding:7px 9px; font-size:.76rem; }
+
+  .note, .verdict, .stat, .card, .tablewrap { border-radius:12px; }
+  details.method { padding:2px 14px; }
+}
+@media (max-width:340px) {
+  .stats { grid-template-columns:1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration:.001ms !important; transition-duration:.001ms !important; }
@@ -303,16 +321,16 @@ details.method[open] > summary::after { content:"Chiudi"; }
         <p class="sec-deck">Il prezzo di un kWh di sola energia, senza la quota fissa mensile. È la parte del conto che si muove con il mercato.</p>
       </div>
       <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
-        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+        <button class="on" data-view="1">Per stagione</button><button data-view="0">Nel tempo</button>
       </div>
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on">
+        <div class="view">
           <div class="plot"><canvas id="l_chartVarUnit"></canvas></div>
           <div class="legend" id="l_legendVarUnit"></div>
         </div>
-        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="l_chartSeasonVarUnit"></canvas></div></div>
+        <div class="view on"><div class="plot tall"><canvas id="l_chartSeasonVarUnit"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_srcVarUnit"></div></details>
     </div>
@@ -326,16 +344,16 @@ details.method[open] > summary::after { content:"Chiudi"; }
         <p class="sec-deck">Il totale di ogni bolletta riportato al singolo mese, canone RAI escluso.</p>
       </div>
       <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
-        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+        <button class="on" data-view="1">Per stagione</button><button data-view="0">Nel tempo</button>
       </div>
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on">
+        <div class="view">
           <div class="plot"><canvas id="l_chartCost"></canvas></div>
           <div class="legend" id="l_legend1"></div>
         </div>
-        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="l_chartSeasonCost"></canvas></div></div>
+        <div class="view on"><div class="plot tall"><canvas id="l_chartSeasonCost"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src1"></div></details>
     </div>
@@ -349,16 +367,16 @@ details.method[open] > summary::after { content:"Chiudi"; }
         <p class="sec-deck">I kWh effettivi del mese, ricavati dalle letture del contatore.</p>
       </div>
       <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
-        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+        <button class="on" data-view="1">Per stagione</button><button data-view="0">Nel tempo</button>
       </div>
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on">
+        <div class="view">
           <div class="plot"><canvas id="l_chartConsumo"></canvas></div>
           <div class="legend" id="l_legend2"></div>
         </div>
-        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="l_chartSeasonCons"></canvas></div></div>
+        <div class="view on"><div class="plot tall"><canvas id="l_chartSeasonCons"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src2"></div></details>
     </div>
@@ -372,16 +390,16 @@ details.method[open] > summary::after { content:"Chiudi"; }
         <p class="sec-deck">Stessa energia, ma spalmando sul consumo anche il canone mensile del fornitore. È il numero da usare per confrontare un fornitore con l'altro.</p>
       </div>
       <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
-        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+        <button class="on" data-view="1">Per stagione</button><button data-view="0">Nel tempo</button>
       </div>
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on">
+        <div class="view">
           <div class="plot"><canvas id="l_chartUnit"></canvas></div>
           <div class="legend" id="l_legend3"></div>
         </div>
-        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="l_chartSeasonUnit"></canvas></div></div>
+        <div class="view on"><div class="plot tall"><canvas id="l_chartSeasonUnit"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src3"></div></details>
     </div>
@@ -416,13 +434,13 @@ details.method[open] > summary::after { content:"Chiudi"; }
         <p class="sec-deck">F1 sono le ore di punta dei feriali, dalle 8 alle 19. F23 è tutto il resto: sere, notti, sabato e domenica.</p>
       </div>
       <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
-        <button class="on" data-view="0">kWh</button><button data-view="1">%</button>
+        <button class="on" data-view="1">%</button><button data-view="0">kWh</button>
       </div>
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on"><div class="plot tall"><canvas id="l_chartFascia"></canvas></div></div>
-        <div class="view"><div class="plot tall"><canvas id="l_chartFasciaPct"></canvas></div></div>
+        <div class="view"><div class="plot tall"><canvas id="l_chartFascia"></canvas></div></div>
+        <div class="view on"><div class="plot tall"><canvas id="l_chartFasciaPct"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src10"></div></details>
     </div>
@@ -467,16 +485,16 @@ details.method[open] > summary::after { content:"Chiudi"; }
         <p class="sec-deck">Il prezzo di uno Smc di solo gas, senza la quota fissa mensile. Nei mesi quasi senza consumo, tipicamente d'estate, il valore è rumoroso: guarda la tendenza, non il singolo mese.</p>
       </div>
       <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
-        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+        <button class="on" data-view="1">Per stagione</button><button data-view="0">Nel tempo</button>
       </div>
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on">
+        <div class="view">
           <div class="plot"><canvas id="g_chartVarUnit"></canvas></div>
           <div class="legend" id="g_legendVarUnit"></div>
         </div>
-        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="g_chartSeasonVarUnit"></canvas></div></div>
+        <div class="view on"><div class="plot tall"><canvas id="g_chartSeasonVarUnit"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_srcVarUnit"></div></details>
     </div>
@@ -490,16 +508,16 @@ details.method[open] > summary::after { content:"Chiudi"; }
         <p class="sec-deck">Il totale di ogni bolletta riportato al singolo mese.</p>
       </div>
       <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
-        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+        <button class="on" data-view="1">Per stagione</button><button data-view="0">Nel tempo</button>
       </div>
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on">
+        <div class="view">
           <div class="plot"><canvas id="g_chartCost"></canvas></div>
           <div class="legend" id="g_legend1"></div>
         </div>
-        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="g_chartSeasonCost"></canvas></div></div>
+        <div class="view on"><div class="plot tall"><canvas id="g_chartSeasonCost"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src1"></div></details>
     </div>
@@ -513,16 +531,16 @@ details.method[open] > summary::after { content:"Chiudi"; }
         <p class="sec-deck">Gli Smc effettivi del mese, ricavati dalle letture del contatore.</p>
       </div>
       <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
-        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+        <button class="on" data-view="1">Per stagione</button><button data-view="0">Nel tempo</button>
       </div>
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on">
+        <div class="view">
           <div class="plot"><canvas id="g_chartConsumo"></canvas></div>
           <div class="legend" id="g_legend2"></div>
         </div>
-        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="g_chartSeasonCons"></canvas></div></div>
+        <div class="view on"><div class="plot tall"><canvas id="g_chartSeasonCons"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src2"></div></details>
     </div>
@@ -536,16 +554,16 @@ details.method[open] > summary::after { content:"Chiudi"; }
         <p class="sec-deck">Stesso gas, ma spalmando sul consumo anche il canone mensile del fornitore. È il numero da usare per confrontare un fornitore con l'altro.</p>
       </div>
       <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
-        <button class="on" data-view="0">Nel tempo</button><button data-view="1">Per stagione</button>
+        <button class="on" data-view="1">Per stagione</button><button data-view="0">Nel tempo</button>
       </div>
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on">
+        <div class="view">
           <div class="plot"><canvas id="g_chartUnit"></canvas></div>
           <div class="legend" id="g_legend3"></div>
         </div>
-        <div class="view"><div class="yearpick"></div><div class="plot tall"><canvas id="g_chartSeasonUnit"></canvas></div></div>
+        <div class="view on"><div class="plot tall"><canvas id="g_chartSeasonUnit"></canvas></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src3"></div></details>
     </div>
@@ -620,22 +638,29 @@ function themeName(){
 }
 try { const saved = localStorage.getItem('tema'); if (saved) document.documentElement.setAttribute('data-theme', saved); } catch(e){}
 
-// 'greys' = rampa ordinale per gli anni non in evidenza nei confronti stagionali,
-// dal piu' sbiadito al piu' marcato. Verificata su monotonia, distanza fra passi
-// e contrasto minimo (2:1) rispetto alla superficie, da 2 a 5 anni passati.
 const PALETTE = {
   light: { s1:'#2a78d6', s2:'#eb6834', s3:'#1baf7a', s4:'#eda100',
-           greys:['#b5b3aa','#9b998f','#807e77','#66645f','#4d4c49'],
            luce:'#eda100', gas:'#2a78d6',
            surface:'#fcfcfb', grid:'#e1e0d9', axis:'#c3c2b7', tick:'#898781',
            ink:'#0b0b0b', tipBg:'#14181d', tipInk:'#ffffff' },
   dark:  { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500',
-           greys:['#5a5854','#75736c','#908e86','#abaaa0','#c6c4b9'],
            luce:'#eda100', gas:'#3987e5',
            surface:'#1a1a19', grid:'#2c2c2a', axis:'#383835', tick:'#898781',
            ink:'#ffffff', tipBg:'#2c2c2a', tipInk:'#ffffff' }
 };
 let T = PALETTE[themeName()];
+
+// Colori per anno nei confronti stagionali: cinque tinte volutamente lontane
+// fra loro (non una scala di uno stesso colore), verificate con lo script
+// data-viz su separazione CVD e leggibilita' a vista normale, su tutte le
+// coppie possibili, sia in tema chiaro sia scuro — con lo stesso hex per
+// entrambi (la luminosita' scelta, L=0.63 in OKLCH, cade dentro la banda
+// valida di entrambe le superfici). Assegnati per posizione nell'elenco
+// cronologico degli anni: un anno nuovo aggiunge un colore in coda senza
+// mai cambiare quello degli anni gia' passati. La quinta tinta è di scorta
+// per quando comparirà un quinto anno nel dataset.
+const YEAR_COLORS = ['#d86400', '#00aa5f', '#009fd7', '#8b6ef2', '#d84d99'];
+function yearColor(idx){ return YEAR_COLORS[idx % YEAR_COLORS.length]; }
 
 /* ═══════════════════════ Utilità ═══════════════════════ */
 const MESI = ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
@@ -660,9 +685,6 @@ let chartById = {};
 let gasRendered = false;
 let activeKind = 'luce';
 let noteRange = '12';
-let annoEvidenza = null;                              // anno colorato nei confronti stagionali
-const seasonalRestylers = { l_: [], g_: [] };         // ridisegnano i grafici stagionali
-const pickerPainters    = { l_: [], g_: [] };         // ridisegnano i selettori dell'anno
 
 function destroyCharts(prefix){
   Object.keys(chartById).forEach(id => {
@@ -1021,39 +1043,21 @@ function renderUtility(cfg){
     const el = document.getElementById(id); if (el) el.innerHTML = legendHTML;
   });
 
-  /* — Stagionalità —
-     Quattro anni sovrapposti non si distinguono con quattro tinte: sulla superficie scura
-     nessuna quaterna della palette supera i test di separazione a tutte le coppie. Quindi
-     un anno alla volta prende il colore dell'utenza e gli altri arretrano su una rampa di
-     grigi ordinata (il piu' vecchio e' il piu' sbiadito). L'anno in evidenza si sceglie. */
+  /* — Stagionalità — un colore fisso per anno, diverso da tutti gli altri (non una
+     scala di uno stesso colore): tavolozza a 5 tinte verificata su separazione CVD
+     e leggibilita' a vista normale su tutte le coppie possibili. Vedi YEAR_COLORS. */
   const years = [...new Set(rows.map(r => +r.month.slice(0,4)))].sort((a,b)=>a-b);
-  if (annoEvidenza == null) annoEvidenza = years[years.length-1];
-
-  function seasonColors(){
-    const sel = years.includes(annoEvidenza) ? annoEvidenza : years[years.length-1];
-    const passati = years.filter(y => y !== sel);
-    const scala = T.greys, n = passati.length;
-    const map = {};
-    passati.forEach((y,i) => {
-      map[y] = n <= 1 ? scala[scala.length-1] : scala[Math.round(i*(scala.length-1)/(n-1))];
-    });
-    map[sel] = tinta;
-    return { map, sel };
-  }
 
   function seasonalDatasets(valueFn){
-    const { map, sel } = seasonColors();
-    // L'anno in evidenza va per ultimo cosi' viene disegnato sopra agli altri.
-    const ordine = years.filter(y => y !== sel).concat(sel);
-    return ordine.map(y => {
+    return years.map((y,i) => {
       const rowsY = MESI.map((_, mi) => rows.find(rr => rr.month === `${y}-${String(mi+1).padStart(2,'0')}`) || null);
       const ripY = rowsY.map(isRip);
-      const col = map[y], on = y === sel;
-      return { label:String(y), data:rowsY.map(r => r ? valueFn(r) : null), ripY, anno:y,
+      const col = yearColor(i);
+      return { label:String(y), data:rowsY.map(r => r ? valueFn(r) : null), ripY,
         borderColor:col, backgroundColor:col,
         pointBackgroundColor:ripY.map(x => x ? T.surface : col),
         pointBorderColor:col, pointBorderWidth:2,
-        borderWidth:on ? 3 : 1.5, pointRadius:on ? 4 : 2.5, pointHoverRadius:6,
+        borderWidth:2, pointRadius:3, pointHoverRadius:6,
         segment:{ borderDash:c => (ripY[c.p0DataIndex] || ripY[c.p1DataIndex]) ? [5,4] : undefined },
         spanGaps:false, tension:.2, fill:false };
     });
@@ -1080,30 +1084,10 @@ function renderUtility(cfg){
     { id:'chartSeasonUnit', fn:r => r.mat!=null && r.c ? round4(r.mat/r.c) : null,
       fmt:v => nf(v,4)+' €/'+unit, tick:v => nf(v,2)+' €' }
   ];
-  seasonalRestylers[p] = [];
   STAGIONALI.forEach(s => {
     mkChart(p+s.id, { type:'line', data:{labels:MESI, datasets:seasonalDatasets(s.fn)},
       options:seasonOpts(s.fmt, {tick:s.tick, scale:s.scale}) });
-    const ch = chartById[p+s.id];
-    if (!ch) return;
-    seasonalRestylers[p].push(() => {
-      ch.data.datasets = seasonalDatasets(s.fn);
-      ch.update();
-      if (ch.canvas.offsetParent && ch.width > 0 && ch.height > 0) ch.draw();
-    });
   });
-
-  /* Selettore dell'anno: una sola scelta, ripetuta sopra ogni grafico stagionale. */
-  const paneEl = document.getElementById(kind === 'gas' ? 'gasPane' : 'lucePane');
-  function paintPickers(){
-    const { map, sel } = seasonColors();
-    const html = '<span class="lab">Anno in evidenza</span>' + years.map(y =>
-      `<button type="button" data-anno="${y}" class="${y === sel ? 'on' : ''}" aria-pressed="${y === sel}">` +
-      `<span class="dot" style="background:${map[y]}"></span>${y}</button>`).join('');
-    paneEl.querySelectorAll('.yearpick').forEach(el => el.innerHTML = html);
-  }
-  pickerPainters[p] = [paintPickers];
-  paintPickers();
 
   /* — Composizione: 4 slot categoriali, ordine fisso — */
   const imposte = rows.map(r => round2(r.tot - r.mat - r.tra - r.one));
@@ -1188,7 +1172,7 @@ function renderUtility(cfg){
     ? ' <b>Punto vuoto e tratteggio</b> segnano i mesi ricavati per ripartizione, con il contatore non letto: affidabile il totale del periodo, non il singolo mese.'
     : '';
   const materia = kind === 'gas' ? 'gas' : 'energia';
-  const stagioneNota = ' <b>Nella vista “Per stagione”</b> gli anni sono sovrapposti mese su mese: quello che scegli va a colori, gli altri restano in grigio, dal più vecchio, il più sbiadito, al più recente.';
+  const stagioneNota = ' <b>Nella vista “Per stagione”</b> gli anni sono sovrapposti mese su mese, ciascuno con il proprio colore: stesso colore per lo stesso anno in ogni grafico e in entrambe le utenze.';
   const testi = {
     srcVarUnit: `<b>Da dove viene:</b> sezione "Elementi di dettaglio" della bolletta, dove la quota ${materia} (che varia col consumo) è separata dalla quota fissa di commercializzazione. <b>Calcolo:</b> spesa variabile del mese ÷ ${unit} del mese.${ripNota}${stagioneNota}`,
     src1: `<b>Da dove viene:</b> il totale fatturato, riportato al mese dove il fornitore fattura a bimestre.${unit==='kWh' ? ' Il canone RAI è escluso.' : ''}${ripNota}${stagioneNota}`,
@@ -1405,17 +1389,6 @@ document.addEventListener('click', e => {
     const ch = chartById[cv.id]; if (!ch) return;
     ch.resize();
     if (ch.width > 0 && ch.height > 0) ch.draw();
-  });
-});
-
-/* Anno in evidenza nei confronti stagionali: scelta unica, valida per luce e gas */
-document.addEventListener('click', e => {
-  const btn = e.target.closest('.yearpick button');
-  if (!btn) return;
-  annoEvidenza = +btn.dataset.anno;
-  ['l_','g_'].forEach(p => {
-    seasonalRestylers[p].forEach(f => f());
-    pickerPainters[p].forEach(f => f());
   });
 });
 

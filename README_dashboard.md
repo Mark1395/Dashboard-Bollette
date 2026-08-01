@@ -133,9 +133,10 @@ promemoria per me: non compaiono nell'interfaccia.
 - **Da tenere d'occhio** — le segnalazioni sulle bollette nuove.
 - **Le sezioni di dettaglio** — prezzo, spesa, consumo, prezzo pieno, composizione del costo,
   fasce orarie (luce) o verifica del ricalcolo (gas), confronto fornitori, riepiloghi annuali.
-  Ogni sezione
-  ha un interruttore per cambiare vista (nel tempo / per stagione, colonne / linee / percentuali)
-  e un "Come si legge" che spiega fonte e formula.
+  Ogni sezione ha un interruttore per cambiare vista — il confronto per stagione si apre per
+  primo (è quello che risponde alla domanda più comune: "come sto messo rispetto all'anno
+  scorso?"), poi l'andamento mese per mese. Le fasce orarie si aprono sulla vista in percentuale.
+  Un "Come si legge" sotto ogni grafico spiega fonte e formula.
 - **Da dove arrivano questi numeri** — la metodologia completa, in fondo a ciascuna scheda.
 
 Tema chiaro e scuro: segue le impostazioni del telefono, con interruttore in alto a destra.
@@ -148,12 +149,15 @@ Tema chiaro e scuro: segue le impostazioni del telefono, con interruttore in alt
   piano, o il telefono è in risparmio energetico, quel frame non arriva mai e i grafici restano
   vuoti. Senza animazione il disegno è sincrono e non dipende da nulla.
 - La tavolozza dei grafici è verificata per contrasto e daltonismo (protanopia/deuteranopia).
-- Nei confronti stagionali gli anni **non** hanno un colore ciascuno: nessuna quaterna della
-  tavolozza supera i test di separazione a tutte le coppie sulla superficie scura, e quattro
-  linee sovrapposte diventavano illeggibili. Un anno alla volta prende il colore dell'utenza
-  (ambra per la luce, blu per il gas) e gli altri arretrano su una scala di grigi ordinata, dal
-  più vecchio — il più sbiadito — al più recente. L'anno in evidenza si sceglie con i pulsanti
-  sopra al grafico, e la scelta vale per tutti i confronti stagionali di entrambe le utenze.
+- Nei confronti stagionali ogni anno ha un colore fisso e ben distinto dagli altri — non una
+  scala di uno stesso colore. Cinque tinte (arancio, verde, azzurro, viola, magenta), scelte
+  cercando sistematicamente sulla ruota dei colori quelle che superano i test di separazione a
+  tutte le coppie possibili, sia in tema chiaro sia scuro, con lo stesso hex in entrambi. Il
+  colore segue la posizione dell'anno nell'elenco cronologico: quando un nuovo anno si aggiunge
+  in coda, gli anni precedenti non cambiano colore. Il quinto colore è di scorta per quando
+  comparirà un quinto anno nel dataset (oggi il dataset ne copre quattro, 2023–2026); se in
+  futuro se ne aggiungesse un sesto andrebbe ripetuta la ricerca, perché nessuna sesta tinta a
+  quella luminosità supera la stessa soglia di separazione.
 
 ## File
 
