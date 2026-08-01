@@ -51,7 +51,6 @@
 
 * { box-sizing:border-box; }
 html { -webkit-text-size-adjust:100%; }
-html, body { max-width:100%; overflow-x:hidden; }
 body {
   margin:0; background:var(--plane); color:var(--ink);
   font-family:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -106,7 +105,7 @@ h1 { font-size:clamp(1.5rem,4.5vw,2.05rem); font-weight:700; line-height:1.12; }
   margin:26px 0 20px; padding:9px 0; background:color-mix(in srgb, var(--plane) 88%, transparent);
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border-bottom:1px solid var(--rule); }
 .seg { display:inline-flex; flex:none; gap:3px; padding:3px; border-radius:11px;
-  background:color-mix(in srgb, var(--ink) 6%, transparent); }
+  border:1px solid var(--hair); background:color-mix(in srgb, var(--ink) 6%, transparent); }
 .seg button { border:0; background:transparent; cursor:pointer; color:var(--ink-2);
   font:600 .85rem/1 "IBM Plex Sans", sans-serif; padding:8px 13px; border-radius:8px;
   display:inline-flex; align-items:center; gap:6px; }
@@ -146,6 +145,14 @@ h1 { font-size:clamp(1.5rem,4.5vw,2.05rem); font-weight:700; line-height:1.12; }
 .plot { position:relative; width:100%; height:250px; }
 .plot.tall { height:310px; }
 .view { display:none; } .view.on { display:block; }
+
+/* Grafici a colonna: con 40+ mesi in poco spazio le barre diventano una riga di
+   pixel illeggibile. Il contenitore scorre in orizzontale e il grafico dentro
+   mantiene una larghezza minima leggibile — su schermi larghi la larghezza
+   naturale del riquadro (piu' di 820px) supera gia' quel minimo, quindi qui
+   non cambia nulla; lo scroll entra in gioco solo dove serve, cioe' su mobile. */
+.barwrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.plot.wide { min-width:820px; }
 
 .legend { display:flex; flex-wrap:wrap; gap:7px 16px; font-size:.76rem; color:var(--ink-2);
   margin:10px 2px 2px; }
@@ -227,7 +234,10 @@ details.method[open] > summary::after { content:"Chiudi"; }
 @media (max-width:640px) {
   .wrap { padding-bottom:64px; }
   .masthead { padding:22px 0 16px; gap:10px; }
-  .navbar { gap:8px; margin:18px 0 16px; }
+  .navbar { flex-wrap:wrap; gap:8px; margin:18px 0 16px; }
+  #utilitySwitch { width:100%; }
+  #utilitySwitch button { flex:1; justify-content:center; }
+  .chiprow { width:100%; }
   .seg.sm { width:100%; }
   .seg.sm button { flex:1; justify-content:center; padding:9px 10px; font-size:.8rem; }
   #noteRange.seg.sm { width:auto; }
@@ -373,7 +383,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
     <div class="card">
       <div class="views">
         <div class="view">
-          <div class="plot"><canvas id="l_chartConsumo"></canvas></div>
+          <div class="barwrap"><div class="plot wide"><canvas id="l_chartConsumo"></canvas></div></div>
           <div class="legend" id="l_legend2"></div>
         </div>
         <div class="view on"><div class="plot tall"><canvas id="l_chartSeasonCons"></canvas></div></div>
@@ -418,9 +428,9 @@ details.method[open] > summary::after { content:"Chiudi"; }
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on"><div class="plot tall"><canvas id="l_chartBreak"></canvas></div></div>
+        <div class="view on"><div class="barwrap"><div class="plot tall wide"><canvas id="l_chartBreak"></canvas></div></div></div>
         <div class="view"><div class="plot tall"><canvas id="l_chartVoci"></canvas></div></div>
-        <div class="view"><div class="plot tall"><canvas id="l_chartComposizione"></canvas></div></div>
+        <div class="view"><div class="barwrap"><div class="plot tall wide"><canvas id="l_chartComposizione"></canvas></div></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src7"></div></details>
     </div>
@@ -439,8 +449,8 @@ details.method[open] > summary::after { content:"Chiudi"; }
     </div>
     <div class="card">
       <div class="views">
-        <div class="view"><div class="plot tall"><canvas id="l_chartFascia"></canvas></div></div>
-        <div class="view on"><div class="plot tall"><canvas id="l_chartFasciaPct"></canvas></div></div>
+        <div class="view"><div class="barwrap"><div class="plot tall wide"><canvas id="l_chartFascia"></canvas></div></div></div>
+        <div class="view on"><div class="barwrap"><div class="plot tall wide"><canvas id="l_chartFasciaPct"></canvas></div></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="l_src10"></div></details>
     </div>
@@ -537,7 +547,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
     <div class="card">
       <div class="views">
         <div class="view">
-          <div class="plot"><canvas id="g_chartConsumo"></canvas></div>
+          <div class="barwrap"><div class="plot wide"><canvas id="g_chartConsumo"></canvas></div></div>
           <div class="legend" id="g_legend2"></div>
         </div>
         <div class="view on"><div class="plot tall"><canvas id="g_chartSeasonCons"></canvas></div></div>
@@ -582,9 +592,9 @@ details.method[open] > summary::after { content:"Chiudi"; }
     </div>
     <div class="card">
       <div class="views">
-        <div class="view on"><div class="plot tall"><canvas id="g_chartBreak"></canvas></div></div>
+        <div class="view on"><div class="barwrap"><div class="plot tall wide"><canvas id="g_chartBreak"></canvas></div></div></div>
         <div class="view"><div class="plot tall"><canvas id="g_chartVoci"></canvas></div></div>
-        <div class="view"><div class="plot tall"><canvas id="g_chartComposizione"></canvas></div></div>
+        <div class="view"><div class="barwrap"><div class="plot tall wide"><canvas id="g_chartComposizione"></canvas></div></div></div>
       </div>
       <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="g_src7"></div></details>
     </div>

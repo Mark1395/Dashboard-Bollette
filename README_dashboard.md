@@ -158,6 +158,11 @@ Tema chiaro e scuro: segue le impostazioni del telefono, con interruttore in alt
   comparirà un quinto anno nel dataset (oggi il dataset ne copre quattro, 2023–2026); se in
   futuro se ne aggiungesse un sesto andrebbe ripetuta la ricerca, perché nessuna sesta tinta a
   quella luminosità supera la stessa soglia di separazione.
+- I grafici a colonna (composizione, consumo, fasce orarie) hanno oltre 40 mesi in ascissa:
+  su schermo stretto le barre diventerebbero una riga di pixel illeggibile. Il riquadro che li
+  contiene scorre in orizzontale, e il grafico dentro mantiene una larghezza minima leggibile
+  (820px); su schermi larghi il riquadro è già più largo di così, quindi lì non cambia nulla e
+  lo scroll non compare.
 
 ## File
 
