@@ -509,6 +509,19 @@
       "f23": 50,
       "mat_var_unit": 0.098372,
       "note": ""
+    },
+    {
+      "month": "2026-07",
+      "f": "Octopus",
+      "c": 102,
+      "mat": 20.0,
+      "tra": 9.35,
+      "one": 3.38,
+      "tot": 36.0,
+      "f1": 50,
+      "f23": 52,
+      "mat_var_unit": 0.098824,
+      "note": ""
     }
   ],
   "gas_monthly": [
@@ -1004,7 +1017,7 @@
     }
   ],
   "meta": {
-    "aggiornato": "2026-07-17",
+    "aggiornato": "2026-08-07",
     "note": "Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi. Le righe gas ago25-gen26 portano il flag 'ripartito': true (ripartizione pro-rata di un'unica lettura reale): la dashboard le rende tratteggiate e a punto vuoto per non confonderle con i mesi letti davvero.",
     "note_rilevanti_regola": "Il campo 'data' e' la data dell'EVENTO segnalato (non quella in cui la nota e' stata scritta). La dashboard mostra solo le note degli ultimi 12 mesi, filtrate per ambito (Luce/Gas/Entrambe)."
   },
