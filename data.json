@@ -992,6 +992,17 @@
       "tot": 9.99,
       "note": "",
       "mat_var_unit": 0.33
+    },
+    {
+      "month": "2026-07",
+      "f": "Octopus",
+      "c": 6,
+      "mat": 9.19,
+      "tra": 7.23,
+      "one": -1.49,
+      "tot": 18.64,
+      "note": "",
+      "mat_var_unit": 0.365
     }
   ],
   "gas_conguaglio_note": [
