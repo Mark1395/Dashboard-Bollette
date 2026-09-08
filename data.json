@@ -522,6 +522,19 @@
       "f23": 52,
       "mat_var_unit": 0.098824,
       "note": ""
+    },
+    {
+      "month": "2026-08",
+      "f": "Octopus",
+      "c": 89,
+      "mat": 16.46,
+      "tra": 9.17,
+      "one": 2.95,
+      "tot": 31.44,
+      "f1": 37,
+      "f23": 52,
+      "mat_var_unit": 0.099101,
+      "note": "Fatt. KE-26-A2CEAEC8-007 del 07/09/2026, periodo 01-31/08/2026. c = consumo reale da letture fascia (F1 37, F2 19, F3 33; delta contatore energia) e da scatto consumo annuo (411->500 kWh 01/02-fine mese); la bolletta scrive 'CONSUMO FATTURATO 98 kWh' includendo 9 kWh di perdite di rete. mat/tra/one dagli Elementi di dettaglio. tot = TOTALE BOLLETTA al netto del canone RAI: il Bonus Energy Break -1,00 EUR e' applicato fuori dal totale imponibile (come il canone), quindi non incluso qui."
     }
   ],
   "gas_monthly": [
@@ -1028,8 +1041,8 @@
     }
   ],
   "meta": {
-    "aggiornato": "2026-08-07",
-    "note": "Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi. Le righe gas ago25-gen26 portano il flag 'ripartito': true (ripartizione pro-rata di un'unica lettura reale): la dashboard le rende tratteggiate e a punto vuoto per non confonderle con i mesi letti davvero.",
+    "aggiornato": "2026-09-08",
+    "note": "Aggiornamento 08/09/2026: aggiunta bolletta luce Octopus agosto 2026 (c 89 kWh reali, tot 31,44 EUR netto canone RAI). Gas agosto 2026 non ancora emesso. Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi. Le righe gas ago25-gen26 portano il flag 'ripartito': true (ripartizione pro-rata di un'unica lettura reale): la dashboard le rende tratteggiate e a punto vuoto per non confonderle con i mesi letti davvero.",
     "note_rilevanti_regola": "Il campo 'data' e' la data dell'EVENTO segnalato (non quella in cui la nota e' stata scritta). La dashboard mostra solo le note degli ultimi 12 mesi, filtrate per ambito (Luce/Gas/Entrambe)."
   },
   "note_rilevanti": [
