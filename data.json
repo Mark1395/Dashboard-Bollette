@@ -999,23 +999,23 @@
       "month": "2026-06",
       "f": "Octopus",
       "c": 1,
-      "mat": 5.19,
+      "mat": 5.21,
       "tra": 5.28,
       "one": -2.04,
-      "tot": 9.99,
-      "note": "",
-      "mat_var_unit": 0.33
+      "tot": 10.01,
+      "note": "Corretto il 15/09/2026 da un ricalcolo nella bolletta gas di agosto 2026 (fatt. KG-26-A2CEAEC8-007, 09/09/2026): consumo 1 Smc confermato invariato (nessuna differenza), tot +0,02 EUR per aggiornamento dei corrispettivi materia. Valori originari pre-ricalcolo: mat 5,19 / tot 9,99 / mat_var_unit 0,33.",
+      "mat_var_unit": 0.35
     },
     {
       "month": "2026-07",
       "f": "Octopus",
-      "c": 6,
-      "mat": 9.19,
-      "tra": 7.23,
-      "one": -1.49,
-      "tot": 18.64,
-      "note": "",
-      "mat_var_unit": 0.365
+      "c": 2,
+      "mat": 7.57,
+      "tra": 6.42,
+      "one": -1.78,
+      "tot": 14.91,
+      "note": "Corretto il 15/09/2026 da un ricalcolo nella bolletta gas di agosto 2026 (fatt. KG-26-A2CEAEC8-007, 09/09/2026): consumo reale rivisto da 6 Smc stimati a 2 Smc (differenza -4 Smc), tot -3,73 EUR (delta -1,62 mat, -0,81 tra, -0,29 one, -0,67 accise, -0,34 IVA, ricavato riga per riga dalle voci di ricalcolo negli Elementi di dettaglio del periodo 01/07-31/07/2026). Valori originari pre-ricalcolo: c 6, mat 9,19, tra 7,23, one -1,49, tot 18,64, mat_var_unit 0,365.",
+      "mat_var_unit": 0.285
     },
     {
       "month": "2026-08",
@@ -1025,7 +1025,7 @@
       "tra": 6.59,
       "one": -1.72,
       "tot": 15.67,
-      "note": "Fatt. KG-26-A2CEAEC8-007 del 09/09/2026, periodo 01-31/08/2026. c = 2 Smc fatturati (consumo reale del periodo 2,4398 Smc da coefficiente C 1,0138; lettura di chiusura 31/08/2026 STIMATA, non ancora rilevata dal distributore). mat/tra/one dagli Elementi di dettaglio del periodo 01/08-31/08/2026 (mat=7,87€ conferma esatta col box offerta 'TOTALE DOVUTO PER GAS NATURALE'; DI CUI QUOTA VARIABILE 0,87€). accise (imposte) 0,25€. tot = mat+tra+one+accise+IVA: l'IVA di agosto (2,68€) non è scorporata singolarmente in fattura (il documento cumula 3 periodi con ricalcoli), è ricavata per differenza dal totale IVA fattura (2,34€) al netto della quota IVA dei ricalcoli giu/lug (~-0,34€) verificata riga per riga sulle voci variabili degli Elementi di dettaglio. La fattura include anche due ricalcoli retroattivi non ancora applicati alle righe storiche: giugno 2026 +0,02€ e luglio 2026 -2,72€ (consumo rivisto da 6 a 2 Smc reali) — vedi nota rilevante.",
+      "note": "Fatt. KG-26-A2CEAEC8-007 del 09/09/2026, periodo 01-31/08/2026. c = 2 Smc fatturati (consumo reale del periodo 2,4398 Smc da coefficiente C 1,0138; lettura di chiusura 31/08/2026 STIMATA, non ancora rilevata dal distributore). mat/tra/one dagli Elementi di dettaglio del periodo 01/08-31/08/2026 (mat=7,87€ conferma esatta col box offerta 'TOTALE DOVUTO PER GAS NATURALE'; DI CUI QUOTA VARIABILE 0,87€). accise (imposte) 0,25€. tot = mat+tra+one+accise+IVA: l'IVA di agosto (2,68€) non è scorporata singolarmente in fattura (il documento cumula 3 periodi con ricalcoli), è ricavata per differenza dal totale IVA fattura (2,34€) al netto della quota IVA dei ricalcoli giu/lug (~-0,34€) verificata riga per riga sulle voci variabili degli Elementi di dettaglio. La fattura include anche due ricalcoli retroattivi, applicati lo stesso 15/09/2026 alle righe di giugno e luglio 2026: vedi le note su quelle due righe.",
       "mat_var_unit": 0.435
     }
   ],
@@ -1053,7 +1053,7 @@
   ],
   "meta": {
     "aggiornato": "2026-09-15",
-    "note": "Aggiornamento 15/09/2026: aggiunta bolletta gas Octopus agosto 2026 (c 2 Smc fatturati, tot 15,67 EUR; lettura di chiusura ancora stimata, non reale). La bolletta gas luce settembre non era attesa (l'unico PDF luce nuovo su Drive era un duplicato della bolletta agosto gia' registrata l'08/09). La fattura gas di agosto porta con se' due ricalcoli retroattivi su giugno (+0,02 EUR, nessuna variazione) e luglio (-2,72 EUR, consumo rivisto da 6 a 2 Smc reali): non ancora applicati alle righe storiche gia' pubblicate, segnalati in nota rilevante e da integrare in una sessione dedicata come gia' fatto per i ricalcoli Eni. Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi. Le righe gas ago25-gen26 portano il flag 'ripartito': true (ripartizione pro-rata di un'unica lettura reale): la dashboard le rende tratteggiate e a punto vuoto per non confonderle con i mesi letti davvero.",
+    "note": "Aggiornamento 15/09/2026: aggiunta bolletta gas Octopus agosto 2026 (c 2 Smc fatturati, tot 15,67 EUR; lettura di chiusura ancora stimata, non reale). Il PDF luce nuovo su Drive era un duplicato della bolletta agosto gia' registrata l'08/09, nessun aggiornamento luce necessario. La fattura gas di agosto portava con se' due ricalcoli retroattivi, integrati subito nelle righe storiche per non lasciare consumi/importi disallineati in dashboard: giugno 2026 mat 5,19->5,21, tot 9,99->10,01 (nessuna variazione di consumo); luglio 2026 c 6->2 Smc, mat 9,19->7,57, tra 7,23->6,42, one -1,49->-1,78, tot 18,64->14,91. Dettaglio e valori originari nelle note delle singole righe e in nota rilevante. Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi. Le righe gas ago25-gen26 portano il flag 'ripartito': true (ripartizione pro-rata di un'unica lettura reale): la dashboard le rende tratteggiate e a punto vuoto per non confonderle con i mesi letti davvero.",
     "note_rilevanti_regola": "Il campo 'data' e' la data dell'EVENTO segnalato (non quella in cui la nota e' stata scritta). La dashboard mostra solo le note degli ultimi 12 mesi, filtrate per ambito (Luce/Gas/Entrambe)."
   },
   "note_rilevanti": [
@@ -1087,10 +1087,10 @@
     },
     {
       "data": "2026-09-09",
-      "tipo": "dati_mancanti",
+      "tipo": "info",
       "ambito": "Gas",
-      "titolo": "Ricalcoli retroattivi giugno e luglio 2026 non ancora integrati",
-      "testo": "La bolletta gas di agosto 2026 Octopus (fatt. KG-26-A2CEAEC8-007, 09/09/2026) include due ricalcoli: giugno 2026 +0,02 EUR (nessuna variazione di consumo, 1 Smc confermato) e luglio 2026 -2,72 EUR (consumo rivisto da 6 Smc stimati a 2 Smc reali). Le righe di giugno e luglio nella serie mensile riportano ancora i valori originari a stima: la correzione va integrata con lo stesso metodo gia' usato per i ricalcoli Eni (vedi nota 17/07/2026), in una sessione dedicata."
+      "titolo": "Ricalcoli retroattivi giugno e luglio 2026 integrati nella serie mensile",
+      "testo": "La bolletta gas di agosto 2026 Octopus (fatt. KG-26-A2CEAEC8-007, 09/09/2026) includeva due ricalcoli: giugno 2026 +0,02 EUR (nessuna variazione di consumo, 1 Smc confermato) e luglio 2026 -2,72 EUR (consumo rivisto da 6 Smc stimati a 2 Smc reali, -4 Smc di differenza). Integrati il 15/09/2026 direttamente nelle righe di giugno e luglio della serie mensile (vedi le note su quelle due righe per i valori originari pre-ricalcolo), con lo stesso metodo gia' usato per i ricalcoli Eni (vedi nota 17/07/2026)."
     }
   ]
 }
