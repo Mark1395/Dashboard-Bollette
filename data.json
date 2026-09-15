@@ -1471,10 +1471,55 @@
         "note": ""
       }
   ],
+  "telefonia_fissa_monthly": [
+    { "month": "2021-11", "f": "Vodafone", "numero_fattura": "AN21141825", "tot": 31.06, "ripartito": true, "note": "Prima bolletta: periodo parziale 13/10-16/11/2021 (attivazione linea)" },
+    { "month": "2022-01", "f": "Vodafone", "numero_fattura": "AO01339673", "tot": 49.79, "ripartito": true, "note": "Copre il periodo 17/11/2021-16/01/2022 (fatturazione bimestrale)" },
+    { "month": "2022-03", "f": "Vodafone", "numero_fattura": "AO05300564", "tot": 49.79, "ripartito": true, "note": "Copre 17/01-16/03/2022" },
+    { "month": "2022-05", "f": "Vodafone", "numero_fattura": "AO09244609", "tot": 49.79, "ripartito": true, "note": "Copre 17/03-16/05/2022" },
+    { "month": "2022-07", "f": "Vodafone", "numero_fattura": "AO13141190", "tot": 49.79, "ripartito": true, "note": "Copre 17/05-16/07/2022" },
+    { "month": "2022-09", "f": "Vodafone", "numero_fattura": "AO17004292", "tot": 49.79, "ripartito": true, "note": "Copre 17/07-16/09/2022" },
+    { "month": "2022-11", "f": "Vodafone", "numero_fattura": "AO20857562", "tot": 49.79, "ripartito": true, "note": "Copre 17/09-16/11/2022" },
+    { "month": "2023-01", "f": "Vodafone", "numero_fattura": "AP01272055", "tot": 49.79, "ripartito": true, "note": "Copre 17/11/2022-16/01/2023" },
+    { "month": "2023-03", "f": "Vodafone", "numero_fattura": "AP05053839", "tot": 49.79, "ripartito": true, "note": "Copre 17/01-16/03/2023" },
+    { "month": "2023-05", "f": "Vodafone", "numero_fattura": "AP08820875", "tot": 53.77, "ripartito": true, "note": "Copre 17/03-16/05/2023" },
+    { "month": "2023-07", "f": "Vodafone", "numero_fattura": "AP12527838", "tot": 53.78, "ripartito": true, "note": "Copre 17/05-16/07/2023" },
+    { "month": "2024-01", "f": "Vodafone", "numero_fattura": "TF40439898", "tot": 50.19, "ripartito": true, "note": "Copre 17/11/2023-16/01/2024. Salto di fatturazione lug-nov 2023 non risulta nella posta (vedi nota rilevante dati_mancanti)" },
+    { "month": "2024-02", "f": "Vodafone", "numero_fattura": "TF41280570", "tot": 47.03, "ripartito": false, "note": "Periodo 17/01-15/02/2024 (da qui fatturazione mensile)" },
+    { "month": "2024-03", "f": "Vodafone", "numero_fattura": "TF42477002", "tot": 23.90, "ripartito": false, "note": "Periodo 16/02-15/03/2024" },
+    { "month": "2024-04", "f": "Vodafone", "numero_fattura": "TF43381907", "tot": 23.90, "ripartito": false, "note": "Periodo 16/03-15/04/2024" },
+    { "month": "2024-05", "f": "Vodafone", "numero_fattura": "TF44888776", "tot": 25.89, "ripartito": false, "note": "Periodo dedotto dalla cadenza mensile: dal mag-2024 la mail Vodafone non riporta piu' il campo 'periodo fatturazione'" },
+    { "month": "2024-06", "f": "Vodafone", "numero_fattura": "TF46140862", "tot": 25.56, "ripartito": false, "note": "" },
+    { "month": "2024-07", "f": "Vodafone", "numero_fattura": "TF47711452", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2024-08", "f": "Vodafone", "numero_fattura": "TF49516866", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2024-09", "f": "Vodafone", "numero_fattura": "TF51284299", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2024-10", "f": "Vodafone", "numero_fattura": "TF53303209", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2024-11", "f": "Vodafone", "numero_fattura": "TF55721093", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2024-12", "f": "Vodafone", "numero_fattura": "TF58085315", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-01", "f": "Vodafone", "numero_fattura": "TF61697032", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-02", "f": "Vodafone", "numero_fattura": "TF64442290", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-03", "f": "Vodafone", "numero_fattura": "TF67158046", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-04", "f": "Vodafone", "numero_fattura": "TF69901763", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-05", "f": "Vodafone", "numero_fattura": "TF72626272", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-06", "f": "Vodafone", "numero_fattura": "TF75360117", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-07", "f": "Vodafone", "numero_fattura": "TF78066618", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-08", "f": "Vodafone", "numero_fattura": "TF80766911", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-09", "f": "Vodafone", "numero_fattura": "TF83471159", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-10", "f": "Vodafone", "numero_fattura": "TF86164232", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-11", "f": "Vodafone", "numero_fattura": "TF88867571", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2025-12", "f": "Vodafone", "numero_fattura": "TF91565794", "tot": 25.89, "ripartito": false, "note": "" },
+    { "month": "2026-01", "f": "Vodafone", "numero_fattura": "TG01677600", "tot": 27.95, "ripartito": false, "note": "Rincaro rispetto ai 25,89 di dic-2025 (vedi nota rilevante)" },
+    { "month": "2026-02", "f": "Vodafone", "numero_fattura": "TG04351912", "tot": 27.95, "ripartito": false, "note": "" },
+    { "month": "2026-03", "f": "Vodafone", "numero_fattura": "TG07050197", "tot": 27.95, "ripartito": false, "note": "" },
+    { "month": "2026-04", "f": "Vodafone", "numero_fattura": "TG09719844", "tot": 27.95, "ripartito": false, "note": "" },
+    { "month": "2026-05", "f": "Vodafone", "numero_fattura": "TG12371088", "tot": 27.95, "ripartito": false, "note": "" },
+    { "month": "2026-06", "f": "Vodafone", "numero_fattura": "TG15000427", "tot": 27.95, "ripartito": false, "note": "" },
+    { "month": "2026-07", "f": "Vodafone", "numero_fattura": "TG17615534", "tot": 27.95, "ripartito": false, "note": "" },
+    { "month": "2026-08", "f": "Vodafone", "numero_fattura": "TG20214532", "tot": 27.95, "ripartito": false, "note": "" }
+  ],
   "meta": {
-    "aggiornato": "2026-09-15",
-    "note": "Aggiornamento 15/09/2026: aggiunta bolletta gas Octopus agosto 2026 (c 2 Smc fatturati, tot 15,67 EUR; lettura di chiusura ancora stimata, non reale). Il PDF luce nuovo su Drive era un duplicato della bolletta agosto gia' registrata l'08/09, nessun aggiornamento luce necessario. La fattura gas di agosto portava con se' due ricalcoli retroattivi, integrati subito nelle righe storiche per non lasciare consumi/importi disallineati in dashboard: giugno 2026 mat 5,19->5,21, tot 9,99->10,01 (nessuna variazione di consumo); luglio 2026 c 6->2 Smc, mat 9,19->7,57, tra 7,23->6,42, one -1,49->-1,78, tot 18,64->14,91. Dettaglio e valori originari nelle note delle singole righe e in nota rilevante. Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi. Le righe gas ago25-gen26 portano il flag 'ripartito': true (ripartizione pro-rata di un'unica lettura reale): la dashboard le rende tratteggiate e a punto vuoto per non confonderle con i mesi letti davvero. Aggiunta oggi anche la sezione Acqua: 19 bollette trimestrali Barbieri Edi/Publiacqua (4 Periodo 2021 - 2 Periodo 2026), estratte dalla mail e verificate una per una contro il 'Totale da pagare' di ogni bolletta (incluse tre rettifiche di deposito cauzionale). Vedi acqua_periodi.",
-    "note_rilevanti_regola": "Il campo 'data' e' la data dell'EVENTO segnalato (non quella in cui la nota e' stata scritta). La dashboard mostra solo le note degli ultimi 12 mesi, filtrate per ambito (Luce/Gas/Acqua/Entrambe)."
+    "aggiornato": "2026-09-16",
+    "note": "Aggiornamento 16/09/2026: aggiunta la quarta utenza, Telefonia fissa (marchio Vodafone, ente fatturante Fastweb S.p.A. per licenza del marchio: trivia amministrativa, non mostrata in dashboard). 43 fatture reali nov21-ago26, lette a mano dalle mail di notifica Vodafone (nessun PDF allegato esiste per questa utenza, a differenza delle altre tre). Fatturazione bimestrale fino a lug23 (importo intero sull'ultimo mese del periodo, flag ripartito:true, stesso trattamento grafico gia' usato per i mesi non letti di luce/gas/acqua), mensile da feb24. Buco reale di fatturazione ago-ott 2023 (nessuna mail trovata tra la fattura del 20/07/2023 e quella del 20/01/2024): lasciato come buco, non stimato, con nota rilevante dati_mancanti dedicata. Rincaro gen26 da 25,89 a 27,95 EUR/mese (+8% circa) documentato con nota rilevante rincaro. Nessun dato personale incluso (niente nome cliente ne' codice cliente Vodafone), stessa policy delle altre tre utenze. Vedi telefonia_fissa_monthly. Aggiornamento 15/09/2026: aggiunta bolletta gas Octopus agosto 2026 (c 2 Smc fatturati, tot 15,67 EUR; lettura di chiusura ancora stimata, non reale). Il PDF luce nuovo su Drive era un duplicato della bolletta agosto gia' registrata l'08/09, nessun aggiornamento luce necessario. La fattura gas di agosto portava con se' due ricalcoli retroattivi, integrati subito nelle righe storiche per non lasciare consumi/importi disallineati in dashboard: giugno 2026 mat 5,19->5,21, tot 9,99->10,01 (nessuna variazione di consumo); luglio 2026 c 6->2 Smc, mat 9,19->7,57, tra 7,23->6,42, one -1,49->-1,78, tot 18,64->14,91. Dettaglio e valori originari nelle note delle singole righe e in nota rilevante. Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi. Le righe gas ago25-gen26 portano il flag 'ripartito': true (ripartizione pro-rata di un'unica lettura reale): la dashboard le rende tratteggiate e a punto vuoto per non confonderle con i mesi letti davvero. Sezione Acqua: 19 bollette trimestrali Barbieri Edi/Publiacqua (4 Periodo 2021 - 2 Periodo 2026), estratte dalla mail e verificate una per una contro il 'Totale da pagare' di ogni bolletta (incluse tre rettifiche di deposito cauzionale). Vedi acqua_periodi.",
+    "note_rilevanti_regola": "Il campo 'data' e' la data dell'EVENTO segnalato (non quella in cui la nota e' stata scritta). La dashboard mostra solo le note degli ultimi 12 mesi, filtrate per ambito (Luce/Gas/Acqua/Telefonia/Entrambe)."
   },
   "note_rilevanti": [
     {
@@ -1532,6 +1577,20 @@
       "ambito": "Gas",
       "titolo": "Ricalcoli retroattivi giugno e luglio 2026 integrati nella serie mensile",
       "testo": "La bolletta gas di agosto 2026 Octopus (fatt. KG-26-A2CEAEC8-007, 09/09/2026) includeva due ricalcoli: giugno 2026 +0,02 EUR (nessuna variazione di consumo, 1 Smc confermato) e luglio 2026 -2,72 EUR (consumo rivisto da 6 Smc stimati a 2 Smc reali, -4 Smc di differenza). Integrati il 15/09/2026 direttamente nelle righe di giugno e luglio della serie mensile (vedi le note su quelle due righe per i valori originari pre-ricalcolo), con lo stesso metodo gia' usato per i ricalcoli Eni (vedi nota 17/07/2026)."
+    },
+    {
+      "data": "2023-08-01",
+      "tipo": "dati_mancanti",
+      "ambito": "Telefonia",
+      "titolo": "Buco di fatturazione telefonia fissa ago-ott 2023",
+      "testo": "Tra la fattura Vodafone emessa il 20/07/2023 (fatt. AP12527838, periodo fino al 16/07/2023) e quella emessa il 20/01/2024 (fatt. TF40439898, periodo dal 17/11/2023) non risulta nessuna mail di notifica fattura: tre mesi, agosto-ottobre 2023, restano senza alcun dato. Non e' stato stimato o interpolato nulla: il buco resta un buco nel grafico, come da metodo gia' usato per gli altri buchi della dashboard."
+    },
+    {
+      "data": "2026-01-22",
+      "tipo": "rincaro",
+      "ambito": "Telefonia",
+      "titolo": "Vodafone rete fissa: rincaro da 25,89 a 27,95 EUR/mese",
+      "testo": "A partire dalla fattura TG01677600 (gennaio 2026) il canone mensile Vodafone rete fissa e' salito da 25,89 a 27,95 EUR, +2,06 EUR/mese, circa +8%. Il canone era rimasto stabile a 25,89 EUR/mese per tutto il 2025."
     }
   ]
 }

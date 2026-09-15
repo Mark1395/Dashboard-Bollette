@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>Bollette di casa — luce, gas e acqua</title>
+<title>Bollette di casa — luce, gas, acqua e telefonia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
   --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
   --rule:#e1e0d9; --axis:#c3c2b7; --hair:rgba(11,11,11,.10);
   --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
-  --luce:#eda100; --gas:#2a78d6; --acqua:#0e9594;
+  --luce:#eda100; --gas:#2a78d6; --acqua:#0e9594; --tel:#8b6ef2;
   --good:#006300; --bad:#d03b3b; --serious:#ec835a;
   --shadow:0 1px 2px rgba(11,11,11,.05), 0 8px 24px -18px rgba(11,11,11,.35);
   --r:14px;
@@ -33,7 +33,7 @@
     --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
     --rule:#2c2c2a; --axis:#383835; --hair:rgba(255,255,255,.10);
     --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
-    --luce:#eda100; --gas:#3987e5; --acqua:#2bc4c2;
+    --luce:#eda100; --gas:#3987e5; --acqua:#2bc4c2; --tel:#8b6ef2;
     --good:#0ca30c; --bad:#d03b3b; --serious:#ec835a;
     --shadow:none;
   }
@@ -44,7 +44,7 @@
   --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
   --rule:#2c2c2a; --axis:#383835; --hair:rgba(255,255,255,.10);
   --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
-  --luce:#eda100; --gas:#3987e5; --acqua:#2bc4c2;
+  --luce:#eda100; --gas:#3987e5; --acqua:#2bc4c2; --tel:#8b6ef2;
   --good:#0ca30c; --bad:#d03b3b; --serious:#ec835a;
   --shadow:none;
 }
@@ -229,6 +229,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
 
 #gasPane { display:none; }
 #acquaError { display:none; }
+#telefoniaError { display:none; }
 .foot { margin-top:44px; padding-top:18px; border-top:1px solid var(--rule);
   font-size:.76rem; color:var(--ink-3); }
 
@@ -279,14 +280,14 @@ details.method[open] > summary::after { content:"Chiudi"; }
 <header class="masthead">
   <div>
     <p class="eyebrow">Bollette di casa</p>
-    <h1>Luce, gas e acqua</h1>
+    <h1>Luce, gas, acqua e telefonia</h1>
     <p class="masthead-meta" id="updatedLine">Carico i dati…</p>
   </div>
   <button class="iconbtn" id="themeBtn" type="button" aria-label="Cambia tema chiaro/scuro" title="Tema chiaro/scuro">◐</button>
 </header>
 
 <section class="hero" id="hero" aria-label="Sintesi ultimi 12 mesi">
-  <p class="hero-label">Spesa degli ultimi 12 mesi — luce, gas e acqua</p>
+  <p class="hero-label">Spesa degli ultimi 12 mesi — luce, gas, acqua e telefonia</p>
   <p class="hero-figure" id="heroFigure">—</p>
   <p class="hero-delta" id="heroDelta"></p>
   <div class="hero-split">
@@ -303,6 +304,8 @@ details.method[open] > summary::after { content:"Chiudi"; }
       <span class="dot" style="background:var(--gas)"></span>Gas</button>
     <button role="tab" id="btn-acqua" aria-selected="false" aria-controls="acquaPane">
       <span class="dot" style="background:var(--acqua)"></span>Acqua</button>
+    <button role="tab" id="btn-telefonia" aria-selected="false" aria-controls="telefoniaPane">
+      <span class="dot" style="background:var(--tel)"></span>Telefonia</button>
   </div>
   <div class="chiprow" id="chiprow"></div>
 </nav>
@@ -770,6 +773,42 @@ details.method[open] > summary::after { content:"Chiudi"; }
   </section>
 </div>
 
+<!-- ══════════════════════ TELEFONIA ══════════════════════ -->
+<div id="telefoniaPane" role="tabpanel" aria-labelledby="btn-telefonia" style="display:none">
+  <div class="alert" id="telefoniaError"></div>
+
+  <section class="sec" id="t-spesa" data-sec="spesa">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Spesa</span>
+        <h2 class="sec-title">Quanto costa il telefono fisso</h2>
+        <p class="sec-deck">Il canone mensile Vodafone (rete fissa). Un solo importo per bolletta: nessun consumo da scomporre, nessuna fascia oraria.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="plot"><canvas id="t_chartCost"></canvas></div>
+      <div class="legend" id="t_legend1"></div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="t_src1"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="t-anni" data-sec="anni">
+    <div class="sec-head"><div>
+      <span class="sec-num">Anno per anno</span>
+      <h2 class="sec-title">Il totale annuo</h2>
+      <p class="sec-deck">Somma delle bollette Vodafone di ogni anno solare, e media per fattura registrata.</p>
+    </div></div>
+    <div class="tablewrap"><table class="data" id="t_annualCostTable"></table></div>
+  </section>
+
+  <section class="sec" id="t-metodo" data-sec="metodo">
+    <details class="method">
+      <summary>Da dove arrivano questi numeri — telefonia fissa</summary>
+      <div class="method-body" id="t_metodologia"></div>
+    </details>
+  </section>
+</div>
+
 <p class="foot" id="footNote"></p>
 </div>
 
@@ -784,11 +823,11 @@ try { const saved = localStorage.getItem('tema'); if (saved) document.documentEl
 
 const PALETTE = {
   light: { s1:'#2a78d6', s2:'#eb6834', s3:'#1baf7a', s4:'#eda100',
-           luce:'#eda100', gas:'#2a78d6', acqua:'#0e9594',
+           luce:'#eda100', gas:'#2a78d6', acqua:'#0e9594', tel:'#8b6ef2',
            surface:'#fcfcfb', grid:'#e1e0d9', axis:'#c3c2b7', tick:'#898781',
            ink:'#0b0b0b', tipBg:'#14181d', tipInk:'#ffffff' },
   dark:  { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500',
-           luce:'#eda100', gas:'#3987e5', acqua:'#2bc4c2',
+           luce:'#eda100', gas:'#3987e5', acqua:'#2bc4c2', tel:'#8b6ef2',
            surface:'#1a1a19', grid:'#2c2c2a', axis:'#383835', tick:'#898781',
            ink:'#ffffff', tipBg:'#2c2c2a', tipInk:'#ffffff' }
 };
@@ -947,8 +986,9 @@ async function loadData(){
 
     const nMesi = Math.max(DATA.luce_monthly.length, DATA.gas_monthly.length);
     const nPeriodi = (DATA.acqua_periodi || []).length;
+    const nTel = (DATA.telefonia_fissa_monthly || []).length;
     document.getElementById('updatedLine').textContent =
-      'Aggiornato al ' + fmtDataLunga(DATA.meta.aggiornato) + ' · ' + nMesi + ' mesi di luce/gas · ' + nPeriodi + ' periodi di acqua';
+      'Aggiornato al ' + fmtDataLunga(DATA.meta.aggiornato) + ' · ' + nMesi + ' mesi di luce/gas · ' + nPeriodi + ' periodi di acqua · ' + nTel + ' fatture di telefonia';
     document.getElementById('footNote').textContent =
       'Dashboard statica: legge data.json a ogni apertura. Per aggiornare i numeri basta sostituire quel file.';
 
@@ -985,21 +1025,22 @@ const ultimi4p = (rows, key) => ultimiN(rows, key, 4);
 const precedenti4p = (rows, key) => precedentiN(rows, key, 4);
 
 function renderHero(){
-  const l = DATA.luce_monthly, g = DATA.gas_monthly, a = DATA.acqua_periodi;
-  const lTot = ultimi12(l,'tot') || 0, gTot = ultimi12(g,'tot') || 0, aTot = ultimi4p(a,'tot') || 0;
-  const tot = lTot + gTot + aTot;
-  const prec = (precedenti12(l,'tot') || 0) + (precedenti12(g,'tot') || 0) + (precedenti4p(a,'tot') || 0);
+  const l = DATA.luce_monthly, g = DATA.gas_monthly, a = DATA.acqua_periodi, t = DATA.telefonia_fissa_monthly || [];
+  const lTot = ultimi12(l,'tot') || 0, gTot = ultimi12(g,'tot') || 0, aTot = ultimi4p(a,'tot') || 0, tTot = ultimi12(t,'tot') || 0;
+  const tot = lTot + gTot + aTot + tTot;
+  const prec = (precedenti12(l,'tot') || 0) + (precedenti12(g,'tot') || 0) + (precedenti4p(a,'tot') || 0) + (precedenti12(t,'tot') || 0);
 
   document.getElementById('heroFigure').innerHTML = nf(tot,2) + '<span class="cur">€</span>';
   document.getElementById('heroDelta').innerHTML = prec
     ? deltaChip(tot, prec) + 'rispetto ai 12 mesi precedenti, chiusi a ' + eur(prec)
-    : 'Luce, gas e acqua insieme, ultimi 12 mesi di bollette (l\'acqua conta gli ultimi 4 periodi trimestrali).';
+    : 'Luce, gas, acqua e telefonia insieme, ultimi 12 mesi di bollette (l\'acqua conta gli ultimi 4 periodi trimestrali).';
 
   const voci = [
     ['Luce', lTot, PALETTE.dark.luce],
     ['Gas', gTot, PALETTE.dark.gas],
-    ['Acqua', aTot, PALETTE.dark.acqua]
-  ].map(([label,v,col]) => [label, v, col, tot ? v/tot*100 : 100/3]);
+    ['Acqua', aTot, PALETTE.dark.acqua],
+    ['Telefonia', tTot, PALETTE.dark.tel]
+  ].map(([label,v,col]) => [label, v, col, tot ? v/tot*100 : 100/4]);
 
   document.getElementById('heroBar').innerHTML =
     voci.map(([,,col,pct]) => `<span style="flex:${pct}; background:${col}"></span>`).join('');
@@ -1010,6 +1051,7 @@ function renderHero(){
 /* ═══════════════════════ Riquadri di sintesi ═══════════════════════ */
 function renderStats(){
   if (activeKind === 'acqua') { renderStatsAcqua(); return; }
+  if (activeKind === 'telefonia') { renderStatsTelefonia(); return; }
   const gas = activeKind === 'gas';
   const rows = gas ? DATA.gas_monthly : DATA.luce_monthly;
   const unit = gas ? 'Smc' : 'kWh';
@@ -1083,6 +1125,35 @@ function renderStatsAcqua(){
     </div>`).join('');
 }
 
+function renderStatsTelefonia(){
+  const rows = DATA.telefonia_fissa_monthly, col = T.tel, last = rows[rows.length-1];
+
+  const spesa = ultimi12(rows,'tot'), spesaPrec = precedenti12(rows,'tot');
+  const li = rows.length-1;
+  const canone = rows[li].tot;
+  const canonePrima = li-12 >= 0 ? rows[li-12].tot : null;
+
+  const tiles = [
+    { label:'Ultima bolletta', value:nf(last.tot,2), unit:'€',
+      sub:monthLong(last.month) + ' · Vodafone' + (last.numero_fattura ? ' · fatt. ' + last.numero_fattura : ''),
+      spark:rows.slice(-24).map(r=>r.tot) },
+    { label:'Spesa 12 mesi', value:nf(spesa,2), unit:'€',
+      sub:(spesaPrec ? deltaChip(spesa, spesaPrec) + ' sui 12 precedenti' : 'storico troppo corto per il confronto'),
+      spark:rows.slice(-24).map(r=>r.tot) },
+    { label:'Canone attuale', value:nf(canone,2), unit:'€/mese',
+      sub:(canonePrima ? deltaChip(canone, canonePrima) + ' su un anno fa' : 'ultimo importo fatturato'),
+      spark:rows.slice(-24).map(r=>r.tot) }
+  ];
+
+  document.getElementById('statsBox').innerHTML = tiles.map(t => `
+    <div class="stat">
+      <span class="stat-label">${t.label}</span>
+      <span class="stat-value">${t.value}<span class="u">${t.unit}</span></span>
+      <span class="stat-sub">${t.sub}</span>
+      ${sparkline(t.spark, col)}
+    </div>`).join('');
+}
+
 /* ═══════════════════════ Note ═══════════════════════ */
 const TIPO_LABEL = { rincaro:'Rincaro', anomalia:'Anomalia', dati_mancanti:'Dati mancanti', info:'Info' };
 const TIPO_ICONA = { rincaro:'▲', anomalia:'!', dati_mancanti:'?', info:'i' };
@@ -1099,8 +1170,8 @@ function noteVisibili(notes, kind){
 
 function renderNotes(){
   if (!DATA) return;
-  const etichetta = activeKind === 'gas' ? 'Gas' : activeKind === 'acqua' ? 'Acqua' : 'Luce';
-  const conArticolo = { luce:'sulla luce', gas:'sul gas', acqua:"sull'acqua" }[activeKind];
+  const etichetta = activeKind === 'gas' ? 'Gas' : activeKind === 'acqua' ? 'Acqua' : activeKind === 'telefonia' ? 'Telefonia' : 'Luce';
+  const conArticolo = { luce:'sulla luce', gas:'sul gas', acqua:"sull'acqua", telefonia:'sulla telefonia fissa' }[activeKind];
   const periodo = noteRange === 'all' ? 'tutto lo storico' : 'ultimi 12 mesi';
   document.getElementById('noteScope').textContent = 'Segnalazioni · ' + etichetta + ' · ' + periodo;
   const list = noteVisibili(DATA.note_rilevanti, activeKind);
@@ -1129,9 +1200,10 @@ const SEZIONI = {
   gas:   [['prezzo','Prezzo'],['spesa','Spesa'],['consumo','Consumo'],['prezzopieno','Prezzo pieno'],
           ['voci','Composizione'],['ricalcolo','Verifica'],['fornitori','Fornitori'],['anni','Anno per anno'],['metodo','Metodo']],
   acqua: [['prezzo','Prezzo'],['spesa','Spesa'],['consumo','Consumo'],['prezzopieno','Prezzo pieno'],
-          ['voci','Composizione'],['anni','Anno per anno'],['metodo','Metodo']]
+          ['voci','Composizione'],['anni','Anno per anno'],['metodo','Metodo']],
+  telefonia: [['spesa','Spesa'],['anni','Anno per anno'],['metodo','Metodo']]
 };
-const PREFISSO = { luce:'l-', gas:'g-', acqua:'a-' };
+const PREFISSO = { luce:'l-', gas:'g-', acqua:'a-', telefonia:'t-' };
 function renderChips(){
   const pre = PREFISSO[activeKind];
   document.getElementById('chiprow').innerHTML =
@@ -1820,11 +1892,96 @@ function renderAcqua(){
   }
 }
 
+/* ═══════════════════════ Pannello telefonia ═══════════════════════ */
+let telRendered = false;
+function renderTelefonia(){
+  if (telRendered) return;
+  telRendered = true;
+  try {
+    const rows = DATA.telefonia_fissa_monthly;
+    const labels = rows.map(r => monthLabel(r.month));
+    const tinta = T.tel;
+
+    // Bollette bimestrali (fino a lug23): l'intero importo sta sull'ultimo mese del
+    // periodo, non diviso a meta'. Stesso linguaggio visivo dei mesi "ripartiti" di
+    // luce/gas/acqua: punto vuoto e tratteggio.
+    const rip = rows.map(isRip);
+    const anyRip = rip.some(Boolean);
+    const ptBg = rows.map((r,i) => rip[i] ? T.surface : tinta);
+    const dashSeg = { borderDash: c => (rip[c.p0DataIndex] || rip[c.p1DataIndex]) ? [5,4] : undefined };
+    const ripTag = i => rip[i] ? ' · bimestre ripartito sull\'ultimo mese' : '';
+
+    mkChart('t_chartCost', {
+      type:'line',
+      data:{labels, datasets:[{
+        label:'Canone Vodafone', data:rows.map(r=>r.tot), borderColor:tinta,
+        backgroundColor:c => areaFill(c, tinta),
+        pointBackgroundColor:ptBg, pointBorderColor:tinta, pointBorderWidth:2,
+        pointRadius:4, pointHoverRadius:6, borderWidth:2, tension:.2, segment:dashSeg, fill:true
+      }]},
+      options:{
+        responsive:true, maintainAspectRatio:false, interaction:idxHover,
+        plugins:{ legend:{display:false}, tooltip:{callbacks:{
+          label:c => eur(c.parsed.y) + ripTag(c.dataIndex) }}},
+        scales:{ y:yAxis(v => v+' €', {beginAtZero:true}), x:xAxis() }
+      }
+    });
+    document.getElementById('t_legend1').innerHTML = anyRip
+      ? '<span class="item"><span class="ghost"></span>bimestre ripartito sull\'ultimo mese, non un canone mensile singolo</span>' : '';
+
+    document.getElementById('t_src1').innerHTML =
+      `<b>Da dove viene:</b> il totale di ogni bolletta Vodafone (rete fissa), letto dalla mail di notifica fattura — per questa
+      utenza, a differenza delle altre tre, non esiste un PDF allegato. <b>Fino a luglio 2023</b> la fatturazione era bimestrale:
+      l'intero importo del bimestre è messo sull'ultimo mese del periodo (punto vuoto e linea tratteggiata), i mesi intermedi
+      restano senza dato, non stimati. <b>Da febbraio 2024</b> la fatturazione è mensile: un punto pieno per ogni mese. Il buco
+      reale fra agosto e ottobre 2023 è segnalato a parte in "Da tenere d'occhio".`;
+
+    /* — Tabella anno per anno — */
+    const years = [...new Set(rows.map(r => +r.month.slice(0,4)))].sort((a,b)=>a-b);
+    let html = '<thead><tr><th>Anno</th><th>Fatture</th><th>Totale annuo</th><th>Media a fattura</th></tr></thead><tbody>';
+    years.forEach(y => {
+      const yr = rows.filter(r => r.month.startsWith(String(y)));
+      const totY = round2(yr.reduce((s,r) => s + r.tot, 0));
+      html += `<tr><td>${y}</td><td>${yr.length}</td><td>${eur(totY)}</td><td>${eur(round2(totY/yr.length))}</td></tr>`;
+    });
+    document.getElementById('t_annualCostTable').innerHTML = html + '</tbody>';
+
+    document.getElementById('t_metodologia').innerHTML = `
+      <h4>Fornitore in bolletta</h4>
+      La bolletta arriva a marchio <b>Vodafone</b>; l'ente che fattura è Fastweb S.p.A. per licenza del marchio — un dettaglio
+      amministrativo, non mostrato altrove in questa pagina.
+      <h4>Nessun PDF, dati dalla mail</h4>
+      A differenza di luce, gas e acqua, per questa utenza Vodafone non allega un PDF alla notifica di fattura: i 43 importi di
+      questa sezione sono letti a mano dalle mail di emissione fattura, uno per uno.
+      <h4>Fatturazione bimestrale fino a metà 2023, poi mensile</h4>
+      Le prime undici bollette (novembre 2021 – luglio 2023) coprono due mesi ciascuna: l'intero importo è attribuito
+      all'ultimo mese del periodo, non diviso a metà, con lo stesso trattamento grafico "ripartito" già usato per i mesi non
+      letti di luce, gas e acqua — punto vuoto, linea tratteggiata. Da febbraio 2024 la fatturazione è mensile: un importo,
+      un mese, nessuna ripartizione.
+      <h4>Buco reale agosto–ottobre 2023</h4>
+      Tra la fattura del 20/07/2023 (periodo fino al 16/07/2023) e quella del 20/01/2024 (periodo dal 17/11/2023) non risulta
+      nessuna mail di fattura Vodafone: tre mesi senza dato, lasciati come buco nel grafico invece che stimati o interpolati.
+      Vedi la segnalazione dedicata in "Da tenere d'occhio".
+      <h4>Rincaro gennaio 2026</h4>
+      Il canone è salito da 25,89 a 27,95 EUR/mese (+2,06 EUR, circa +8%) dalla fattura TG01677600, dopo essere rimasto
+      stabile a 25,89 EUR/mese per tutto il 2025.
+      <h4>Nessun dato personale</h4>
+      Come per le altre tre utenze, niente nome cliente né codice cliente Vodafone: solo mese, importo e numero di fattura.`;
+  } catch (err) {
+    const el = document.getElementById('telefoniaError');
+    el.style.display = 'block';
+    el.textContent = 'Non riesco a disegnare la sezione Telefonia.\n' + (err && err.message ? err.message : err) +
+      '\n\nCopia questo messaggio e incollalo in chat.';
+    console.error(err);
+    telRendered = false;
+  }
+}
+
 /* ═══════════════════════ Interazione ═══════════════════════ */
-const RENDER_LAZY = { gas:renderGas, acqua:renderAcqua };
+const RENDER_LAZY = { gas:renderGas, acqua:renderAcqua, telefonia:renderTelefonia };
 function switchTo(kind){
   activeKind = kind;
-  ['luce','gas','acqua'].forEach(k => {
+  ['luce','gas','acqua','telefonia'].forEach(k => {
     const on = k === kind;
     document.getElementById('btn-'+k).classList.toggle('on', on);
     document.getElementById('btn-'+k).setAttribute('aria-selected', String(on));
@@ -1845,9 +2002,10 @@ function resizeVisible(){
 // Se la pagina è stata caricata mentre era in secondo piano, ridisegna al ritorno.
 document.addEventListener('visibilitychange', () => { if (!document.hidden) resizeVisible(); });
 window.addEventListener('pageshow', resizeVisible);
-document.getElementById('btn-luce').onclick  = () => switchTo('luce');
-document.getElementById('btn-gas').onclick   = () => switchTo('gas');
-document.getElementById('btn-acqua').onclick = () => switchTo('acqua');
+document.getElementById('btn-luce').onclick      = () => switchTo('luce');
+document.getElementById('btn-gas').onclick       = () => switchTo('gas');
+document.getElementById('btn-acqua').onclick     = () => switchTo('acqua');
+document.getElementById('btn-telefonia').onclick = () => switchTo('telefonia');
 
 /* Alternanza vista dentro una sezione */
 document.addEventListener('click', e => {
@@ -1880,11 +2038,12 @@ function applyTheme(){
   applyChartDefaults();
   if (!DATA) return;
   destroyCharts();
-  const gasEra = gasRendered, acquaEra = acquaRendered;
-  gasRendered = false; acquaRendered = false;
+  const gasEra = gasRendered, acquaEra = acquaRendered, telEra = telRendered;
+  gasRendered = false; acquaRendered = false; telRendered = false;
   renderLuce();
   if (gasEra) renderGas();
   if (acquaEra) renderAcqua();
+  if (telEra) renderTelefonia();
   renderStats();
   watchSections();
   setTimeout(resizeVisible, 40);

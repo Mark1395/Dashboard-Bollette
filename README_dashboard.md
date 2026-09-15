@@ -1,4 +1,4 @@
-# Dashboard bollette luce, gas e acqua
+# Dashboard bollette luce, gas, acqua e telefonia
 
 Dashboard statica (HTML + Chart.js) che legge i dati da `data.json`. Pensata per GitHub Pages:
 aggiornare i numeri ogni mese significa sostituire un solo file, senza toccare `index.html`.
@@ -9,7 +9,7 @@ Online: <https://mark1395.github.io/Dashboard-Bollette/>
 
 1. Vai su [github.com/new](https://github.com/new) e crea un repository. Pubblico va bene:
    **nessun dato personale è presente** in questi file (niente nome, indirizzo, POD/PDR, codice
-   fiscale o numero cliente — solo periodo, fornitore, consumi e costi).
+   fiscale o numero cliente/codice cliente Vodafone — solo periodo, fornitore, consumi e costi).
 2. Nella pagina del repository, clicca **Add file → Upload files** e trascina i tre file:
    `index.html`, `data.json`, `README_dashboard.md`.
 3. Clicca **Commit changes**.
@@ -40,8 +40,9 @@ cambiati i numeri da un aggiornamento all'altro.
   "gas_monthly":  [ … ],
   "gas_conguaglio_note": [ … ],
   "acqua_periodi": [ … ],
+  "telefonia_fissa_monthly": [ … ],
   "note_rilevanti": [ … ],
-  "meta": { "aggiornato": "2026-07-17", "note": "…", "note_rilevanti_regola": "…" }
+  "meta": { "aggiornato": "2026-09-16", "note": "…", "note_rilevanti_regola": "…" }
 }
 ```
 
@@ -109,7 +110,7 @@ Le segnalazioni che compaiono nel riquadro "Da tenere d'occhio", in cima alla pa
 
 - `data` è la data dell'**evento segnalato**, non quella in cui la nota è stata scritta.
 - `tipo`: `rincaro`, `anomalia`, `dati_mancanti` o `info`. Determina colore ed etichetta.
-- `ambito`: `Luce`, `Gas`, `Acqua` o `Entrambe`. Filtra la nota sulla scheda corrispondente.
+- `ambito`: `Luce`, `Gas`, `Acqua`, `Telefonia` o `Entrambe`. Filtra la nota sulla scheda corrispondente.
 
 Di default la pagina mostra solo gli ultimi 12 mesi; l'interruttore "Tutte" apre lo storico
 completo.
@@ -170,6 +171,47 @@ I periodi dal 4° 2021 al 4° 2022 hanno `tipo_lettura` `credito` o `presunta`: 
 contatore in quella finestra, il consumo fatturato è solo il conguaglio. La dashboard li disegna con punto
 vuoto/tratteggio e barre sbiadite, come i mesi "ripartiti" di luce e gas.
 
+### `telefonia_fissa_monthly`
+
+Una riga per bolletta, in ordine cronologico. La bolletta arriva a marchio **Vodafone** (rete fissa); l'ente
+fatturante è Fastweb S.p.A. per licenza del marchio, un dettaglio amministrativo non mostrato in dashboard.
+A differenza di luce, gas e acqua, per questa utenza **non esiste un PDF allegato** alla notifica di fattura:
+i dati sono letti a mano dalle mail di emissione fattura.
+
+```json
+{
+  "month": "2026-08",
+  "f": "Vodafone",
+  "numero_fattura": "TG20214532",
+  "tot": 27.95,
+  "ripartito": false,
+  "note": ""
+}
+```
+
+| Campo | Significato |
+|---|---|
+| `month` | mese, formato `AAAA-MM` |
+| `f` | fornitore in bolletta: sempre `Vodafone` in questa serie |
+| `numero_fattura` | numero di fattura Vodafone, per rintracciare la mail sorgente |
+| `tot` | totale della bolletta attribuito al mese (EUR) |
+| `ripartito` | `true` se il mese non nasce da un canone mensile singolo ma da un bimestre ripartito (vedi sotto) |
+| `note` | testo libero, non mostrato in pagina |
+
+**Il flag `ripartito`.** Fino alla fattura di luglio 2023 Vodafone fatturava a **bimestre**: ogni bolletta
+copre due mesi. A differenza del trattamento usato per il gas (dove il totale del bimestre viene diviso in
+proporzione fra i due mesi), qui **l'intero importo bimestrale è attribuito all'ultimo mese del periodo**, non
+diviso a metà — una scelta già validata nel progetto. Il mese precedente del bimestre non ha quindi nessuna riga
+in questo array: non è un buco segnalato, è semplicemente assente, come per ogni altro mese che la dashboard non
+completa da sé. La dashboard disegna le righe `ripartito: true` con punto vuoto e linea tratteggiata, lo stesso
+linguaggio visivo dei mesi ripartiti di luce, gas e acqua. Dal 17/01/2024 (fattura TF41280570, ricevuta a
+febbraio 2024) la fatturazione è mensile e il flag è sempre `false`.
+
+**Il buco reale di agosto–ottobre 2023.** Tra la fattura del 20/07/2023 (periodo fino al 16/07/2023) e quella
+del 20/01/2024 (periodo dal 17/11/2023) non risulta nessuna mail di notifica fattura Vodafone: tre mesi senza
+alcun dato, né stimato né interpolato. Resta un buco nel grafico, documentato anche in `note_rilevanti`
+(`tipo: "dati_mancanti"`).
+
 ### `gas_conguaglio_note`
 
 Archivio delle due bollette di ricalcolo Eni (76,37 € e 60,16 €). **Non è più usato dalla
@@ -183,18 +225,22 @@ promemoria per me: non compaiono nell'interfaccia.
 
 ## Cosa c'è nella pagina
 
-- **Pannello di sintesi** — spesa luce+gas+acqua degli ultimi 12 mesi, confronto con i 12 precedenti,
-  e come si divide tra le tre utenze (per l'acqua, trimestrale, "ultimi 12 mesi" è approssimato con gli
-  ultimi 4 periodi).
-- **Quattro riquadri per utenza** — ultima bolletta, spesa e consumo a 12 mesi (o 4 periodi per l'acqua),
-  prezzo attuale, ciascuno con la variazione e l'andamento recente.
+- **Pannello di sintesi** — spesa luce+gas+acqua+telefonia degli ultimi 12 mesi, confronto con i 12
+  precedenti, e come si divide tra le quattro utenze (per l'acqua, trimestrale, "ultimi 12 mesi" è
+  approssimato con gli ultimi 4 periodi).
+- **Riquadri per utenza** — ultima bolletta, spesa e consumo a 12 mesi (o 4 periodi per l'acqua),
+  prezzo attuale, ciascuno con la variazione e l'andamento recente. La telefonia, che non ha consumo
+  né fasce da scomporre, ne ha tre invece di quattro: ultima bolletta, spesa 12 mesi, canone attuale.
 - **Da tenere d'occhio** — le segnalazioni sulle bollette nuove.
 - **Le sezioni di dettaglio** — prezzo, spesa, consumo, prezzo pieno, composizione del costo,
   fasce orarie (luce) o verifica del ricalcolo (gas), confronto fornitori, riepiloghi annuali.
   Ogni sezione ha un interruttore per cambiare vista — il confronto per stagione si apre per
   primo (è quello che risponde alla domanda più comune: "come sto messo rispetto all'anno
   scorso?"), poi l'andamento mese per mese. Le fasce orarie si aprono sulla vista in percentuale.
-  Un "Come si legge" sotto ogni grafico spiega fonte e formula.
+  Un "Come si legge" sotto ogni grafico spiega fonte e formula. La scheda Telefonia è più snella
+  delle altre tre (un solo importo mensile, nessun consumo): solo l'andamento nel tempo, senza
+  confronto stagionale — con la cadenza bimestrale fino al 2023 e mensile solo dal 2024, un
+  confronto per periodo dell'anno sarebbe stato più rumore che segnale.
 - **Da dove arrivano questi numeri** — la metodologia completa, in fondo a ciascuna scheda.
 
 Tema chiaro e scuro: segue le impostazioni del telefono, con interruttore in alto a destra.
