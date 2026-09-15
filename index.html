@@ -1780,6 +1780,21 @@ function renderAcqua(){
       "TOTALE IMPORTO ACQUA" della bolletta (il consumo a tariffa, più la "Compensazione tariffe" che il gestore
       applica quando cambia la tariffa a metà periodo) diviso i mc fatturati. Nei periodi a consumo zero — tutta
       la serie 2022, oltre al 1° periodo 2023 — il rapporto non è definito e il grafico lascia un vuoto.
+      <h4>Perché il prezzo al mc non è fisso</h4>
+      Publiacqua fattura l'uso domestico residente su <b>due scaglioni</b>: i primi <b>18,25 mc/anno per ogni
+      residente</b> a tariffa agevolata (~2,10 €/mc), tutto il consumo oltre quella soglia a tariffa piena
+      (~3,04–3,38 €/mc, il 45–60% in più). Con un solo residente in questa utenza la soglia agevolata vale circa
+      50 litri al giorno: facile da superare. La soglia è <b>annuale</b> ma le bollette sono trimestrali, quindi
+      ogni periodo la proroga sui propri giorni (18,25÷365×giorni) e fattura la parte di consumo ancora dentro
+      la quota residua a tariffa bassa, il resto a tariffa alta — a volte come due righe "Acquedotto" separate
+      nel dettaglio (es. 2° periodo 2025: 4,85 mc a 2,31 €/mc + 4,15 mc a 3,34 €/mc), a volte con un'unica riga
+      più una "Compensazione tariffe" che sposta consumo da una fascia all'altra in base a quanto della quota
+      annua è già stato usato nei periodi precedenti dello stesso anno solare (es. 2° periodo 2026: 3 mc fatturati
+      a 2,31 €/mc più 6,51 € di compensazione, prezzo medio effettivo 4,48 €/mc). La compensazione può anche
+      essere negativa — un piccolo credito quando la quota agevolata dell'anno non è stata ancora consumata (es.
+      3° periodo 2022, 0 mc: importo acqua -0,18 €). Il prezzo medio al mc sale quindi nei periodi a consumo
+      concentrato o quando l'anno ha già superato il tetto agevolato, e scende quando il consumo resta basso e
+      spalmato nell'anno.
       <h4>Prezzo pieno</h4>
       Importo acqua più quota fissa del servizio idrico, diviso i mc fatturati. Esclude di proposito i servizi
       amministrativi (spese SEPA, servizio) e i movimenti di deposito cauzionale, che non sono legati al consumo.
