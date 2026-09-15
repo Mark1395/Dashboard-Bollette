@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>Bollette di casa — luce e gas</title>
+<title>Bollette di casa — luce, gas e acqua</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
   --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
   --rule:#e1e0d9; --axis:#c3c2b7; --hair:rgba(11,11,11,.10);
   --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
-  --luce:#eda100; --gas:#2a78d6;
+  --luce:#eda100; --gas:#2a78d6; --acqua:#0e9594;
   --good:#006300; --bad:#d03b3b; --serious:#ec835a;
   --shadow:0 1px 2px rgba(11,11,11,.05), 0 8px 24px -18px rgba(11,11,11,.35);
   --r:14px;
@@ -33,7 +33,7 @@
     --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
     --rule:#2c2c2a; --axis:#383835; --hair:rgba(255,255,255,.10);
     --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
-    --luce:#eda100; --gas:#3987e5;
+    --luce:#eda100; --gas:#3987e5; --acqua:#2bc4c2;
     --good:#0ca30c; --bad:#d03b3b; --serious:#ec835a;
     --shadow:none;
   }
@@ -44,7 +44,7 @@
   --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
   --rule:#2c2c2a; --axis:#383835; --hair:rgba(255,255,255,.10);
   --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
-  --luce:#eda100; --gas:#3987e5;
+  --luce:#eda100; --gas:#3987e5; --acqua:#2bc4c2;
   --good:#0ca30c; --bad:#d03b3b; --serious:#ec835a;
   --shadow:none;
 }
@@ -228,6 +228,7 @@ details.method[open] > summary::after { content:"Chiudi"; }
 .method-body b { color:var(--ink); font-weight:600; }
 
 #gasPane { display:none; }
+#acquaError { display:none; }
 .foot { margin-top:44px; padding-top:18px; border-top:1px solid var(--rule);
   font-size:.76rem; color:var(--ink-3); }
 
@@ -278,14 +279,14 @@ details.method[open] > summary::after { content:"Chiudi"; }
 <header class="masthead">
   <div>
     <p class="eyebrow">Bollette di casa</p>
-    <h1>Luce e gas, mese per mese</h1>
+    <h1>Luce, gas e acqua</h1>
     <p class="masthead-meta" id="updatedLine">Carico i dati…</p>
   </div>
   <button class="iconbtn" id="themeBtn" type="button" aria-label="Cambia tema chiaro/scuro" title="Tema chiaro/scuro">◐</button>
 </header>
 
 <section class="hero" id="hero" aria-label="Sintesi ultimi 12 mesi">
-  <p class="hero-label">Spesa degli ultimi 12 mesi</p>
+  <p class="hero-label">Spesa degli ultimi 12 mesi — luce, gas e acqua</p>
   <p class="hero-figure" id="heroFigure">—</p>
   <p class="hero-delta" id="heroDelta"></p>
   <div class="hero-split">
@@ -300,6 +301,8 @@ details.method[open] > summary::after { content:"Chiudi"; }
       <span class="dot" style="background:var(--luce)"></span>Luce</button>
     <button role="tab" id="btn-gas" aria-selected="false" aria-controls="gasPane">
       <span class="dot" style="background:var(--gas)"></span>Gas</button>
+    <button role="tab" id="btn-acqua" aria-selected="false" aria-controls="acquaPane">
+      <span class="dot" style="background:var(--acqua)"></span>Acqua</button>
   </div>
   <div class="chiprow" id="chiprow"></div>
 </nav>
@@ -636,6 +639,137 @@ details.method[open] > summary::after { content:"Chiudi"; }
   </section>
 </div>
 
+<!-- ══════════════════════ ACQUA ══════════════════════ -->
+<div id="acquaPane" role="tabpanel" aria-labelledby="btn-acqua" style="display:none">
+  <div class="alert" id="acquaError"></div>
+
+  <section class="sec" id="a-prezzo" data-sec="prezzo">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Prezzo</span>
+        <h2 class="sec-title">Quanto costa l'acqua</h2>
+        <p class="sec-deck">Il prezzo di un mc di sola acqua consumata, senza la quota fissa del servizio idrico. Nei periodi a consumo zero il rapporto non esiste: il punto resta vuoto.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="1">Per periodo dell'anno</button><button data-view="0">Nel tempo</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view">
+          <div class="plot"><canvas id="a_chartVarUnit"></canvas></div>
+        </div>
+        <div class="view on"><div class="plot tall"><canvas id="a_chartSeasonVarUnit"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="a_srcVarUnit"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="a-spesa" data-sec="spesa">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Spesa</span>
+        <h2 class="sec-title">Quanto ho pagato</h2>
+        <p class="sec-deck">Il totale di ogni bolletta trimestrale, deposito cauzionale compreso quando presente.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="1">Per periodo dell'anno</button><button data-view="0">Nel tempo</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view">
+          <div class="plot"><canvas id="a_chartCost"></canvas></div>
+        </div>
+        <div class="view on"><div class="plot tall"><canvas id="a_chartSeasonCost"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="a_src1"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="a-consumo" data-sec="consumo">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Consumo</span>
+        <h2 class="sec-title">Quanta acqua ho usato</h2>
+        <p class="sec-deck">I metri cubi fatturati in ogni bolletta, letture reali del contatore. Da fine 2021 a inizio 2023 il gestore non ha mai letto il contatore davvero: quei periodi sono segnati a parte.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="1">Per periodo dell'anno</button><button data-view="0">Nel tempo</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view">
+          <div class="barwrap"><div class="plot wide"><canvas id="a_chartConsumo"></canvas></div></div>
+          <div class="legend" id="a_legend2"></div>
+        </div>
+        <div class="view on"><div class="plot tall"><canvas id="a_chartSeasonCons"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="a_src2"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="a-prezzopieno" data-sec="prezzopieno">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Prezzo pieno</span>
+        <h2 class="sec-title">Con dentro anche la quota fissa</h2>
+        <p class="sec-deck">Stessa acqua, ma spalmando sul consumo anche la quota fissa del servizio idrico e i servizi accessori. È il costo vero di ogni mc, non solo la parte variabile.</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="1">Per periodo dell'anno</button><button data-view="0">Nel tempo</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view">
+          <div class="plot"><canvas id="a_chartUnit"></canvas></div>
+        </div>
+        <div class="view on"><div class="plot tall"><canvas id="a_chartSeasonUnit"></canvas></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="a_src3"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="a-voci" data-sec="voci">
+    <div class="sec-head">
+      <div>
+        <span class="sec-num">Composizione</span>
+        <h2 class="sec-title">Dove finiscono i soldi</h2>
+        <p class="sec-deck">Ogni bolletta si divide in tre: l'acqua consumata, la quota fissa del servizio idrico e i servizi (SEPA, imposte, eventuali movimenti di deposito cauzionale).</p>
+      </div>
+      <div class="seg sm" data-viewgroup role="group" aria-label="Vista">
+        <button class="on" data-view="0">Colonne</button><button data-view="1">Linee</button><button data-view="2">%</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="views">
+        <div class="view on"><div class="barwrap"><div class="plot tall wide"><canvas id="a_chartBreak"></canvas></div></div></div>
+        <div class="view"><div class="plot tall"><canvas id="a_chartVoci"></canvas></div></div>
+        <div class="view"><div class="barwrap"><div class="plot tall wide"><canvas id="a_chartComposizione"></canvas></div></div></div>
+      </div>
+      <details class="howto"><summary>Come si legge</summary><div class="howto-body" id="a_src7"></div></details>
+    </div>
+  </section>
+
+  <section class="sec" id="a-anni" data-sec="anni">
+    <div class="sec-head"><div>
+      <span class="sec-num">Anno per anno</span>
+      <h2 class="sec-title">I totali annuali, per anno</h2>
+      <p class="sec-deck">Somma dei periodi fatturati in ogni anno solare. Un anno con meno di 4 periodi ha bollette ancora da ricevere o già spostate sull'anno successivo.</p>
+    </div></div>
+    <div class="tablewrap"><table class="data" id="a_annualCostTable"></table></div>
+  </section>
+
+  <section class="sec" id="a-metodo" data-sec="metodo">
+    <details class="method">
+      <summary>Da dove arrivano questi numeri — acqua</summary>
+      <div class="method-body" id="a_metodologia"></div>
+    </details>
+  </section>
+</div>
+
 <p class="foot" id="footNote"></p>
 </div>
 
@@ -650,11 +784,11 @@ try { const saved = localStorage.getItem('tema'); if (saved) document.documentEl
 
 const PALETTE = {
   light: { s1:'#2a78d6', s2:'#eb6834', s3:'#1baf7a', s4:'#eda100',
-           luce:'#eda100', gas:'#2a78d6',
+           luce:'#eda100', gas:'#2a78d6', acqua:'#0e9594',
            surface:'#fcfcfb', grid:'#e1e0d9', axis:'#c3c2b7', tick:'#898781',
            ink:'#0b0b0b', tipBg:'#14181d', tipInk:'#ffffff' },
   dark:  { s1:'#3987e5', s2:'#d95926', s3:'#199e70', s4:'#c98500',
-           luce:'#eda100', gas:'#3987e5',
+           luce:'#eda100', gas:'#3987e5', acqua:'#2bc4c2',
            surface:'#1a1a19', grid:'#2c2c2a', axis:'#383835', tick:'#898781',
            ink:'#ffffff', tipBg:'#2c2c2a', tipInk:'#ffffff' }
 };
@@ -686,6 +820,10 @@ const eur0 = v => v==null ? '—' : Math.round(v).toLocaleString('it-IT') + ' �
 const int  = v => v==null ? '—' : Math.round(v).toLocaleString('it-IT');
 const monthLabel = ym => { const [y,m] = ym.split('-'); return MESI[+m-1] + String(y).slice(2); };
 const monthLong  = ym => { const [y,m] = ym.split('-'); return MESI_LUNGHI[+m-1] + ' ' + y; };
+const periodYear = p => +p.slice(0,4);
+const periodNum  = p => +p.slice(6);
+const periodLabel = p => 'P' + periodNum(p) + ' ' + String(periodYear(p)).slice(2);
+const periodLong  = p => (periodYear(p)) + ', ' + periodNum(p) + '° periodo';
 const fmtDataIt  = iso => { const [y,m,d] = iso.split('-'); return d+'/'+m+'/'+y; };
 function fmtDataLunga(iso){ const [y,m,d] = iso.split('-'); return +d + ' ' + MESI_LUNGHI[+m-1] + ' ' + y; }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -808,8 +946,9 @@ async function loadData(){
     applyChartDefaults();
 
     const nMesi = Math.max(DATA.luce_monthly.length, DATA.gas_monthly.length);
+    const nPeriodi = (DATA.acqua_periodi || []).length;
     document.getElementById('updatedLine').textContent =
-      'Aggiornato al ' + fmtDataLunga(DATA.meta.aggiornato) + ' · ' + nMesi + ' mesi di bollette';
+      'Aggiornato al ' + fmtDataLunga(DATA.meta.aggiornato) + ' · ' + nMesi + ' mesi di luce/gas · ' + nPeriodi + ' periodi di acqua';
     document.getElementById('footNote').textContent =
       'Dashboard statica: legge data.json a ogni apertura. Per aggiornare i numeri basta sostituire quel file.';
 
@@ -829,39 +968,48 @@ async function loadData(){
 }
 
 /* ═══════════════════════ Hero ═══════════════════════ */
-function ultimi12(rows, key){
-  const v = rows.slice(-12).map(r => r[key]).filter(x => x != null);
+function ultimiN(rows, key, n){
+  const v = rows.slice(-n).map(r => r[key]).filter(x => x != null);
   return v.length ? v.reduce((a,b)=>a+b, 0) : null;
 }
-function precedenti12(rows, key){
-  const slice = rows.slice(-24, -12);
-  if (slice.length < 6) return null;
+function precedentiN(rows, key, n){
+  const slice = rows.slice(-2*n, -n);
+  if (slice.length < Math.ceil(n/2)) return null;
   const v = slice.map(r => r[key]).filter(x => x != null);
   return v.length ? v.reduce((a,b)=>a+b, 0) : null;
 }
+const ultimi12 = (rows, key) => ultimiN(rows, key, 12);
+const precedenti12 = (rows, key) => precedentiN(rows, key, 12);
+// L'acqua fattura a trimestre: "ultimi 12 mesi" ~= ultimi 4 periodi.
+const ultimi4p = (rows, key) => ultimiN(rows, key, 4);
+const precedenti4p = (rows, key) => precedentiN(rows, key, 4);
 
 function renderHero(){
-  const l = DATA.luce_monthly, g = DATA.gas_monthly;
-  const lTot = ultimi12(l,'tot') || 0, gTot = ultimi12(g,'tot') || 0;
-  const tot = lTot + gTot;
-  const prec = (precedenti12(l,'tot') || 0) + (precedenti12(g,'tot') || 0);
+  const l = DATA.luce_monthly, g = DATA.gas_monthly, a = DATA.acqua_periodi;
+  const lTot = ultimi12(l,'tot') || 0, gTot = ultimi12(g,'tot') || 0, aTot = ultimi4p(a,'tot') || 0;
+  const tot = lTot + gTot + aTot;
+  const prec = (precedenti12(l,'tot') || 0) + (precedenti12(g,'tot') || 0) + (precedenti4p(a,'tot') || 0);
 
   document.getElementById('heroFigure').innerHTML = nf(tot,2) + '<span class="cur">€</span>';
   document.getElementById('heroDelta').innerHTML = prec
     ? deltaChip(tot, prec) + 'rispetto ai 12 mesi precedenti, chiusi a ' + eur(prec)
-    : 'Luce e gas insieme, ultimi 12 mesi di bollette.';
+    : 'Luce, gas e acqua insieme, ultimi 12 mesi di bollette (l\'acqua conta gli ultimi 4 periodi trimestrali).';
 
-  const lPct = tot ? lTot/tot*100 : 50;
+  const voci = [
+    ['Luce', lTot, PALETTE.dark.luce],
+    ['Gas', gTot, PALETTE.dark.gas],
+    ['Acqua', aTot, PALETTE.dark.acqua]
+  ].map(([label,v,col]) => [label, v, col, tot ? v/tot*100 : 100/3]);
+
   document.getElementById('heroBar').innerHTML =
-    `<span style="flex:${lPct}; background:${PALETTE.dark.luce}"></span>` +
-    `<span style="flex:${100-lPct}; background:${PALETTE.dark.gas}"></span>`;
+    voci.map(([,,col,pct]) => `<span style="flex:${pct}; background:${col}"></span>`).join('');
   document.getElementById('heroLegend').innerHTML =
-    `<li><span class="dot" style="background:${PALETTE.dark.luce}"></span>Luce <b>${eur(lTot)}</b> · ${Math.round(lPct)}%</li>` +
-    `<li><span class="dot" style="background:${PALETTE.dark.gas}"></span>Gas <b>${eur(gTot)}</b> · ${Math.round(100-lPct)}%</li>`;
+    voci.map(([label,v,col,pct]) => `<li><span class="dot" style="background:${col}"></span>${label} <b>${eur(v)}</b> · ${Math.round(pct)}%</li>`).join('');
 }
 
 /* ═══════════════════════ Riquadri di sintesi ═══════════════════════ */
 function renderStats(){
+  if (activeKind === 'acqua') { renderStatsAcqua(); return; }
   const gas = activeKind === 'gas';
   const rows = gas ? DATA.gas_monthly : DATA.luce_monthly;
   const unit = gas ? 'Smc' : 'kWh';
@@ -900,6 +1048,41 @@ function renderStats(){
     </div>`).join('');
 }
 
+function renderStatsAcqua(){
+  const rows = DATA.acqua_periodi, col = T.acqua, last = rows[rows.length-1];
+
+  const spesa = ultimi4p(rows,'tot'), spesaPrec = precedenti4p(rows,'tot');
+  const cons  = ultimi4p(rows,'c'),   consPrec  = precedenti4p(rows,'c');
+
+  const prezzi = rows.map(r => r.c ? round4(r.acqua_importo/r.c) : null);
+  let li = -1; for (let i=prezzi.length-1; i>=0; i--) if (prezzi[i] != null) { li = i; break; }
+  const prezzoOra = li >= 0 ? prezzi[li] : null;
+  const prezzoAnnoPrima = li-4 >= 0 ? prezzi[li-4] : null;
+
+  const tiles = [
+    { label:'Ultima bolletta', value:nf(last.tot,2), unit:'€',
+      sub:periodLong(last.periodo) + ' · Barbieri Edi',
+      spark:rows.slice(-12).map(r=>r.tot) },
+    { label:'Spesa ultimi 4 periodi', value:nf(spesa,2), unit:'€',
+      sub:(spesaPrec ? deltaChip(spesa, spesaPrec) + ' sui 4 precedenti' : 'storico troppo corto per il confronto'),
+      spark:rows.slice(-12).map(r=>r.tot) },
+    { label:'Consumo ultimi 4 periodi', value:int(cons), unit:'mc',
+      sub:(consPrec ? deltaChip(cons, consPrec) + ' sui 4 precedenti' : 'storico troppo corto per il confronto'),
+      spark:rows.slice(-12).map(r=>r.c) },
+    { label:"Prezzo dell'acqua", value:prezzoOra!=null ? nf(prezzoOra,4) : '—', unit:'€/mc',
+      sub:(prezzoAnnoPrima ? deltaChip(prezzoOra, prezzoAnnoPrima) + ' su un anno fa' : 'sola quota consumo, periodo senza consumo se assente'),
+      spark:rows.slice(-12).map(r=>r.c ? round4(r.acqua_importo/r.c) : null) }
+  ];
+
+  document.getElementById('statsBox').innerHTML = tiles.map(t => `
+    <div class="stat">
+      <span class="stat-label">${t.label}</span>
+      <span class="stat-value">${t.value}<span class="u">${t.unit}</span></span>
+      <span class="stat-sub">${t.sub}</span>
+      ${sparkline(t.spark, col)}
+    </div>`).join('');
+}
+
 /* ═══════════════════════ Note ═══════════════════════ */
 const TIPO_LABEL = { rincaro:'Rincaro', anomalia:'Anomalia', dati_mancanti:'Dati mancanti', info:'Info' };
 const TIPO_ICONA = { rincaro:'▲', anomalia:'!', dati_mancanti:'?', info:'i' };
@@ -916,13 +1099,14 @@ function noteVisibili(notes, kind){
 
 function renderNotes(){
   if (!DATA) return;
-  const etichetta = activeKind === 'gas' ? 'Gas' : 'Luce';
+  const etichetta = activeKind === 'gas' ? 'Gas' : activeKind === 'acqua' ? 'Acqua' : 'Luce';
+  const conArticolo = { luce:'sulla luce', gas:'sul gas', acqua:"sull'acqua" }[activeKind];
   const periodo = noteRange === 'all' ? 'tutto lo storico' : 'ultimi 12 mesi';
   document.getElementById('noteScope').textContent = 'Segnalazioni · ' + etichetta + ' · ' + periodo;
   const list = noteVisibili(DATA.note_rilevanti, activeKind);
   const el = document.getElementById('noteList');
   if (!list.length) {
-    el.innerHTML = '<div class="empty">Niente da segnalare sulla ' + etichetta.toLowerCase() +
+    el.innerHTML = '<div class="empty">Niente da segnalare ' + conArticolo +
       ' in questo periodo. Rincari, anomalie e dati mancanti compaiono qui appena vengono rilevati su una bolletta nuova.' +
       (noteRange === '12' ? ' Passa a “Tutte” per rivedere lo storico.' : '') + '</div>';
     return;
@@ -940,13 +1124,16 @@ function renderNotes(){
 
 /* ═══════════════════════ Indice sezioni ═══════════════════════ */
 const SEZIONI = {
-  luce: [['prezzo','Prezzo'],['spesa','Spesa'],['consumo','Consumo'],['prezzopieno','Prezzo pieno'],
-         ['voci','Composizione'],['fascia','Fasce'],['fornitori','Fornitori'],['anni','Anno per anno'],['metodo','Metodo']],
-  gas:  [['prezzo','Prezzo'],['spesa','Spesa'],['consumo','Consumo'],['prezzopieno','Prezzo pieno'],
-         ['voci','Composizione'],['ricalcolo','Verifica'],['fornitori','Fornitori'],['anni','Anno per anno'],['metodo','Metodo']]
+  luce:  [['prezzo','Prezzo'],['spesa','Spesa'],['consumo','Consumo'],['prezzopieno','Prezzo pieno'],
+          ['voci','Composizione'],['fascia','Fasce'],['fornitori','Fornitori'],['anni','Anno per anno'],['metodo','Metodo']],
+  gas:   [['prezzo','Prezzo'],['spesa','Spesa'],['consumo','Consumo'],['prezzopieno','Prezzo pieno'],
+          ['voci','Composizione'],['ricalcolo','Verifica'],['fornitori','Fornitori'],['anni','Anno per anno'],['metodo','Metodo']],
+  acqua: [['prezzo','Prezzo'],['spesa','Spesa'],['consumo','Consumo'],['prezzopieno','Prezzo pieno'],
+          ['voci','Composizione'],['anni','Anno per anno'],['metodo','Metodo']]
 };
+const PREFISSO = { luce:'l-', gas:'g-', acqua:'a-' };
 function renderChips(){
-  const pre = activeKind === 'gas' ? 'g-' : 'l-';
+  const pre = PREFISSO[activeKind];
   document.getElementById('chiprow').innerHTML =
     SEZIONI[activeKind].map(([id,label]) => `<a href="#${pre}${id}" data-target="${id}">${label}</a>`).join('');
 }
@@ -1357,18 +1544,279 @@ function renderGasCheck(){
     c'è una sola lettura reale sul periodo. È affidabile il <b>totale</b>, non la singola colonna.</span>`;
 }
 
+/* ═══════════════════════ Pannello acqua ═══════════════════════ */
+let acquaRendered = false;
+function renderAcqua(){
+  if (acquaRendered) return;
+  acquaRendered = true;
+  try {
+    const rows = DATA.acqua_periodi;
+    const labels = rows.map(r => periodLabel(r.periodo));
+    const tinta = T.acqua;
+
+    // Periodi su lettura "a credito" o "presunta": il gestore non ha letto il contatore.
+    // Stesso linguaggio visivo dei mesi "ripartiti" di luce/gas: punto vuoto e tratteggio,
+    // barra sbiadita con bordo nel grafico dei consumi.
+    const stim = rows.map(r => r.tipo_lettura === 'credito' || r.tipo_lettura === 'presunta');
+    const anyStim = stim.some(Boolean);
+    const ptBg = rows.map((r,i) => stim[i] ? T.surface : tinta);
+    const dashSeg = { borderDash: c => (stim[c.p0DataIndex] || stim[c.p1DataIndex]) ? [5,4] : undefined };
+    const stimTag = i => stim[i] ? ' · lettura a credito/presunta, non reale' : '';
+
+    const lineaBase = (extra={}) => Object.assign({
+      pointBackgroundColor:ptBg, pointBorderColor:tinta, pointBorderWidth:2,
+      pointRadius:4, pointHoverRadius:6, borderWidth:2, tension:.2, segment:dashSeg, fill:true
+    }, extra);
+
+    const optBase = (yCb, yOpts={}) => ({
+      responsive:true, maintainAspectRatio:false, interaction:idxHover,
+      plugins:{ legend:{display:false}, tooltip:{} },
+      scales:{ y:yAxis(yCb, yOpts), x:xAxis() }
+    });
+
+    /* — Prezzo dell'acqua, sola quota variabile — */
+    const varUnitRows = rows.map(r => r.c ? round4(r.acqua_importo/r.c) : null);
+    mkChart('a_chartVarUnit', {
+      type:'line',
+      data:{labels, datasets:[lineaBase({
+        label:'Prezzo acqua', data:varUnitRows, borderColor:tinta, spanGaps:true,
+        backgroundColor:c => areaFill(c, tinta)
+      })]},
+      options:Object.assign(optBase(v => nf(v,2)+' €'), {
+        plugins:{ legend:{display:false}, tooltip:{callbacks:{
+          label:c => c.parsed.y!=null ? nf(c.parsed.y,4)+' €/mc'+stimTag(c.dataIndex) : 'consumo zero, prezzo non definito' }}}
+      })
+    });
+
+    /* — Costo totale — */
+    mkChart('a_chartCost', {
+      type:'line',
+      data:{labels, datasets:[lineaBase({
+        label:'Totale bolletta', data:rows.map(r=>r.tot), borderColor:tinta,
+        backgroundColor:c => areaFill(c, tinta)
+      })]},
+      options:Object.assign(optBase(v => v+' €', {beginAtZero:true}), {
+        plugins:{ legend:{display:false}, tooltip:{callbacks:{
+          label:c => eur(c.parsed.y)+stimTag(c.dataIndex) }}}
+      })
+    });
+
+    /* — Consumo — */
+    mkChart('a_chartConsumo', {
+      type:'bar',
+      data:{labels, datasets:[{
+        label:'Consumo', data:rows.map(r=>r.c),
+        backgroundColor:rows.map((r,i) => stim[i] ? tinta+'3d' : tinta),
+        borderColor:tinta, borderWidth:rows.map((r,i) => stim[i] ? 1.5 : 0),
+        borderRadius:{topLeft:4, topRight:4}, borderSkipped:'bottom', maxBarThickness:26
+      }]},
+      options:Object.assign(optBase(v => v+' mc', {beginAtZero:true}), {
+        plugins:{ legend:{display:false}, tooltip:{callbacks:{
+          label:c => (c.parsed.y ?? 'n.d.')+' mc'+stimTag(c.dataIndex) }}}
+      })
+    });
+    document.getElementById('a_legend2').innerHTML = anyStim
+      ? '<span class="item"><span class="ghost"></span>periodo su lettura a credito o presunta, non reale</span>' : '';
+
+    /* — Prezzo pieno (acqua + quota fissa) — */
+    const unitRows = rows.map(r => r.c ? round4((r.acqua_importo+r.quota_fissa)/r.c) : null);
+    mkChart('a_chartUnit', {
+      type:'line',
+      data:{labels, datasets:[lineaBase({
+        label:'Prezzo pieno', data:unitRows, borderColor:tinta, spanGaps:true,
+        backgroundColor:c => areaFill(c, tinta)
+      })]},
+      options:Object.assign(optBase(v => nf(v,2)+' €'), {
+        plugins:{ legend:{display:false}, tooltip:{callbacks:{
+          label:c => c.parsed.y!=null ? nf(c.parsed.y,4)+' €/mc'+stimTag(c.dataIndex) : 'consumo zero, prezzo non definito' }}}
+      })
+    });
+
+    /* — Per periodo dell'anno: un colore fisso per anno, come le stagionalità di luce/gas — */
+    const years = [...new Set(rows.map(r => periodYear(r.periodo)))].sort((a,b)=>a-b);
+    const PLABELS = ['1° periodo','2° periodo','3° periodo','4° periodo'];
+
+    function seasonalDatasets(valueFn){
+      return years.map((y,i) => {
+        const rowsY = [1,2,3,4].map(pn => rows.find(rr => rr.periodo === `${y}-P${pn}`) || null);
+        const stimY = rowsY.map(r => r ? (r.tipo_lettura === 'credito' || r.tipo_lettura === 'presunta') : false);
+        const col = yearColor(i);
+        return { label:String(y), data:rowsY.map(r => r ? valueFn(r) : null), stimY,
+          borderColor:col, backgroundColor:col,
+          pointBackgroundColor:stimY.map(x => x ? T.surface : col),
+          pointBorderColor:col, pointBorderWidth:2,
+          borderWidth:2, pointRadius:3, pointHoverRadius:6,
+          segment:{ borderDash:c => (stimY[c.p0DataIndex] || stimY[c.p1DataIndex]) ? [5,4] : undefined },
+          spanGaps:false, tension:.2, fill:false };
+      });
+    }
+    const seasonTag = c => (c.dataset.stimY && c.dataset.stimY[c.dataIndex]) ? ' · a credito/presunta' : '';
+    const byYear = (a,b) => a.text.localeCompare(b.text);
+    const seasonOpts = (fmt, yOpts={}) => ({
+      responsive:true, maintainAspectRatio:false, interaction:idxHover,
+      plugins:{
+        legend:{ position:'top', align:'end', labels:{ sort:byYear } },
+        tooltip:{ itemSort:(a,b) => a.dataset.label.localeCompare(b.dataset.label), callbacks:{
+          label:c => c.dataset.label + ': ' + (c.parsed.y!=null ? fmt(c.parsed.y)+seasonTag(c) : 'n.d.') }}
+      },
+      scales:{ y:yAxis(yOpts.tick, yOpts.scale||{}), x:xAxisM() }
+    });
+
+    const STAGIONALI = [
+      { id:'chartSeasonVarUnit', fn:r => r.c ? round4(r.acqua_importo/r.c) : null,
+        fmt:v => nf(v,4)+' €/mc', tick:v => nf(v,2)+' €' },
+      { id:'chartSeasonCost', fn:r => r.tot,
+        fmt:v => eur(v), tick:v => v+' €', scale:{beginAtZero:true} },
+      { id:'chartSeasonCons', fn:r => r.c,
+        fmt:v => v+' mc', tick:v => v+' mc', scale:{beginAtZero:true} },
+      { id:'chartSeasonUnit', fn:r => r.c ? round4((r.acqua_importo+r.quota_fissa)/r.c) : null,
+        fmt:v => nf(v,4)+' €/mc', tick:v => nf(v,2)+' €' }
+    ];
+    STAGIONALI.forEach(s => {
+      mkChart('a_'+s.id, { type:'line', data:{labels:PLABELS, datasets:seasonalDatasets(s.fn)},
+        options:seasonOpts(s.fmt, {tick:s.tick, scale:s.scale}) });
+    });
+
+    /* — Composizione: 3 slot categoriali — acqua consumata, quota fissa, tutto il resto — */
+    const restoVoce = rows.map(r => round2(r.tot - r.acqua_importo - r.quota_fissa));
+    const VOCI_ACQUA = [
+      ['Acqua consumata',            rows.map(r=>r.acqua_importo), T.s1],
+      ['Quota fissa servizio idrico',rows.map(r=>r.quota_fissa),   T.s2],
+      ['Servizi, imposte e cauzione',restoVoce,                    T.s3]
+    ];
+
+    mkChart('a_chartBreak', {
+      type:'bar',
+      data:{labels, datasets:VOCI_ACQUA.map(([label,data,col]) => ({
+        label, data, backgroundColor:col, stack:'s',
+        borderColor:T.surface, borderWidth:2, borderSkipped:false, borderRadius:3, maxBarThickness:26
+      }))},
+      options:{ responsive:true, maintainAspectRatio:false, interaction:idxHover,
+        plugins:{ legend:{position:'top', align:'end'}, tooltip:{callbacks:{label:c => c.dataset.label+': '+eur(c.parsed.y)}} },
+        scales:{ y:Object.assign(yAxis(v => v+' €'), {stacked:true}), x:Object.assign(xAxis(), {stacked:true}) } }
+    });
+
+    mkChart('a_chartVoci', {
+      type:'line',
+      data:{labels, datasets:VOCI_ACQUA.map(([label,data,col]) => ({
+        label, data, borderColor:col, backgroundColor:col, borderWidth:2,
+        pointRadius:0, pointHoverRadius:5, tension:.2, fill:false
+      }))},
+      options:{ responsive:true, maintainAspectRatio:false, interaction:idxHover,
+        plugins:{ legend:{position:'top', align:'end'}, tooltip:{callbacks:{label:c => c.dataset.label+': '+eur(c.parsed.y)}} },
+        scales:{ y:yAxis(v => v+' €'), x:xAxis() } }
+    });
+
+    const compData = rows.map((r,i) => {
+      const t = r.tot || 1;
+      return [r.acqua_importo/t, r.quota_fissa/t, restoVoce[i]/t];
+    });
+    mkChart('a_chartComposizione', {
+      type:'bar',
+      data:{labels, datasets:VOCI_ACQUA.map(([label,,col], i) => ({
+        label, data:compData.map(c => c[i]), backgroundColor:col, stack:'s',
+        borderColor:T.surface, borderWidth:2, borderSkipped:false, borderRadius:3, maxBarThickness:26
+      }))},
+      options:{ responsive:true, maintainAspectRatio:false, interaction:idxHover,
+        plugins:{ legend:{position:'top', align:'end'}, tooltip:{callbacks:{label:c => c.dataset.label+': '+nf(c.parsed.y*100,1)+'%'}} },
+        scales:{ y:Object.assign(yAxis(v => Math.round(v*100)+'%'), {stacked:true, max:1}), x:Object.assign(xAxis(), {stacked:true}) } }
+    });
+
+    /* — Testi "Come si legge" — */
+    const stimNota = anyStim
+      ? ' <b>Punto vuoto e tratteggio</b>, barra sbiadita con bordo: periodi fatturati su lettura "a credito" o "presunta", col contatore non letto davvero. Affidabile il totale del periodo, non il singolo consumo.'
+      : '';
+    const periodoNota = ' <b>Nella vista "Per periodo dell\'anno"</b> gli anni sono sovrapposti periodo su periodo (1°-4°), ciascuno col proprio colore: stesso colore per lo stesso anno in ogni grafico, coerente con luce e gas.';
+    document.getElementById('a_srcVarUnit').innerHTML =
+      `<b>Da dove viene:</b> la riga "TOTALE IMPORTO ACQUA" della bolletta (consumo effettivo più compensazione tariffe), esclusa la quota fissa. <b>Calcolo:</b> importo acqua del periodo ÷ mc fatturati.${stimNota}${periodoNota}`;
+    document.getElementById('a_src1').innerHTML =
+      `<b>Da dove viene:</b> il "Totale da pagare" di ogni bolletta trimestrale, deposito cauzionale e conguagli inclusi quando presenti.${stimNota}${periodoNota}`;
+    document.getElementById('a_src2').innerHTML =
+      `<b>Da dove viene:</b> i metri cubi fatturati ("Totale MC" in bolletta), conguagli su letture stimate già inclusi.${stimNota}${periodoNota}`;
+    document.getElementById('a_src3').innerHTML =
+      `<b>Calcolo:</b> (importo acqua + quota fissa) ÷ mc fatturati. Esclude servizi, imposte ed eventuali movimenti di deposito cauzionale: quello è il costo pieno del servizio idrico, non i costi amministrativi una tantum.${stimNota}${periodoNota}`;
+    document.getElementById('a_src7').innerHTML =
+      `<b>Da dove viene:</b> le voci "TOTALE IMPORTO ACQUA" e "TOTALE QUOTA FISSA..." di ogni bolletta. <b>"Servizi, imposte e cauzione"</b> è quel che resta: totale − acqua − quota fissa, cioè spese SEPA/servizio, IVA, arrotondamenti ed eventuali richieste o rimborsi di deposito cauzionale.`;
+
+    /* — Tabella anno per anno — */
+    let costHtml = '<thead><tr><th>Anno</th><th>Periodi</th><th>Consumo (mc)</th><th>Prezzo acqua (€/mc)</th>' +
+      '<th>Prezzo pieno (€/mc)</th><th>Acqua</th><th>Quota fissa</th><th>Servizi e resto</th><th>Totale annuo</th></tr></thead><tbody>';
+    years.forEach(y => {
+      const yr = rows.filter(r => periodYear(r.periodo) === y);
+      const n = yr.length;
+      const consTot = yr.reduce((s,r) => s + (r.c||0), 0);
+      const acquaTot = round2(yr.reduce((s,r) => s + r.acqua_importo, 0));
+      const fissaTot = round2(yr.reduce((s,r) => s + r.quota_fissa, 0));
+      const totTot = round2(yr.reduce((s,r) => s + r.tot, 0));
+      const restoTot = round2(totTot - acquaTot - fissaTot);
+      const prezzoAcqua = consTot ? acquaTot/consTot : null;
+      const prezzoPieno = consTot ? (acquaTot+fissaTot)/consTot : null;
+      costHtml += `<tr><td>${y}</td><td>${n}</td><td>${int(consTot)}</td>` +
+        `<td>${prezzoAcqua!=null ? nf(prezzoAcqua,4) : '—'}</td><td>${prezzoPieno!=null ? nf(prezzoPieno,4) : '—'}</td>` +
+        `<td>${eur(acquaTot)}</td><td>${eur(fissaTot)}</td><td>${eur(restoTot)}</td><td>${eur(totTot)}</td></tr>`;
+    });
+    document.getElementById('a_annualCostTable').innerHTML = costHtml + '</tbody>';
+
+    document.getElementById('a_metodologia').innerHTML = `
+      <h4>Bollette trimestrali, non mensili</h4>
+      Barbieri Edi (gestore del servizio idrico Publiacqua per l'utenza) fattura ogni tre mesi circa, con periodi di
+      lunghezza variabile (${Math.min(...rows.map(r=>r.giorni))}–${Math.max(...rows.map(r=>r.giorni))} giorni). Ogni riga di questa sezione è una bolletta intera, non un mese: i grafici "Nel tempo"
+      hanno quindi un punto ogni 3 mesi circa, e "ultimi 12 mesi" nei riquadri di sintesi è approssimato con gli
+      ultimi 4 periodi.
+      <h4>Oltre un anno di letture non reali (fine 2021 – inizio 2023)</h4>
+      Dal 4° periodo 2021 al 4° periodo 2022 il contatore non è mai stato letto davvero: le bollette riportano
+      "Credito lettura" o "lettura presunta", con il contatore fermo sulla carta a 2300 mc per cinque bollette
+      di fila. I piccoli conguagli (0–3 mc a periodo) sono l'unico consumo fatturato in quella finestra. La prima
+      lettura reale dell'utente è del 23/03/2023. Questi periodi sono disegnati diversamente in tutti i grafici:
+      punto vuoto e linea tratteggiata, barre sbiadite con bordo nel grafico dei consumi.
+      <h4>Cambio contatore, luglio 2023</h4>
+      Il 29/07/2023 il vecchio contatore (fermo a 2302 mc) è stato sostituito con uno nuovo che riparte da 0. La
+      bolletta del 3° periodo 2023 copre solo i giorni del nuovo contatore (53 anziché il trimestre pieno): le
+      letture prima e dopo quella data non sono confrontabili come differenza diretta.
+      <h4>Consumo fatturato</h4>
+      Il campo "consumo" è sempre il "Totale MC" stampato in bolletta: la lettura del periodo più l'eventuale
+      conguaglio su letture stimate precedenti, esattamente come i ricalcoli gas confluiscono nel mese giusto.
+      <h4>Prezzo dell'acqua, sola quota variabile</h4>
+      "TOTALE IMPORTO ACQUA" della bolletta (il consumo a tariffa, più la "Compensazione tariffe" che il gestore
+      applica quando cambia la tariffa a metà periodo) diviso i mc fatturati. Nei periodi a consumo zero — tutta
+      la serie 2022, oltre al 1° periodo 2023 — il rapporto non è definito e il grafico lascia un vuoto.
+      <h4>Prezzo pieno</h4>
+      Importo acqua più quota fissa del servizio idrico, diviso i mc fatturati. Esclude di proposito i servizi
+      amministrativi (spese SEPA, servizio) e i movimenti di deposito cauzionale, che non sono legati al consumo.
+      <h4>Deposito cauzionale</h4>
+      Tre bollette (3° e 4° periodo 2024, 1° periodo 2025) includono una voce "Richiesta/rimborso Deposito
+      Cauzionale" indipendente dal consumo: confluisce nel totale bolletta e nella voce "Servizi, imposte e
+      cauzione" della composizione, mai nel prezzo dell'acqua o nel prezzo pieno.
+      <h4>Un solo gestore</h4>
+      Tutta la serie è fatturata da Barbieri Edi per conto di Publiacqua: a differenza di luce e gas non c'è un
+      confronto fra fornitori da fare, quindi questa sezione non ha una tabella "Fornitori".
+      <h4>Nota sui colori nella vista "Per periodo dell'anno"</h4>
+      La tavolozza dei 5 colori per anno (vedi luce e gas) è verificata solo fino a 5 anni distinti. L'acqua
+      risale al 2021, quindi il 2026 (sesto anno) riusa lo stesso colore del 2021: oggi non si sovrappongono mai
+      sullo stesso periodo (2021 ha solo il 4° periodo, il 2026 non è ancora arrivato al 4°), ma dal 4° periodo
+      2026 in poi andrà rifatta la ricerca colore per un sesto anno davvero distinto.`;
+  } catch (err) {
+    const el = document.getElementById('acquaError');
+    el.style.display = 'block';
+    el.textContent = 'Non riesco a disegnare la sezione Acqua.\n' + (err && err.message ? err.message : err) +
+      '\n\nCopia questo messaggio e incollalo in chat.';
+    console.error(err);
+    acquaRendered = false;
+  }
+}
+
 /* ═══════════════════════ Interazione ═══════════════════════ */
+const RENDER_LAZY = { gas:renderGas, acqua:renderAcqua };
 function switchTo(kind){
   activeKind = kind;
-  const gas = kind === 'gas';
-  document.getElementById('btn-luce').classList.toggle('on', !gas);
-  document.getElementById('btn-gas').classList.toggle('on', gas);
-  document.getElementById('btn-luce').setAttribute('aria-selected', String(!gas));
-  document.getElementById('btn-gas').setAttribute('aria-selected', String(gas));
-  document.getElementById('lucePane').style.display = gas ? 'none' : 'block';
-  document.getElementById('gasPane').style.display  = gas ? 'block' : 'none';
+  ['luce','gas','acqua'].forEach(k => {
+    const on = k === kind;
+    document.getElementById('btn-'+k).classList.toggle('on', on);
+    document.getElementById('btn-'+k).setAttribute('aria-selected', String(on));
+    document.getElementById(k+'Pane').style.display = on ? 'block' : 'none';
+  });
   renderChips(); renderNotes(); renderStats();
-  if (gas) setTimeout(renderGas, 20);
+  if (RENDER_LAZY[kind]) setTimeout(RENDER_LAZY[kind], 20);
   // I grafici costruiti mentre il pannello era nascosto nascono a larghezza zero.
   setTimeout(resizeVisible, 40);
 }
@@ -1382,8 +1830,9 @@ function resizeVisible(){
 // Se la pagina è stata caricata mentre era in secondo piano, ridisegna al ritorno.
 document.addEventListener('visibilitychange', () => { if (!document.hidden) resizeVisible(); });
 window.addEventListener('pageshow', resizeVisible);
-document.getElementById('btn-luce').onclick = () => switchTo('luce');
-document.getElementById('btn-gas').onclick  = () => switchTo('gas');
+document.getElementById('btn-luce').onclick  = () => switchTo('luce');
+document.getElementById('btn-gas').onclick   = () => switchTo('gas');
+document.getElementById('btn-acqua').onclick = () => switchTo('acqua');
 
 /* Alternanza vista dentro una sezione */
 document.addEventListener('click', e => {
@@ -1416,10 +1865,11 @@ function applyTheme(){
   applyChartDefaults();
   if (!DATA) return;
   destroyCharts();
-  const gasEra = gasRendered;
-  gasRendered = false;
+  const gasEra = gasRendered, acquaEra = acquaRendered;
+  gasRendered = false; acquaRendered = false;
   renderLuce();
   if (gasEra) renderGas();
+  if (acquaEra) renderAcqua();
   renderStats();
   watchSections();
   setTimeout(resizeVisible, 40);
