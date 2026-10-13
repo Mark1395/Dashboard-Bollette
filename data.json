@@ -535,6 +535,19 @@
       "f23": 52,
       "mat_var_unit": 0.099101,
       "note": "Fatt. KE-26-A2CEAEC8-007 del 07/09/2026, periodo 01-31/08/2026. c = consumo reale da letture fascia (F1 37, F2 19, F3 33; delta contatore energia) e da scatto consumo annuo (411->500 kWh 01/02-fine mese); la bolletta scrive 'CONSUMO FATTURATO 98 kWh' includendo 9 kWh di perdite di rete. mat/tra/one dagli Elementi di dettaglio. tot = TOTALE BOLLETTA al netto del canone RAI: il Bonus Energy Break -1,00 EUR e' applicato fuori dal totale imponibile (come il canone), quindi non incluso qui."
+    },
+    {
+      "month": "2026-09",
+      "f": "Octopus",
+      "c": 63,
+      "mat": 13.19,
+      "tra": 8.77,
+      "one": 2.09,
+      "tot": 26.46,
+      "f1": 24,
+      "f23": 39,
+      "mat_var_unit": 0.099048,
+      "note": "Fatt. KE-26-A2CEAEC8-008 del 09/10/2026, periodo 01-30/09/2026. c = 63 kWh = scatto consumo annuo (500->563 kWh) = delta letture fascia (F1 24, F2 15, F3 24; 30/09 vs 31/08), senza perdite di rete (CONSUMO FATTURATO 63). mat/tra/one dagli Elementi di dettaglio (13,19 / 8,77 / 2,09); imposta erariale 0,00 (0,000000 EUR/kWh per residenti 1,5-3 kW), IVA 2,41. tot = TOTALE BOLLETTA 26,46 al netto del canone RAI 9,00 (totale da pagare 35,46). mat_var_unit = box offerta DI CUI QUOTA VARIABILE 6,24 / 63 kWh."
     }
   ],
   "gas_monthly": [
@@ -1021,12 +1034,23 @@
       "month": "2026-08",
       "f": "Octopus",
       "c": 2,
-      "mat": 7.87,
-      "tra": 6.59,
-      "one": -1.72,
-      "tot": 15.67,
-      "note": "Fatt. KG-26-A2CEAEC8-007 del 09/09/2026, periodo 01-31/08/2026. c = 2 Smc fatturati (consumo reale del periodo 2,4398 Smc da coefficiente C 1,0138; lettura di chiusura 31/08/2026 STIMATA, non ancora rilevata dal distributore). mat/tra/one dagli Elementi di dettaglio del periodo 01/08-31/08/2026 (mat=7,87€ conferma esatta col box offerta 'TOTALE DOVUTO PER GAS NATURALE'; DI CUI QUOTA VARIABILE 0,87€). accise (imposte) 0,25€. tot = mat+tra+one+accise+IVA: l'IVA di agosto (2,68€) non è scorporata singolarmente in fattura (il documento cumula 3 periodi con ricalcoli), è ricavata per differenza dal totale IVA fattura (2,34€) al netto della quota IVA dei ricalcoli giu/lug (~-0,34€) verificata riga per riga sulle voci variabili degli Elementi di dettaglio. La fattura include anche due ricalcoli retroattivi, applicati lo stesso 15/09/2026 alle righe di giugno e luglio 2026: vedi le note su quelle due righe.",
-      "mat_var_unit": 0.435
+      "mat": 7.54,
+      "tra": 6.41,
+      "one": -1.79,
+      "tot": 14.87,
+      "note": "Fatt. KG-26-A2CEAEC8-007 del 09/09/2026, periodo 01-31/08/2026. c = 2 Smc fatturati (consumo reale del periodo 2,4398 Smc da coefficiente C 1,0138; lettura di chiusura 31/08/2026 STIMATA, non ancora rilevata dal distributore). mat/tra/one dagli Elementi di dettaglio del periodo 01/08-31/08/2026 (mat=7,87€ conferma esatta col box offerta 'TOTALE DOVUTO PER GAS NATURALE'; DI CUI QUOTA VARIABILE 0,87€). accise (imposte) 0,25€. tot = mat+tra+one+accise+IVA: l'IVA di agosto (2,68€) non è scorporata singolarmente in fattura (il documento cumula 3 periodi con ricalcoli), è ricavata per differenza dal totale IVA fattura (2,34€) al netto della quota IVA dei ricalcoli giu/lug (~-0,34€) verificata riga per riga sulle voci variabili degli Elementi di dettaglio. La fattura include anche due ricalcoli retroattivi, applicati lo stesso 15/09/2026 alle righe di giugno e luglio 2026: vedi le note su quelle due righe. Corretto il 13/10/2026 da un ricalcolo nella bolletta gas di settembre 2026 (fatt. KG-26-A2CEAEC8-008, 13/10/2026, motivo 'Rettifica consumi'): consumo fatturato invariato (stimato 2 Smc, ricalcolato 2 Smc, differenza 0 Smc; la lettura di fine agosto ora e' 'ricondotta' 1902,0927 mc), importo 1,33 -> 0,75 EUR (-0,58 su mat/tra/one: mat -0,33, tra -0,18, one -0,07) piu' accise -0,15 e IVA -0,07, tot -0,80 EUR. Valori originari pre-ricalcolo: mat 7,87 / tra 6,59 / one -1,72 / tot 15,67 / mat_var_unit 0,435.",
+      "mat_var_unit": 0.27
+    },
+    {
+      "month": "2026-09",
+      "f": "Octopus",
+      "c": 2,
+      "mat": 7.7,
+      "tra": 6.46,
+      "one": -1.63,
+      "tot": 15.53,
+      "note": "Fatt. KG-26-A2CEAEC8-008 del 13/10/2026, periodo 01-30/09/2026, totale fattura 14,73 EUR (= 15,53 di settembre - 0,80 del ricalcolo di agosto). c = 2 Smc fatturati (letture: 31/08 1902,0927 mc ricondotta, 30/09 1904 mc STIMATA, non ancora rilevata dal distributore; Octopus ha chiesto l'autolettura il 28/09). mat/tra/one dagli Elementi di dettaglio del periodo 01-30/09/2026 (mat 7,70 = box offerta TOTALE DOVUTO PER GAS NATURALE; quota variabile 0,70). accise settembre 0,36. tot = mat+tra+one+accise+IVA = 7,70+6,46-1,63+0,36+2,64 (IVA: 22% su 11,27 = 2,48 piu' 10% su 1,62 = 0,16), ricavato per differenza dal totale fattura 14,73 al netto del ricalcolo di agosto (-0,80): vedi la nota sulla riga di agosto 2026.",
+      "mat_var_unit": 0.35
     }
   ],
   "gas_conguaglio_note": [
@@ -1469,6 +1493,28 @@
         "iva": 2.2,
         "tot": 41.25,
         "note": ""
+      },
+      {
+        "periodo": "2026-P3",
+        "f": "Publiacqua",
+        "data_emissione": "2026-10-01",
+        "giorni": 91,
+        "lettura_prec": 54,
+        "lettura_prec_data": "2026-06-22",
+        "lettura_att": 58,
+        "lettura_att_data": "2026-09-21",
+        "tipo_lettura": "utente",
+        "consumo_rilevato": 4,
+        "conguaglio": null,
+        "c": 4,
+        "acqua_importo": 11.56,
+        "quota_fissa": 15.13,
+        "addebiti_accrediti": null,
+        "servizi": 10.0,
+        "arrotondamento": 0.01,
+        "iva": 2.2,
+        "tot": 38.9,
+        "note": ""
       }
   ],
   "telefonia_fissa_monthly": [
@@ -1514,11 +1560,12 @@
     { "month": "2026-05", "f": "Vodafone", "numero_fattura": "TG12371088", "tot": 27.95, "ripartito": false, "note": "" },
     { "month": "2026-06", "f": "Vodafone", "numero_fattura": "TG15000427", "tot": 27.95, "ripartito": false, "note": "" },
     { "month": "2026-07", "f": "Vodafone", "numero_fattura": "TG17615534", "tot": 27.95, "ripartito": false, "note": "" },
-    { "month": "2026-08", "f": "Vodafone", "numero_fattura": "TG20214532", "tot": 27.95, "ripartito": false, "note": "" }
+    { "month": "2026-08", "f": "Vodafone", "numero_fattura": "TG20214532", "tot": 27.95, "ripartito": false, "note": "" },
+    { "month": "2026-09", "f": "Vodafone", "numero_fattura": "TG22791874", "tot": 27.95, "ripartito": false, "note": "" }
   ],
   "meta": {
-    "aggiornato": "2026-09-16",
-    "note": "Aggiornamento 16/09/2026: aggiunta la quarta utenza, Telefonia fissa (marchio Vodafone, ente fatturante Fastweb S.p.A. per licenza del marchio: trivia amministrativa, non mostrata in dashboard). 43 fatture reali nov21-ago26, lette a mano dalle mail di notifica Vodafone (nessun PDF allegato esiste per questa utenza, a differenza delle altre tre). Fatturazione bimestrale fino a lug23 (importo intero sull'ultimo mese del periodo, flag ripartito:true, stesso trattamento grafico gia' usato per i mesi non letti di luce/gas/acqua), mensile da feb24. Buco reale di fatturazione ago-ott 2023 (nessuna mail trovata tra la fattura del 20/07/2023 e quella del 20/01/2024): lasciato come buco, non stimato, con nota rilevante dati_mancanti dedicata. Rincaro gen26 da 25,89 a 27,95 EUR/mese (+8% circa) documentato con nota rilevante rincaro. Nessun dato personale incluso (niente nome cliente ne' codice cliente Vodafone), stessa policy delle altre tre utenze. Vedi telefonia_fissa_monthly. Aggiornamento 15/09/2026: aggiunta bolletta gas Octopus agosto 2026 (c 2 Smc fatturati, tot 15,67 EUR; lettura di chiusura ancora stimata, non reale). Il PDF luce nuovo su Drive era un duplicato della bolletta agosto gia' registrata l'08/09, nessun aggiornamento luce necessario. La fattura gas di agosto portava con se' due ricalcoli retroattivi, integrati subito nelle righe storiche per non lasciare consumi/importi disallineati in dashboard: giugno 2026 mat 5,19->5,21, tot 9,99->10,01 (nessuna variazione di consumo); luglio 2026 c 6->2 Smc, mat 9,19->7,57, tra 7,23->6,42, one -1,49->-1,78, tot 18,64->14,91. Dettaglio e valori originari nelle note delle singole righe e in nota rilevante. Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi. Le righe gas ago25-gen26 portano il flag 'ripartito': true (ripartizione pro-rata di un'unica lettura reale): la dashboard le rende tratteggiate e a punto vuoto per non confonderle con i mesi letti davvero. Sezione Acqua: 19 bollette trimestrali Barbieri Edi/Publiacqua (4 Periodo 2021 - 2 Periodo 2026), estratte dalla mail e verificate una per una contro il 'Totale da pagare' di ogni bolletta (incluse tre rettifiche di deposito cauzionale). Vedi acqua_periodi.",
+    "aggiornato": "2026-10-13",
+    "note": "Aggiornamento 13/10/2026: aggiunte luce settembre 2026 (63 kWh, tot 26,46 EUR, fatt. KE-26-A2CEAEC8-008), gas settembre 2026 (2 Smc, tot 15,53 EUR; fatt. KG-26-A2CEAEC8-008 da 14,73 EUR) con il ricalcolo retroattivo di agosto applicato subito (tot 15,67 -> 14,87 EUR, consumo invariato; valori originari nella nota della riga), acqua 3 periodo 2026 (4 mc, 38,90 EUR, bolletta n. 33534/2026 del 01/10/2026) e telefonia fissa settembre 2026 (27,95 EUR, fatt. TG22791874). Aggiornamento 16/09/2026: aggiunta la quarta utenza, Telefonia fissa (marchio Vodafone, ente fatturante Fastweb S.p.A. per licenza del marchio: trivia amministrativa, non mostrata in dashboard). 43 fatture reali nov21-ago26, lette a mano dalle mail di notifica Vodafone (nessun PDF allegato esiste per questa utenza, a differenza delle altre tre). Fatturazione bimestrale fino a lug23 (importo intero sull'ultimo mese del periodo, flag ripartito:true, stesso trattamento grafico gia' usato per i mesi non letti di luce/gas/acqua), mensile da feb24. Buco reale di fatturazione ago-ott 2023 (nessuna mail trovata tra la fattura del 20/07/2023 e quella del 20/01/2024): lasciato come buco, non stimato, con nota rilevante dati_mancanti dedicata. Rincaro gen26 da 25,89 a 27,95 EUR/mese (+8% circa) documentato con nota rilevante rincaro. Nessun dato personale incluso (niente nome cliente ne' codice cliente Vodafone), stessa policy delle altre tre utenze. Vedi telefonia_fissa_monthly. Aggiornamento 15/09/2026: aggiunta bolletta gas Octopus agosto 2026 (c 2 Smc fatturati, tot 15,67 EUR; lettura di chiusura ancora stimata, non reale). Il PDF luce nuovo su Drive era un duplicato della bolletta agosto gia' registrata l'08/09, nessun aggiornamento luce necessario. La fattura gas di agosto portava con se' due ricalcoli retroattivi, integrati subito nelle righe storiche per non lasciare consumi/importi disallineati in dashboard: giugno 2026 mat 5,19->5,21, tot 9,99->10,01 (nessuna variazione di consumo); luglio 2026 c 6->2 Smc, mat 9,19->7,57, tra 7,23->6,42, one -1,49->-1,78, tot 18,64->14,91. Dettaglio e valori originari nelle note delle singole righe e in nota rilevante. Luce e Gas: dataset mensile completo gen23-2026. Gas: da giu23 a gen26 consumi e costi REALI per mese, ricostruiti dagli Elementi di dettaglio seguendo la catena degli acconti Eni (stime e storni esclusi); eccezione ago25-gen26, unica lettura reale su 6 mesi ripartita pro-rata giorni. Gen-mag23 consumo reale. I due ricalcoli Eni (76,37 e 60,16 EUR) sono ora INTEGRATI nella serie mensile, non piu' esclusi. Le righe gas ago25-gen26 portano il flag 'ripartito': true (ripartizione pro-rata di un'unica lettura reale): la dashboard le rende tratteggiate e a punto vuoto per non confonderle con i mesi letti davvero. Sezione Acqua: 19 bollette trimestrali Barbieri Edi/Publiacqua (4 Periodo 2021 - 2 Periodo 2026), estratte dalla mail e verificate una per una contro il 'Totale da pagare' di ogni bolletta (incluse tre rettifiche di deposito cauzionale). Vedi acqua_periodi.",
     "note_rilevanti_regola": "Il campo 'data' e' la data dell'EVENTO segnalato (non quella in cui la nota e' stata scritta). La dashboard mostra solo le note degli ultimi 12 mesi, filtrate per ambito (Luce/Gas/Acqua/Telefonia/Entrambe)."
   },
   "note_rilevanti": [
@@ -1591,6 +1638,13 @@
       "ambito": "Telefonia",
       "titolo": "Vodafone rete fissa: rincaro da 25,89 a 27,95 EUR/mese",
       "testo": "A partire dalla fattura TG01677600 (gennaio 2026) il canone mensile Vodafone rete fissa e' salito da 25,89 a 27,95 EUR, +2,06 EUR/mese, circa +8%. Il canone era rimasto stabile a 25,89 EUR/mese per tutto il 2025."
+    },
+    {
+      "data": "2026-10-13",
+      "tipo": "info",
+      "ambito": "Gas",
+      "titolo": "Ricalcolo agosto 2026 integrato nella serie mensile",
+      "testo": "La bolletta gas di settembre 2026 Octopus (fatt. KG-26-A2CEAEC8-008, 13/10/2026) includeva un ricalcolo del mese di agosto: consumo invariato (2 Smc), ma importo ridotto di 0,80 EUR (da 15,67 a 14,87 EUR) per l'aggiornamento della lettura di chiusura. E' stato applicato subito alla riga di agosto; i valori originari restano nella nota della riga. Anche la lettura di fine settembre e' ancora stimata: Octopus ha chiesto l'autolettura il 28/09."
     }
   ]
 }
